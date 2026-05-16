@@ -1,3 +1,11 @@
+## 0.3.9
+
+* 🪟 **AppBar rediseñado**: ahora usa `BackdropFilter` + `ImageFilter.blur`
+  real para el frosted glass, en vez de `LiquidGlass` con shaders. El efecto
+  es más fiel al glass nativo de Flutter y funciona en todas las plataformas.
+* ✨ Nuevos parámetros en `AppBar`: `blurSigma`, `bottomRadius`, `glassTint`.
+* ⚙️ `GlasConfig.appBarBlurSigma`, `.appBarBottomRadius`, `.appBarGlassTint`.
+
 ## 0.3.8
 
 * 📝 **Posicionamiento honesto**: ya no se describe como "drop-in replacement de
