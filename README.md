@@ -12,12 +12,21 @@ pasan a tener un sistema de vidrio con personalidad marcada. No es un skin neutr
 es una estética glass con blur, tintes cálidos, bordes suaves y acentos líquidos.
 
 ```dart
-// Un solo cambio en todo el proyecto:
+// ✅ Recomendado: un solo import, todo funciona
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
+
+AppBar(title: const Text('Inicio'));
+Card(child: const Text('Contenido'));
 ```
 
-Sin refactorizar widgets. Sin configuración obligatoria. La API es la misma —
-el aspecto cambia deliberadamente.
+Sin prefijos. Sin alias. Sin `glass.` delante de cada componente.
+
+> Si necesitás importar `material.dart` además (p.ej. para widgets que el
+> paquete no sobreescribe), usá `hide` para evitar ambigüedades:
+> ```dart
+> import 'package:flutter/material.dart' hide AppBar, Card, NavigationBar, AlertDialog, BottomAppBar;
+> import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
+> ```
 
 ## ✨ Componentes
 
