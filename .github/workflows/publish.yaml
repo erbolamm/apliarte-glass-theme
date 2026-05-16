@@ -4,8 +4,8 @@ on:
   push:
     tags:
       - 'v*.*.*'
-
 permissions:
+  id-token: write 
   contents: read
 
 jobs:
@@ -13,17 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
+          
       - run: flutter pub get
+      
       - run: flutter test
-      - name: 🔑 Authenticate with pub.dev
-        env:
-          PUB_DEV_CREDENTIALS: ${{ secrets.PUB_DEV_CREDENTIALS }}
-        run: |
-          mkdir -p ~/.config/dart
-          echo "$PUB_DEV_CREDENTIALS" > ~/.config/dart/pub-credentials.json
+      
+      # 🚀 dart pub publish detecta automáticamente el id-token
       - name: 📢 Publish
         run: dart pub publish --force
