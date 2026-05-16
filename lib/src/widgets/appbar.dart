@@ -7,7 +7,7 @@ import '../helpers/glass_layer.dart';
 /// Glass-themed [material.AppBar].
 ///
 /// Drop-in replacement: same constructor API as Material's AppBar.
-/// The glass effect adapts to dark/light theme automatically.
+/// Glass color, blur, and radius are derived from the current theme.
 class AppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
   final Widget? leading;
@@ -73,16 +73,14 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
     final theme = material.Theme.of(context);
     final effectiveForeground = foregroundColor ?? theme.colorScheme.onSurface;
     final tHeight = toolbarHeight ?? material.kToolbarHeight;
-    final radius = GlasConfig.appBarBorderRadius ?? 0;
+    final radius = GlasConfig.mediumRadiusValue();
 
     return GlassLayer(
       borderRadius: radius,
-      customBlur: GlasConfig.appBarBlur ?? GlasConfig.blur,
       showBorder: false,
       child: material.Column(
         mainAxisSize: material.MainAxisSize.min,
         children: [
-          // Toolbar
           material.SizedBox(
             height: tHeight,
             child: material.NavigationToolbar(
@@ -114,7 +112,6 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
                   : null,
             ),
           ),
-          // Bottom
           if (bottom != null) bottom!,
         ],
       ),

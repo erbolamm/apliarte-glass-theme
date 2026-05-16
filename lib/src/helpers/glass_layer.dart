@@ -5,13 +5,12 @@ import '../../glas_config.dart';
 
 /// Internal widget that applies the liquid glass effect to any child.
 ///
-/// Detects dark/light theme automatically from context and reads defaults
-/// from [GlasConfig].
+/// Reads defaults from [GlasConfig] and adapts to dark/light automatically.
+/// No external setup needed — just use it inside any widget tree.
 class GlassLayer extends StatelessWidget {
   final Widget child;
   final double? borderRadius;
   final double? customBlur;
-  final LiquidGlassSettings? customSettings;
   final bool showBorder;
   final List<BoxShadow>? customShadows;
 
@@ -20,7 +19,6 @@ class GlassLayer extends StatelessWidget {
     required this.child,
     this.borderRadius,
     this.customBlur,
-    this.customSettings,
     this.showBorder = true,
     this.customShadows,
   });
@@ -28,15 +26,14 @@ class GlassLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = borderRadius ?? 0;
-    final blur = customBlur ?? GlasConfig.blur;
-    final settings = customSettings ??
-        LiquidGlassSettings(
-          thickness: GlasConfig.thickness,
-          blur: blur,
-          glassColor: GlasConfig.glassColor(context),
-          lightIntensity: GlasConfig.lightIntensity,
-          refractiveIndex: GlasConfig.refractiveIndex,
-        );
+    final blur = customBlur ?? GlasConfig.blur();
+    final settings = LiquidGlassSettings(
+      thickness: GlasConfig.highlight() * 30,
+      blur: blur,
+      glassColor: GlasConfig.glassColor(context),
+      lightIntensity: GlasConfig.highlight(),
+      refractiveIndex: 1.3,
+    );
 
     return Stack(
       children: [
@@ -50,7 +47,7 @@ class GlassLayer extends StatelessWidget {
                     [
                       BoxShadow(
                         color: GlasConfig.shadowColor(context),
-                        blurRadius: 20,
+                        blurRadius: 24,
                         offset: const Offset(0, 8),
                         spreadRadius: -4,
                       ),

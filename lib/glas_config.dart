@@ -1,68 +1,100 @@
 import 'package:flutter/material.dart';
 
-/// Single configuration file for all glass theme settings.
+/// Single configuration point for ApliArte Glass Theme.
 ///
-/// To disable the glass theme entirely:
-/// 1. Remove this file from the project
-/// 2. Remove `apliarte_glass_theme` from `pubspec.yaml`
-/// 3. Change `import 'package:apliarte_glass_theme/...'` back to `package:flutter/material.dart'
+/// By default, everything is derived from [Theme.of(context).colorScheme]
+/// at runtime — no external setup needed. Just install and import.
 ///
-/// All values are overridable by the user at app startup.
+/// To customize, override any static field before running your app:
+/// ```dart
+/// void main() {
+///   GlasConfig.useWarmPreset = true;
+///   runApp(const MyApp());
+/// }
+/// ```
+///
+/// To disable glass entirely: remove this package from pubspec.yaml
+/// and switch back to `import 'package:flutter/material.dart'`.
 class GlasConfig {
-  /// ──────────────────────────────────────────────
-  /// Global glass defaults
-  /// ──────────────────────────────────────────────
-  static double thickness = 20.0;
-  static double blur = 20.0;
-  static double lightIntensity = 0.6;
-  static double refractiveIndex = 1.5;
+  /// ──────────────────────────────────────────────────────────
+  /// Preset: warm glass
+  /// ──────────────────────────────────────────────────────────
+  ///
+  /// When true, glass defaults shift towards a warmer, rosier tone
+  /// with larger radii and softer contrast.
+  static bool useWarmPreset = false;
 
-  /// Colors for light theme
-  static Color lightGlassColor = const Color(0xCCE0ECFF);
-  static Color lightBorderColor = const Color(0xB3FFFFFF);
-  static Color lightShadowColor = const Color(0x1A000000);
+  /// ──────────────────────────────────────────────────────────
+  /// Optional overrides (null → derived from Theme + preset)
+  /// ──────────────────────────────────────────────────────────
 
-  /// Colors for dark theme
-  static Color darkGlassColor = const Color(0xCC1E1E2E);
-  static Color darkBorderColor = const Color(0x33FFFFFF);
-  static Color darkShadowColor = const Color(0x40000000);
+  /// Base tint blended over [ColorScheme.surface].
+  static Color? glassTintColor;
 
-  /// ──────────────────────────────────────────────
-  /// Per-component overrides (null = use global defaults)
-  /// ──────────────────────────────────────────────
-  static double? appBarBlur;
-  static double? appBarBorderRadius;
-  static double? appBarHeight;
+  /// Color for glass borders.
+  static Color? glassBorderColor;
 
-  static double? cardBlur;
-  static double? cardBorderRadius;
-  static double? cardElevation;
+  /// Color for the NavigationBar sliding indicator.
+  static Color? navigationIndicatorColor;
 
-  static double? navBarBlur;
-  static double? navBarBorderRadius;
-  static double? navBarHeight;
+  /// Opacity of the glass overlay (0.0 – 1.0).
+  static double? glassOpacity;       // null → 0.80
 
-  static double? bottomAppBarBlur;
-  static double? bottomAppBarBorderRadius;
+  /// Gaussian blur in pixels.
+  static double? glassBlur;          // null → 20.0 (warm) / 16.0 (default)
 
-  static double? dialogBlur;
-  static double? dialogBorderRadius;
+  /// Border opacity (0.0 – 1.0).
+  static double? borderOpacity;      // null → 0.55 (warm) / 0.40 (default)
 
-  /// ──────────────────────────────────────────────
-  /// Helpers
-  /// ──────────────────────────────────────────────
-  static Color glassColor(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark
-          ? darkGlassColor
-          : lightGlassColor;
+  /// Highlight / specular intensity (0.0 – 1.0).
+  static double? highlightIntensity; // null → 0.55 (warm) / 0.40 (default)
 
-  static Color borderColor(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark
-          ? darkBorderColor
-          : lightBorderColor;
+  /// Shadow opacity (0.0 – 1.0).
+  static double? shadowOpacity;      // null → 0.12 (warm) / 0.08 (default)
 
-  static Color shadowColor(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark
-          ? darkShadowColor
-          : lightShadowColor;
+  /// Corner radius for cards, dialogs, sheets.
+  static double? largeRadius;        // null → 28 (warm) / 20 (default)
+
+  /// Corner radius for nav bar, app bar.
+  static double? mediumRadius;       // null → 24 (warm) / 16 (default)
+
+  /// ──────────────────────────────────────────────────────────
+  /// Derived values (read from theme at runtime)
+  /// ──────────────────────────────────────────────────────────
+
+  static bool get _warm => useWarmPreset;
+
+  /// Returns the effective glass color for the current theme.
+  static Color glassColor(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final base = glassTintColor ?? (_warm
+        ? Color.lerp(cs.surface, const Color(0xFFFFF0F5), 0.35)!
+        : cs.surface);
+    return base.withValues(alpha: glassOpacity ?? (_warm ? 0.78 : 0.82));
+  }
+
+  /// Returns the effective glass border color.
+  static Color borderColor(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final raw = glassBorderColor ?? cs.outlineVariant;
+    return raw.withValues(alpha: borderOpacity ?? (_warm ? 0.55 : 0.40));
+  }
+
+  /// Returns the effective shadow color.
+  static Color shadowColor(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return cs.shadow.withValues(alpha: shadowOpacity ?? (_warm ? 0.12 : 0.08));
+  }
+
+  /// Returns the effective blur in pixels.
+  static double blur() => glassBlur ?? (_warm ? 20.0 : 16.0);
+
+  /// Returns the effective highlight intensity.
+  static double highlight() => highlightIntensity ?? (_warm ? 0.55 : 0.40);
+
+  /// Returns the effective large corner radius.
+  static double largeRadiusValue() => largeRadius ?? (_warm ? 28.0 : 20.0);
+
+  /// Returns the effective medium corner radius.
+  static double mediumRadiusValue() => mediumRadius ?? (_warm ? 24.0 : 16.0);
 }

@@ -7,7 +7,7 @@ import '../helpers/glass_layer.dart';
 /// Glass-themed [material.Card].
 ///
 /// Drop-in replacement: same constructor API as Material's Card.
-/// The glass effect adapts to dark/light theme automatically.
+/// Glass color, blur, and radius are derived from the current theme.
 class Card extends StatelessWidget {
   final Widget? child;
   final double? elevation;
@@ -38,11 +38,12 @@ class Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = GlasConfig.cardBorderRadius ?? 16.0;
-    final effectiveElevation = elevation ?? (GlasConfig.cardElevation ?? 4.0);
+    final radius = GlasConfig.largeRadiusValue();
+    final effectiveElevation = elevation ?? 4.0;
 
     return material.Container(
-      margin: margin ?? const material.EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: margin ??
+          const material.EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: material.PhysicalModel(
         color: material.Colors.transparent,
         elevation: effectiveElevation,
@@ -51,7 +52,6 @@ class Card extends StatelessWidget {
         clipBehavior: clipBehavior,
         child: GlassLayer(
           borderRadius: radius,
-          customBlur: GlasConfig.cardBlur ?? GlasConfig.blur,
           customShadows: [
             material.BoxShadow(
               color: GlasConfig.shadowColor(context),

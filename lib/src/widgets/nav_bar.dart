@@ -8,6 +8,7 @@ import '../helpers/glass_layer.dart';
 ///
 /// Drop-in replacement: same constructor API as Material's NavigationBar.
 /// Includes a glass sliding indicator with smooth drag interaction.
+/// Colors are derived from the current theme — no external setup needed.
 class NavigationBar extends StatefulWidget {
   final List<material.NavigationDestination> destinations;
   final int selectedIndex;
@@ -53,8 +54,8 @@ class _NavigationBarState extends State<NavigationBar> {
   bool _isDragging = false;
   int? _highlightedIndex;
 
-  double get _navHeight => widget.height ?? (GlasConfig.navBarHeight ?? 64);
-  double get _radius => GlasConfig.navBarBorderRadius ?? 32;
+  double get _navHeight => widget.height ?? 64;
+  double get _radius => GlasConfig.mediumRadiusValue();
   int get _lastIndex => widget.destinations.length - 1;
 
   double _getAlignment(int index) {
@@ -75,14 +76,16 @@ class _NavigationBarState extends State<NavigationBar> {
   @override
   Widget build(BuildContext context) {
     final theme = material.Theme.of(context);
-    final effectiveColor = widget.indicatorColor ?? theme.colorScheme.primary;
+    final indicatorColor =
+        widget.indicatorColor ??
+        GlasConfig.navigationIndicatorColor ??
+        theme.colorScheme.primary;
     final itemCount = widget.destinations.length;
 
     return material.Padding(
       padding: const material.EdgeInsets.fromLTRB(20, 12, 20, 32),
       child: GlassLayer(
         borderRadius: _radius,
-        customBlur: GlasConfig.navBarBlur ?? GlasConfig.blur,
         child: material.LayoutBuilder(
           builder: (context, constraints) {
             final itemWidth = constraints.maxWidth / itemCount;
@@ -99,7 +102,8 @@ class _NavigationBarState extends State<NavigationBar> {
               onHorizontalDragUpdate: (details) {
                 if (!_isDragging) return;
                 setState(() {
-                  final delta = (details.primaryDelta! / totalDragWidth) * 2.0;
+                  final delta =
+                      (details.primaryDelta! / totalDragWidth) * 2.0;
                   _dragAlignment =
                       (_dragAlignment! + delta).clamp(-1.0, 1.0);
                   _updateHighlightedIndex();
@@ -110,8 +114,7 @@ class _NavigationBarState extends State<NavigationBar> {
                   _isDragging = false;
                   _highlightedIndex = null;
                   final normalized = (_dragAlignment! + 1) / 2;
-                  final nearestIndex =
-                      (normalized * _lastIndex).round();
+                  final nearestIndex = (normalized * _lastIndex).round();
                   widget.onDestinationSelected(nearestIndex);
                 });
               },
@@ -147,26 +150,27 @@ class _NavigationBarState extends State<NavigationBar> {
                             begin: material.Alignment.topLeft,
                             end: material.Alignment.bottomRight,
                             colors: [
-                              effectiveColor.withValues(alpha: 0.15),
-                              const material.Color(0x4DFFFFFF),
-                              const material.Color(0x1AFFFFFF),
+                              indicatorColor.withValues(alpha: 0.15),
+                              indicatorColor.withValues(alpha: 0.06),
+                              indicatorColor.withValues(alpha: 0.02),
                             ],
                             stops: const [0.0, 0.4, 1.0],
                           ),
                           border: material.Border.all(
-                            color: const material.Color(0x99FFFFFF),
-                            width: 1.5,
+                            color: GlasConfig.borderColor(context),
+                            width: 1.0,
                           ),
                           boxShadow: [
                             material.BoxShadow(
-                              color: effectiveColor.withValues(alpha: 0.25),
-                              blurRadius: 12,
-                              offset: const material.Offset(0, 4),
+                              color: indicatorColor.withValues(alpha: 0.20),
+                              blurRadius: 10,
+                              offset: const material.Offset(0, 3),
                             ),
-                            const material.BoxShadow(
-                              color: material.Color(0xCCFFFFFF),
-                              blurRadius: 8,
-                              offset: material.Offset(-2, -2),
+                            material.BoxShadow(
+                              color: GlasConfig.glassColor(context)
+                                  .withValues(alpha: 0.3),
+                              blurRadius: 6,
+                              offset: const material.Offset(-1, -1),
                             ),
                           ],
                           borderRadius: material.BorderRadius.circular(30),
@@ -175,15 +179,17 @@ class _NavigationBarState extends State<NavigationBar> {
                     ),
                     // Destinations
                     material.Row(
-                      mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment:
+                          material.MainAxisAlignment.spaceBetween,
                       children: [
                         for (int i = 0; i < itemCount; i++)
                           _NavDestinationWidget(
                             destination: widget.destinations[i],
                             isSelected: widget.selectedIndex == i,
                             isHighlighted: _highlightedIndex == i,
-                            onTap: () => widget.onDestinationSelected(i),
-                            effectiveColor: effectiveColor,
+                            onTap: () =>
+                                widget.onDestinationSelected(i),
+                            indicatorColor: indicatorColor,
                             labelBehavior: widget.labelBehavior,
                             labelPadding: widget.labelPadding,
                           ),
@@ -205,7 +211,7 @@ class _NavDestinationWidget extends StatelessWidget {
   final bool isSelected;
   final bool isHighlighted;
   final material.VoidCallback onTap;
-  final Color effectiveColor;
+  final Color indicatorColor;
   final material.NavigationDestinationLabelBehavior? labelBehavior;
   final material.EdgeInsetsGeometry? labelPadding;
 
@@ -214,7 +220,7 @@ class _NavDestinationWidget extends StatelessWidget {
     required this.isSelected,
     required this.isHighlighted,
     required this.onTap,
-    required this.effectiveColor,
+    required this.indicatorColor,
     this.labelBehavior,
     this.labelPadding,
   });
@@ -228,7 +234,6 @@ class _NavDestinationWidget extends StatelessWidget {
       case material.NavigationDestinationLabelBehavior.alwaysHide:
         return false;
       default:
-        // Material 3 default: only show label for selected destination
         return isSelected;
     }
   }
@@ -236,7 +241,9 @@ class _NavDestinationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActive = isSelected || isHighlighted;
-    final iconColor = isActive ? effectiveColor : material.Colors.grey;
+    final iconColor = isActive
+        ? indicatorColor
+        : material.Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5);
 
     return material.Expanded(
       child: material.GestureDetector(
@@ -249,7 +256,7 @@ class _NavDestinationWidget extends StatelessWidget {
             mainAxisSize: material.MainAxisSize.min,
             children: [
               material.AnimatedScale(
-                scale: isSelected ? 1.2 : 1.0,
+                scale: isSelected ? 1.15 : 1.0,
                 duration: const Duration(milliseconds: 500),
                 curve: material.Curves.elasticOut,
                 child: material.IconTheme(
@@ -266,10 +273,11 @@ class _NavDestinationWidget extends StatelessWidget {
                   child: material.DefaultTextStyle(
                     style: material.TextStyle(
                       fontSize: 10,
-                      fontWeight: material.FontWeight.w400,
+                      fontWeight: material.FontWeight.w500,
                       color: iconColor,
                     ),
-                    child: Text(destination.label, textAlign: material.TextAlign.center),
+                    child: Text(destination.label,
+                        textAlign: material.TextAlign.center),
                   ),
                 ),
             ],

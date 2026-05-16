@@ -40,7 +40,7 @@ class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final h = height ?? material.kToolbarHeight;
-    final radius = GlasConfig.bottomAppBarBorderRadius ?? 0;
+    final radius = GlasConfig.mediumRadiusValue();
     final effectiveElevation = elevation ?? 4.0;
 
     return material.PhysicalModel(
@@ -51,11 +51,11 @@ class BottomAppBar extends StatelessWidget implements PreferredSizeWidget {
       clipBehavior: clipBehavior,
       child: GlassLayer(
         borderRadius: radius,
-        customBlur: GlasConfig.bottomAppBarBlur ?? GlasConfig.blur,
         showBorder: radius > 0,
         child: material.Container(
           padding: padding ??
-              const material.EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              const material.EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 8),
           height: h,
           child: child ?? const material.SizedBox.shrink(),
         ),

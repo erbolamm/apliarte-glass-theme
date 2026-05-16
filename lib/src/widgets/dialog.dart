@@ -7,18 +7,6 @@ import '../helpers/glass_layer.dart';
 /// Glass-themed [material.AlertDialog].
 ///
 /// Drop-in replacement: same constructor API as Material's AlertDialog.
-///
-/// Usage:
-/// ```dart
-/// showDialog(
-///   context: context,
-///   builder: (context) => AlertDialog(
-///     title: Text('Título'),
-///     content: Text('Mensaje'),
-///     actions: [TextButton(...)],
-///   ),
-/// );
-/// ```
 class AlertDialog extends StatelessWidget {
   final Widget? title;
   final material.EdgeInsetsGeometry? titlePadding;
@@ -73,18 +61,19 @@ class AlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = GlasConfig.dialogBorderRadius ?? 24.0;
+    final radius = GlasConfig.largeRadiusValue();
     final effectiveElevation = elevation ?? 8.0;
     final theme = material.Theme.of(context);
     final effectiveTitleStyle =
         titleTextStyle ?? theme.textTheme.headlineSmall;
     final effectiveContentStyle =
         contentTextStyle ?? theme.textTheme.bodyMedium;
-    final effectiveShadowColor = shadowColor ?? GlasConfig.shadowColor(context);
+    final effectiveShadowColor =
+        shadowColor ?? GlasConfig.shadowColor(context);
 
     return Stack(
       children: [
-        // Shadow layer (always behind glass)
+        // Shadow layer
         if (effectiveElevation > 0)
           Positioned.fill(
             child: material.Material(
@@ -98,7 +87,6 @@ class AlertDialog extends StatelessWidget {
         // Glass layer
         GlassLayer(
           borderRadius: radius,
-          customBlur: GlasConfig.dialogBlur ?? GlasConfig.blur,
           child: ClipRRect(
             borderRadius: material.BorderRadius.circular(radius),
             child: material.AlertDialog(
