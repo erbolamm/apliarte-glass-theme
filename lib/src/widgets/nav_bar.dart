@@ -150,27 +150,27 @@ class _NavigationBarState extends State<NavigationBar> {
                             begin: material.Alignment.topLeft,
                             end: material.Alignment.bottomRight,
                             colors: [
-                              indicatorColor.withValues(alpha: 0.15),
-                              indicatorColor.withValues(alpha: 0.06),
-                              indicatorColor.withValues(alpha: 0.02),
+                              indicatorColor.withValues(alpha: 0.25),
+                              indicatorColor.withValues(alpha: 0.10),
+                              indicatorColor.withValues(alpha: 0.03),
                             ],
                             stops: const [0.0, 0.4, 1.0],
                           ),
                           border: material.Border.all(
                             color: GlasConfig.borderColor(context),
-                            width: 1.0,
+                            width: 1.2,
                           ),
                           boxShadow: [
                             material.BoxShadow(
-                              color: indicatorColor.withValues(alpha: 0.20),
-                              blurRadius: 10,
-                              offset: const material.Offset(0, 3),
+                              color: indicatorColor.withValues(alpha: 0.30),
+                              blurRadius: 12,
+                              offset: const material.Offset(0, 4),
                             ),
                             material.BoxShadow(
                               color: GlasConfig.glassColor(context)
-                                  .withValues(alpha: 0.3),
-                              blurRadius: 6,
-                              offset: const material.Offset(-1, -1),
+                                  .withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const material.Offset(-2, -2),
                             ),
                           ],
                           borderRadius: material.BorderRadius.circular(30),

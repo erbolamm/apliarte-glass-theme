@@ -1,6 +1,7 @@
 name: apliarte_glass_theme
-description: A beautiful glass morphism UI component library for Flutter — bottom navigation bar, app bar, and cards with liquid glass effects.
-version: 0.3.0
+description: Drop-in replacement de Material 3 con efecto glass morphism. Mismas clases, mismas APIs. Sin configuración externa.
+version: 0.3.1
+license: MIT
 homepage: https://github.com/erbolamm/apliarte-glass-theme
 repository: https://github.com/erbolamm/apliarte-glass-theme
 issue_tracker: https://github.com/erbolamm/apliarte-glass-theme/issues

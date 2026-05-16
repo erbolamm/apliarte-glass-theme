@@ -21,7 +21,8 @@ class GlasConfig {
   /// ──────────────────────────────────────────────────────────
   ///
   /// When true, glass defaults shift towards a warmer, rosier tone
-  /// with larger radii and softer contrast.
+  /// with larger radii, softer contrast, and a more editorial feel.
+  /// Recommended for lifestyle, creative, or content-focused apps.
   static bool useWarmPreset = false;
 
   /// ──────────────────────────────────────────────────────────
@@ -29,72 +30,77 @@ class GlasConfig {
   /// ──────────────────────────────────────────────────────────
 
   /// Base tint blended over [ColorScheme.surface].
+  /// Default: neutral (null) or warm pink when preset is active.
   static Color? glassTintColor;
 
   /// Color for glass borders.
   static Color? glassBorderColor;
 
-  /// Color for the NavigationBar sliding indicator.
+  /// Color for the NavigationBar sliding indicator highlight.
+  /// Default: derived from [ColorScheme.primary] at runtime.
   static Color? navigationIndicatorColor;
 
   /// Opacity of the glass overlay (0.0 – 1.0).
-  static double? glassOpacity;       // null → 0.80
+  static double? glassOpacity;
 
-  /// Gaussian blur in pixels.
-  static double? glassBlur;          // null → 20.0 (warm) / 16.0 (default)
+  /// Gaussian blur in pixels applied to content behind the glass.
+  static double? glassBlur;
 
-  /// Border opacity (0.0 – 1.0).
-  static double? borderOpacity;      // null → 0.55 (warm) / 0.40 (default)
+  /// Border opacity (0.0 – 1.0). Controls how visible the glass edge is.
+  static double? borderOpacity;
 
-  /// Highlight / specular intensity (0.0 – 1.0).
-  static double? highlightIntensity; // null → 0.55 (warm) / 0.40 (default)
+  /// Highlight / specular light intensity (0.0 – 1.0).
+  /// Higher values = more glossy, reflective glass.
+  static double? highlightIntensity;
 
   /// Shadow opacity (0.0 – 1.0).
-  static double? shadowOpacity;      // null → 0.12 (warm) / 0.08 (default)
+  static double? shadowOpacity;
 
   /// Corner radius for cards, dialogs, sheets.
-  static double? largeRadius;        // null → 28 (warm) / 20 (default)
+  static double? largeRadius;
 
   /// Corner radius for nav bar, app bar.
-  static double? mediumRadius;       // null → 24 (warm) / 16 (default)
+  static double? mediumRadius;
 
   /// ──────────────────────────────────────────────────────────
-  /// Derived values (read from theme at runtime)
+  /// Derived values — read theme at runtime.
   /// ──────────────────────────────────────────────────────────
 
-  static bool get _warm => useWarmPreset;
+  static bool get _w => useWarmPreset;
 
-  /// Returns the effective glass color for the current theme.
+  /// Returns the effective glass color for the current [context] theme.
   static Color glassColor(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final base = glassTintColor ?? (_warm
-        ? Color.lerp(cs.surface, const Color(0xFFFFF0F5), 0.35)!
+    final base = glassTintColor ?? (_w
+        ? Color.lerp(cs.surface, const Color(0xFFFFF0F5), 0.30)!
         : cs.surface);
-    return base.withValues(alpha: glassOpacity ?? (_warm ? 0.78 : 0.82));
+    return base.withValues(alpha: glassOpacity ?? (_w ? 0.78 : 0.82));
   }
 
   /// Returns the effective glass border color.
   static Color borderColor(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final raw = glassBorderColor ?? cs.outlineVariant;
-    return raw.withValues(alpha: borderOpacity ?? (_warm ? 0.55 : 0.40));
+    final raw = glassBorderColor ?? (_w
+        ? Color.lerp(cs.outlineVariant, const Color(0xFFFFC0CB), 0.20)!
+        : cs.outlineVariant);
+    return raw.withValues(alpha: borderOpacity ?? (_w ? 0.50 : 0.35));
   }
 
   /// Returns the effective shadow color.
   static Color shadowColor(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return cs.shadow.withValues(alpha: shadowOpacity ?? (_warm ? 0.12 : 0.08));
+    return cs.shadow.withValues(alpha: shadowOpacity ?? (_w ? 0.15 : 0.10));
   }
 
-  /// Returns the effective blur in pixels.
-  static double blur() => glassBlur ?? (_warm ? 20.0 : 16.0);
+  /// Returns the effective blur amount in pixels.
+  static double blur() => glassBlur ?? (_w ? 22.0 : 18.0);
 
-  /// Returns the effective highlight intensity.
-  static double highlight() => highlightIntensity ?? (_warm ? 0.55 : 0.40);
+  /// Returns the effective highlight / specular intensity.
+  static double highlight() => highlightIntensity ?? (_w ? 0.50 : 0.35);
 
-  /// Returns the effective large corner radius.
-  static double largeRadiusValue() => largeRadius ?? (_warm ? 28.0 : 20.0);
+  /// Returns the effective large corner radius (cards, dialogs).
+  static double largeRadiusValue() => largeRadius ?? (_w ? 28.0 : 20.0);
 
-  /// Returns the effective medium corner radius.
-  static double mediumRadiusValue() => mediumRadius ?? (_warm ? 24.0 : 16.0);
+  /// Returns the effective medium corner radius (bars).
+  static double mediumRadiusValue() => mediumRadius ?? (_w ? 24.0 : 16.0);
 }
