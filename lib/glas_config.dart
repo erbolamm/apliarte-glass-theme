@@ -13,13 +13,13 @@ class GlasConfig {
   /// Global glass defaults
   /// ──────────────────────────────────────────────
   static double thickness = 20.0;
-  static double blur = 16.0;
+  static double blur = 20.0;
   static double lightIntensity = 0.6;
   static double refractiveIndex = 1.5;
 
   /// Colors for light theme
-  static Color lightGlassColor = const Color(0xCCFFFFFF);
-  static Color lightBorderColor = const Color(0x99FFFFFF);
+  static Color lightGlassColor = const Color(0xCCE0ECFF);
+  static Color lightBorderColor = const Color(0xB3FFFFFF);
   static Color lightShadowColor = const Color(0x1A000000);
 
   /// Colors for dark theme
