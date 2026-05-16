@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Promo Horizontal — ApliArte Glass Theme</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; font-family: 'Inter', sans-serif; }
+        #root { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+(function() {
+    const { createContext, useContext, useState, useEffect } = React;
+    const TimeContext = createContext({ time: 0, duration: 20 });
+    const SpriteContext = createContext(null);
+    const Easing = {
+        linear: t => t,
+        easeOut: t => 1 - (1 - t) * (1 - t),
+        easeInOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+        expoOut: t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+        overshoot: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+    };
+    function interpolate(t, input, output, easing) {
+        const [iS, iE] = input; const [oS, oE] = output;
+        if (t <= iS) return oS; if (t >= iE) return oE;
+        let p = (t - iS) / (iE - iS);
+        if (easing) p = easing(p);
+        return oS + (oE - oS) * p;
+    }
+    function Stage({ duration = 30, width = 1920, height = 1080, children }) {
+        const [time, setTime] = useState(0);
+        const [scale, setScale] = useState(1);
+        useEffect(() => {
+            function updateScale() { setScale(Math.min(window.innerWidth / width, window.innerHeight / height)); }
+            updateScale(); window.addEventListener('resize', updateScale);
+            return () => window.removeEventListener('resize', updateScale);
+        }, [width, height]);
+        useEffect(() => {
+            let last = null, raf;
+            const loop = typeof window !== 'undefined' && !window.__recording;
+            const tick = (now) => {
+                if (last === null) { last = now; if (typeof window !== 'undefined') window.__ready = true; }
+                const delta = (now - last) / 1000; last = now;
+                setTime(prev => { const next = prev + delta; return next >= duration ? (loop ? 0 : duration - 0.001) : next; });
+                raf = requestAnimationFrame(tick);
+            };
+            if (document.fonts?.ready) document.fonts.ready.then(() => { raf = requestAnimationFrame(tick); });
+            else raf = requestAnimationFrame(tick);
+            return () => cancelAnimationFrame(raf);
+        }, [duration]);
+        return React.createElement(TimeContext.Provider, { value: { time, duration } },
+            React.createElement('div', { style: { position: 'fixed', inset: 0, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+                React.createElement('div', { style: { width, height, position: 'relative', overflow: 'hidden', transform: `scale(${scale})`, transformOrigin: 'center center', background: '#0f0f1a' } }, children)
+            )
+        );
+    }
+    function Sprite({ start = 0, end, children }) {
+        const { time } = useContext(TimeContext);
+        if (time < start || time >= (end || 999)) return null;
+        return React.createElement(SpriteContext.Provider, { value: { t: (time - start) / ((end || 999) - start), elapsed: time - start, duration: (end || 999) - start } }, children);
+    }
+    window.Animations = { Stage, Sprite, Easing, interpolate, useTime: () => useContext(TimeContext).time, useSprite: () => useContext(SpriteContext) };
+})();
+</script>
+
+<script type="text/babel">
+const { Stage, Sprite, Easing, interpolate, useTime, useSprite } = window.Animations;
+
+const C = {
+    primary:  '#FF8F00',
+    light:    '#FFB74D',
+    pale:     '#FFE0B2',
+    glow:     'rgba(255, 143, 0, 0.35)',
+    glass:    'rgba(255, 255, 255, 0.06)',
+    border:   'rgba(255, 255, 255, 0.1)',
+    bg:       '#0f0f1a',
+};
+
+const TextReveal = ({ text, delay, size = 28, color = '#e2e8f0', weight = 400, mono = false }) => {
+    const { elapsed } = useSprite();
+    const a = elapsed > delay;
+    return <div style={{
+        opacity: a ? interpolate(elapsed - delay, [0, 0.4], [0, 1], Easing.expoOut) : 0,
+        transform: `translateY(${a ? interpolate(elapsed - delay, [0, 0.4], [20, 0], Easing.expoOut) : 20}px)`,
+        color, fontSize: size, fontWeight: weight,
+        fontFamily: mono ? "'JetBrains Mono', monospace" : "'Inter', sans-serif",
+        textShadow: `0 0 20px ${C.glow}`,
+    }}>{text}</div>;
+};
+
+const GlassCard = ({ icon, title, desc, delay }) => {
+    const { elapsed } = useSprite();
+    const a = elapsed > delay;
+    return <div style={{
+        opacity: a ? interpolate(elapsed - delay, [0, 0.4], [0, 1], Easing.expoOut) : 0,
+        transform: `translateY(${a ? interpolate(elapsed - delay, [0, 0.4], [20, 0], Easing.expoOut) : 20}px)`,
+        background: C.glass, border: `1px solid ${C.border}`,
+        borderRadius: 16, padding: '16px 20px',
+        backdropFilter: 'blur(18px)',
+        flex: 1, margin: '0 8px',
+    }}>
+        <div style={{ fontSize: 24, marginBottom: 4 }}>{icon}</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#e2e8f0', marginBottom: 2 }}>{title}</div>
+        <div style={{ fontSize: 12, color: '#94a3b8' }}>{desc}</div>
+    </div>;
+};
+
+const D = 30;
+
+const App = () => (
+    <Stage duration={D} width={1920} height={1080}>
+        {/* Background */}
+        <div style={{
+            position: 'absolute', inset: 0,
+            background: `radial-gradient(ellipse at 20% 50%, ${C.glow.replace('0.35','0.05')} 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, ${C.glow.replace('0.35','0.03')} 0%, transparent 50%)`,
+        }} />
+
+        {/* ESCENA 1: Hero */}
+        <Sprite start={0} end={7}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                <TextReveal text="ApliArte Glass Theme" delay={0.3} size={72} color="#e2e8f0" weight={900} />
+                <div style={{ height: 12 }} />
+                <TextReveal text="Drop-in replacement de Material 3 con efecto glass morphism" delay={0.8} size={28} color="#94a3b8" weight={300} />
+                <div style={{ height: 32 }} />
+                <div style={{ display: 'flex', gap: 16 }}>
+                    {['v0.3.6','Drop-in','Material 3','Dark/Light','MIT','Sin config'].map((b, i) => (
+                        <span key={i} style={{
+                            padding: '8px 20px', borderRadius: 8,
+                            background: `${C.primary}1f`, border: `1px solid ${C.primary}33`,
+                            color: C.pale, fontSize: 16, fontWeight: 600,
+                        }}>{b}</span>
+                    ))}
+                </div>
+            </div>
+        </Sprite>
+
+        {/* ESCENA 2: Componentes */}
+        <Sprite start={7} end={15}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 80px', zIndex: 10 }}>
+                <TextReveal text="Mismas clases. Mismas APIs. Vidrio." delay={0.2} size={48} color="#e2e8f0" weight={800} />
+                <div style={{ height: 40 }} />
+                <div style={{ display: 'flex' }}>
+                    <GlassCard icon="🪟" title="AppBar" desc="Toolbar de vidrio" delay={0.8} />
+                    <GlassCard icon="💳" title="Card" desc="Frosted glass" delay={1.1} />
+                    <GlassCard icon="🧭" title="NavigationBar" desc="Indicador deslizante" delay={1.4} />
+                    <GlassCard icon="➕" title="FAB" desc="Small/Large/Extended" delay={1.7} />
+                    <GlassCard icon="📂" title="Drawer" desc="Menú glass" delay={2.0} />
+                    <GlassCard icon="💬" title="Dialog" desc="Modal glass" delay={2.3} />
+                </div>
+            </div>
+        </Sprite>
+
+        {/* ESCENA 3: Código */}
+        <Sprite start={15} end={23}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', padding: '0 80px', zIndex: 10 }}>
+                <div style={{ flex: 1 }}>
+                    <TextReveal text="Un solo import" delay={0.2} size={44} color="#e2e8f0" weight={800} />
+                    <div style={{ height: 8 }} />
+                    <TextReveal text="Sin refactorizar. Sin config externa." delay={0.6} size={22} color="#94a3b8" />
+                </div>
+                <div style={{
+                    flex: 1, background: '#1a1a2e', border: `1px solid ${C.border}`,
+                    borderRadius: 12, padding: '24px',
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: 16,
+                    lineHeight: 2,
+                }}>
+                    <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+                        {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 12, height: 12, borderRadius: '50%', background: c }} />)}
+                    </div>
+                    <div style={{ color: '#c792ea' }}>{`import 'package:apliarte_glass_theme/...';`}</div>
+                    <div style={{ color: '#6b7280' }}>// Después: mismas APIs que Material 3</div>
+                    <div style={{ color: '#a6e3a1' }}>AppBar(title: Text('Inicio'));</div>
+                    <div style={{ color: '#a6e3a1' }}>Card(child: Text('Contenido'));</div>
+                    <div style={{ color: '#a6e3a1' }}>NavigationBar(destinations: [...], ...);</div>
+                </div>
+            </div>
+        </Sprite>
+
+        {/* ESCENA 4: Warm + Cierre */}
+        <Sprite start={23} end={D}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                <TextReveal text="🔥 Warm Preset" delay={0.3} size={40} color={C.pale} weight={800} />
+                <div style={{ height: 8 }} />
+                <TextReveal text="Vidrio rosado · Radio 28px · Blur 22px" delay={0.7} size={22} color="#94a3b8" />
+                <div style={{ height: 40 }} />
+                <TextReveal text="Gratis · Open Source · MIT" delay={1.3} size={36} color="#e2e8f0" weight={800} />
+                <div style={{ height: 20 }} />
+                <TextReveal text="pub.dev/packages/apliarte_glass_theme" delay={1.8} size={20} color={C.light} mono />
+                <div style={{ height: 8 }} />
+                <TextReveal text="github.com/erbolamm/apliarte-glass-theme" delay={2.2} size={18} color="#94a3b8" mono />
+                <div style={{ height: 30 }} />
+                <TextReveal text="Javier Mateo (ApliArte)" delay={2.6} size={16} color="#6b7280" />
+            </div>
+        </Sprite>
+    </Stage>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

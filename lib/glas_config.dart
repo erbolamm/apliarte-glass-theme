@@ -63,6 +63,19 @@ class GlasConfig {
   static double? mediumRadius;
 
   /// ──────────────────────────────────────────────────────────
+  /// AppBar (BackdropFilter nativo)
+  /// ──────────────────────────────────────────────────────────
+
+  /// Intensidad de blur del AppBar. null → usa [blur].
+  static double? appBarBlurSigma;
+
+  /// Radio inferior del AppBar. null → usa [mediumRadiusValue].
+  static double? appBarBottomRadius;
+
+  /// Tinte del vidrio del AppBar. null → usa [glassColor].
+  static Color? appBarGlassTint;
+
+  /// ──────────────────────────────────────────────────────────
   /// Liquid highlight system (acento líquido)
   /// ──────────────────────────────────────────────────────────
 

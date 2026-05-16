@@ -1,0 +1,74 @@
+{
+  "es": {
+    "nombre": "ApliArte Glass Theme",
+    "descripcion": "Drop-in replacement de Material 3 con efecto glass morphism",
+    "features": [
+      "Mismas clases, mismas APIs",
+      "Sin configuración externa",
+      "Dark/Light automático",
+      "Preset warm",
+      "Indicador deslizante"
+    ],
+    "badges": ["Drop-in", "Material 3", "Dark/Light", "MIT", "Sin config"]
+  },
+  "en": {
+    "nombre": "ApliArte Glass Theme",
+    "descripcion": "Drop-in replacement for Material 3 with glass morphism effect",
+    "features": [
+      "Same classes, same APIs",
+      "No external setup",
+      "Dark/Light automatic",
+      "Warm preset",
+      "Sliding indicator"
+    ],
+    "badges": ["Drop-in", "Material 3", "Dark/Light", "MIT", "No setup"]
+  },
+  "pt": {
+    "nombre": "ApliArte Glass Theme",
+    "descripcion": "Substituto direto do Material 3 com efeito glass morphism",
+    "features": [
+      "Mesmas classes, mesmas APIs",
+      "Sem configuração externa",
+      "Dark/Light automático",
+      "Preset warm",
+      "Indicador deslizante"
+    ],
+    "badges": ["Drop-in", "Material 3", "Dark/Light", "MIT", "Sem config"]
+  },
+  "fr": {
+    "nombre": "ApliArte Glass Theme",
+    "descripcion": "Remplacement direct de Material 3 avec effet glass morphism",
+    "features": [
+      "Mêmes classes, mêmes API",
+      "Aucune configuration externe",
+      "Dark/Light automatique",
+      "Présélection chaude",
+      "Indicateur coulissant"
+    ],
+    "badges": ["Drop-in", "Material 3", "Dark/Light", "MIT", "Sans config"]
+  },
+  "de": {
+    "nombre": "ApliArte Glass Theme",
+    "descripcion": "Direkter Ersatz für Material 3 mit Glass-Morphism-Effekt",
+    "features": [
+      "Gleiche Klassen, gleiche APIs",
+      "Keine externe Einrichtung",
+      "Dark/Light automatisch",
+      "Warme Voreinstellung",
+      "Schiebeindikator"
+    ],
+    "badges": ["Drop-in", "Material 3", "Dark/Light", "MIT", "Kein Setup"]
+  },
+  "it": {
+    "nombre": "ApliArte Glass Theme",
+    "descripcion": "Sostitutivo diretto di Material 3 con effetto glass morphism",
+    "features": [
+      "Stesse classi, stesse API",
+      "Nessuna configurazione esterna",
+      "Dark/Light automatico",
+      "Preset caldo",
+      "Indicatore scorrevole"
+    ],
+    "badges": ["Drop-in", "Material 3", "Dark/Light", "MIT", "Senza config"]
+  }
+}

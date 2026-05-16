@@ -1,18 +1,26 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
-import '../helpers/glass_layer.dart';
 import '../helpers/liquid_highlight.dart';
 
-/// Glass-themed [material.AppBar].
+/// AppBar con frosted glass real via [BackdropFilter] + [ImageFilter.blur].
 ///
-/// Drop-in replacement: same constructor API as Material's AppBar.
-/// Respeta el notch / status bar automáticamente sin necesidad de SafeArea.
-/// El leading se resuelve:
-///   - [leading] explícito si se pasa
-///   - [DrawerButton] si el [Scaffold] tiene un drawer
-///   - [BackButton] si [Navigator.canPop]
+/// Misma API que Material [AppBar], pero con efecto glass nativo de Flutter.
+/// No usa [LiquidGlass] ni shaders — el blur lo provee [BackdropFilter],
+/// que funciona consistentemente en todas las plataformas.
+///
+/// El tint/color del vidrio se deriva de [GlasConfig] y el theme.
+///
+/// ## Uso
+/// ```dart
+/// AppBar(
+///   title: const Text('Título'),
+///   actions: [IconButton(...)],
+/// )
+/// ```
 class AppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
   final Widget? leading;
@@ -38,6 +46,16 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? scrolledUnderElevation;
   final bool excludeHeaderSemantics;
   final bool forceMaterialTransparency;
+
+  /// Intensidad del blur del frosted glass (sigmaX/sigmaY).
+  /// null → usa [GlasConfig.blur].
+  final double? blurSigma;
+
+  /// Radio de las esquinas inferiores. null → usa [GlasConfig.mediumRadiusValue].
+  final double? bottomRadius;
+
+  /// Tinte del vidrio. null → usa [GlasConfig.glassColor].
+  final Color? glassTint;
 
   const AppBar({
     super.key,
@@ -65,6 +83,9 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
     this.scrolledUnderElevation,
     this.excludeHeaderSemantics = false,
     this.forceMaterialTransparency = false,
+    this.blurSigma,
+    this.bottomRadius,
+    this.glassTint,
   });
 
   @override
@@ -81,11 +102,9 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
     if (scaffold != null && scaffold.hasDrawer) {
       return const material.DrawerButton();
     }
-
     if (material.Navigator.of(context, rootNavigator: true).canPop()) {
       return const material.BackButton();
     }
-
     return null;
   }
 
@@ -95,9 +114,11 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
     final effectiveForeground = foregroundColor ?? theme.colorScheme.onSurface;
     final tHeight = toolbarHeight ?? material.kToolbarHeight;
     final bHeight = bottom?.preferredSize.height ?? 0.0;
-    final radius = GlasConfig.mediumRadiusValue();
-    final resolvedLeading = _resolveLeading(context);
+    final rBottom = bottomRadius ?? GlasConfig.appBarBottomRadius ?? GlasConfig.mediumRadiusValue();
     final topInset = material.MediaQuery.of(context).viewPadding.top;
+    final resolvedLeading = _resolveLeading(context);
+    final sigma = blurSigma ?? GlasConfig.appBarBlurSigma ?? GlasConfig.blur();
+    final tint = glassTint ?? GlasConfig.appBarGlassTint ?? GlasConfig.glassColor(context);
 
     final totalHeight = topInset + tHeight + bHeight;
 
@@ -105,52 +126,80 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
       height: totalHeight,
       child: Stack(
         children: [
-          material.Padding(
-            padding: material.EdgeInsets.only(top: topInset),
-            child: GlassLayer(
-              borderRadius: radius,
-              showBorder: false,
-              child: material.Column(
-                mainAxisSize: material.MainAxisSize.min,
-                children: [
-                  material.SizedBox(
-                    height: tHeight,
-                    child: material.NavigationToolbar(
-                      leading: resolvedLeading != null
-                          ? material.IconTheme(
-                              data: material.IconThemeData(
-                                  color: effectiveForeground),
-                              child: resolvedLeading,
-                            )
-                          : null,
-                      middle: material.DefaultTextStyle(
-                        style: titleTextStyle ??
-                            theme.textTheme.titleLarge?.copyWith(
-                                  color: effectiveForeground,
-                                ) ??
-                            const TextStyle(),
-                        child: title ?? const material.SizedBox.shrink(),
+          // ── Frosted glass background ──
+          Positioned(
+            top: topInset,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ClipRRect(
+              borderRadius: material.BorderRadius.vertical(
+                bottom: material.Radius.circular(rBottom),
+              ),
+              child: material.BackdropFilter(
+                filter: ui.ImageFilter.blur(
+                  sigmaX: sigma,
+                  sigmaY: sigma,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: tint,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: GlasConfig.borderColor(context),
+                        width: 0.5,
                       ),
-                      trailing: actions != null
-                          ? material.Row(
-                              mainAxisSize: material.MainAxisSize.min,
-                              children: actions!.map((action) {
-                                return material.IconTheme(
-                                  data: material.IconThemeData(
-                                      color: effectiveForeground),
-                                  child: action,
-                                );
-                              }).toList(),
-                            )
-                          : null,
                     ),
                   ),
-                  if (bottom != null) bottom!,
-                ],
+                ),
               ),
             ),
           ),
-          // Acento líquido sutil en el borde inferior
+
+          // ── Content ──
+          material.Padding(
+            padding: material.EdgeInsets.only(top: topInset),
+            child: material.Column(
+              mainAxisSize: material.MainAxisSize.min,
+              children: [
+                material.SizedBox(
+                  height: tHeight,
+                  child: material.NavigationToolbar(
+                    leading: resolvedLeading != null
+                        ? material.IconTheme(
+                            data: material.IconThemeData(
+                                color: effectiveForeground),
+                            child: resolvedLeading,
+                          )
+                        : null,
+                    middle: material.DefaultTextStyle(
+                      style: titleTextStyle ??
+                          theme.textTheme.titleLarge?.copyWith(
+                                color: effectiveForeground,
+                              ) ??
+                          const TextStyle(),
+                      child: title ?? const material.SizedBox.shrink(),
+                    ),
+                    trailing: actions != null
+                        ? material.Row(
+                            mainAxisSize: material.MainAxisSize.min,
+                            children: actions!.map((action) {
+                              return material.IconTheme(
+                                data: material.IconThemeData(
+                                    color: effectiveForeground),
+                                child: action,
+                              );
+                            }).toList(),
+                          )
+                        : null,
+                  ),
+                ),
+                if (bottom != null) bottom!,
+              ],
+            ),
+          ),
+
+          // ── Acento líquido sutil ──
           if (GlasConfig.liquidHighlightEnabled && bottom == null)
             Positioned(
               left: 0,

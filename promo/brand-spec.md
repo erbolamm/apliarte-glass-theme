@@ -60,7 +60,9 @@
 |-------|--------|-------|
 | Logo / Icono | ❌ Pendiente | Usar icono de Flutter + glass overlay |
 | Screenshots | ✅ Listo (17 capturas) | browser/ — 4 generales + 10 individuales + 3 secciones |
-| Video vertical | ❌ Pendiente | TikTok/Reels: showcase rápido |
+| Video vertical | ✅ Listo (22s, 650KB) | promo/videos/promo-vertical.mp4 — TikTok/Reels/Shorts |
+| Video horizontal | ✅ Listo (30s, 813KB) | promo/videos/promo-horizontal.mp4 — YouTube/Facebook |
+| Música | ⬜ Pendiente | Agregar MP3 de Suno en music/ |
 | Landing | ✅ Existente | GitHub Pages: erbolamm.github.io/apliarte-glass-theme/ (erbolamm.github.io/apliarte-glass-theme/) |
 
 ## Enlaces
