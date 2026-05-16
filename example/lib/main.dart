@@ -333,6 +333,18 @@ class _OverviewPage extends StatelessWidget {
             )),
           ]),
         )),
+        // Share section
+        const SizedBox(height: 48),
+        _ShareSection(),
+
+        // Support section
+        const SizedBox(height: 48),
+        _SupportSection(),
+
+        // Footer
+        const SizedBox(height: 48),
+        _FooterSection(),
+
         const SizedBox(height: 48),
       ]),
     );
@@ -377,6 +389,196 @@ class _MigrateCard extends StatelessWidget {
         )),
     ]),
   );
+}
+
+// ═══════════════════════════════════════════════════════════
+// SHARE SECTION
+// ═══════════════════════════════════════════════════════════
+
+const _shareUrl = 'https://erbolamm.github.io/apliarte-glass-theme/';
+const _shareText = 'ApliArte%20Glass%20Theme%20%E2%80%94%20Drop-in%20replacement%20de%20Material%203%20con%20efecto%20glass%20morphism.%20Mismas%20clases%2C%20mismas%20APIs.';
+
+class _ShareSection extends StatelessWidget {
+  const _ShareSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Comparte',
+            style: t.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 4),
+        Text('Si te gusta ApliArte Glass Theme, ayuda a que más gente lo conozca.',
+            style: TextStyle(color: t.colorScheme.onSurface.withValues(alpha: 0.5))),
+        const SizedBox(height: 24),
+        Wrap(
+          spacing: 12, runSpacing: 12,
+          children: [
+            _ShareBtn(
+              label: '𝕏 Twitter',
+              url: 'https://twitter.com/intent/tweet?text=$_shareText&url=$_shareUrl',
+            ),
+            _ShareBtn(
+              label: '💼 LinkedIn',
+              url: 'https://www.linkedin.com/sharing/share-offsite/?url=$_shareUrl',
+            ),
+            _ShareBtn(
+              label: '🟠 Reddit',
+              url: 'https://www.reddit.com/submit?url=$_shareUrl&title=ApliArte%20Glass%20Theme',
+            ),
+            _ShareBtn(
+              label: '💬 WhatsApp',
+              url: 'https://api.whatsapp.com/send?text=$_shareText%20$_shareUrl',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ShareBtn extends StatelessWidget {
+  final String label;
+  final String url;
+  const _ShareBtn({required this.label, required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      icon: const Icon(Icons.open_in_new, size: 16),
+      label: Text(label),
+      onPressed: () => launchUrl(Uri.parse(url)),
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        side: BorderSide(color: Theme.of(context).dividerColor),
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SUPPORT SECTION
+// ═══════════════════════════════════════════════════════════
+
+class _SupportSection extends StatelessWidget {
+  const _SupportSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Apoya el proyecto',
+            style: t.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 4),
+        Text('Herramienta gratuita y open source. Si te ahorra tiempo, un café ayuda a mantener el desarrollo.',
+            style: TextStyle(color: t.colorScheme.onSurface.withValues(alpha: 0.5))),
+        const SizedBox(height: 24),
+        Wrap(
+          spacing: 12, runSpacing: 12,
+          children: [
+            _SupportBtn(
+              label: 'PayPal',
+              icon: Icons.payment,
+              url: 'https://paypal.me/erbolamm',
+            ),
+            _SupportBtn(
+              label: 'Ko-fi',
+              icon: Icons.coffee,
+              url: 'https://ko-fi.com/C0C11TWR1K',
+            ),
+            _SupportBtn(
+              label: 'Twitch Tip',
+              icon: Icons.live_tv,
+              url: 'https://streamelements.com/apliarte/tip',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SupportBtn extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final String url;
+  const _SupportBtn({required this.label, required this.icon, required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.tonalIcon(
+      icon: Icon(icon, size: 18),
+      label: Text(label),
+      onPressed: () => launchUrl(Uri.parse(url)),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// FOOTER
+// ═══════════════════════════════════════════════════════════
+
+class _FooterSection extends StatelessWidget {
+  const _FooterSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: t.colorScheme.primaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'v0.2.0  ·  Hecho por '
+            'Javier Mateo (ApliArte)',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: t.colorScheme.onSurface.withValues(alpha: 0.6),
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 16, runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () => launchUrl(
+                  Uri.parse('https://github.com/erbolamm/apliarte-glass-theme'),
+                ),
+                child: const Text('GitHub', style: TextStyle(fontSize: 13)),
+              ),
+              TextButton(
+                onPressed: () => launchUrl(
+                  Uri.parse('https://pub.dev/packages/apliarte_glass_theme'),
+                ),
+                child: const Text('pub.dev', style: TextStyle(fontSize: 13)),
+              ),
+              TextButton(
+                onPressed: () => launchUrl(Uri.parse('https://apliarte.com')),
+                child: const Text('apliarte.com', style: TextStyle(fontSize: 13)),
+              ),
+              TextButton(
+                onPressed: () => launchUrl(
+                  Uri.parse('https://github.com/erbolamm/apliarte-glass-theme/blob/main/LICENSE'),
+                ),
+                child: const Text('MIT License', style: TextStyle(fontSize: 13)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
