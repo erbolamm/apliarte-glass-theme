@@ -72,8 +72,13 @@ class GlasConfig {
   /// Radio inferior del AppBar. null → usa [mediumRadiusValue].
   static double? appBarBottomRadius;
 
-  /// Tinte del vidrio del AppBar. null → usa [glassColor].
+  /// Tinte del vidrio del AppBar. null → usa [glassColor] con [appBarGlassOpacity].
   static Color? appBarGlassTint;
+
+  /// Opacidad del vidrio del AppBar (0.0 – 1.0).
+  /// Un valor bajo (~0.15) deja respirar el blur y se ve frosted glass real.
+  /// null → 0.18 en claro / 0.25 en oscuro.
+  static double? appBarGlassOpacity;
 
   /// ──────────────────────────────────────────────────────────
   /// Liquid highlight system (acento líquido)
@@ -143,4 +148,15 @@ class GlasConfig {
 
   /// Returns the effective medium corner radius (bars).
   static double mediumRadiusValue() => mediumRadius ?? (_w ? 24.0 : 16.0);
+
+  /// Returns the AppBar glass color with its propia opacidad baja.
+  /// Un valor ~0.15 deja respirar el blur para un frosted glass real.
+  static Color appBarColor(BuildContext context) {
+    if (appBarGlassTint != null) return appBarGlassTint!;
+    final cs = Theme.of(context).colorScheme;
+    final isDark = cs.brightness == Brightness.dark;
+    final opacity = appBarGlassOpacity ?? (isDark ? 0.25 : 0.18);
+    final base = glassTintColor ?? cs.surface;
+    return base.withValues(alpha: opacity);
+  }
 }

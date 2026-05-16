@@ -118,7 +118,7 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
     final topInset = material.MediaQuery.of(context).viewPadding.top;
     final resolvedLeading = _resolveLeading(context);
     final sigma = blurSigma ?? GlasConfig.appBarBlurSigma ?? GlasConfig.blur();
-    final tint = glassTint ?? GlasConfig.appBarGlassTint ?? GlasConfig.glassColor(context);
+    final tint = glassTint ?? GlasConfig.appBarColor(context);
 
     final totalHeight = topInset + tHeight + bHeight;
 
