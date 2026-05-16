@@ -10,6 +10,8 @@ build/
 # Internal docs (not for pub.dev)
 openspec/
 demo.gif
+docs/
+example/docs/
 
 # OS files
 .DS_Store

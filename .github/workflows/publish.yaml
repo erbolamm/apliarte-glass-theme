@@ -6,7 +6,6 @@ on:
       - 'v*.*.*'
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
@@ -20,9 +19,11 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: flutter test
-      - name: 🔍 Check OIDC env
+      - name: 🔑 Authenticate with pub.dev
+        env:
+          PUB_DEV_CREDENTIALS: ${{ secrets.PUB_DEV_CREDENTIALS }}
         run: |
-          echo "ACTIONS_ID_TOKEN_REQUEST_URL=$ACTIONS_ID_TOKEN_REQUEST_URL"
-          echo "ACTIONS_RUNTIME_TOKEN=${ACTIONS_RUNTIME_TOKEN:0:20}..."
-          dart pub publish --force 2>&1 || true
-        timeout-minutes: 1
+          mkdir -p ~/.config/dart
+          echo "$PUB_DEV_CREDENTIALS" > ~/.config/dart/pub-credentials.json
+      - name: 📢 Publish
+        run: dart pub publish --force
