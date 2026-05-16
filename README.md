@@ -151,17 +151,10 @@ Si te ahorra tiempo, un café ayuda a mantener el desarrollo.
 | ☕ Ko-fi | [ko-fi.com/C0C11TWR1K](https://ko-fi.com/C0C11TWR1K) |
 | 📺 Twitch Tip | [streamelements.com/apliarte/tip](https://streamelements.com/apliarte/tip) |
 
-## 🔗 Comparte
-
-Ayudá a que más gente lo conozca:
-
-| Red | Enlace |
-|-----|--------|
-| 𝕏 Twitter | [Compartir](https://twitter.com/intent/tweet?text=ApliArte%20Glass%20Theme%20%E2%80%94%20Drop-in%20replacement%20de%20Material%203%20con%20efecto%20glass%20morphism.&url=https://pub.dev/packages/apliarte_glass_theme) |
-| 💼 LinkedIn | [Compartir](https://www.linkedin.com/sharing/share-offsite/?url=https://pub.dev/packages/apliarte_glass_theme) |
-| 🟠 Reddit | [Compartir](https://www.reddit.com/submit?url=https://pub.dev/packages/apliarte_glass_theme&title=ApliArte%20Glass%20Theme) |
-| 💬 WhatsApp | [Compartir](https://api.whatsapp.com/send?text=ApliArte%20Glass%20Theme%20-%20Drop-in%20replacement%20de%20Material%203%20con%20efecto%20glass%20morphism.%20https://pub.dev/packages/apliarte_glass_theme) |
-
 ## Licencia
 
 MIT — © 2026 ApliArte
+
+## About
+
+ApliArte Glass Theme — drop-in replacement de Material 3 con efecto glass morphism para Flutter. v0.3.6. Publicado en pub.dev y GitHub. MIT.

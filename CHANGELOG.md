@@ -1,3 +1,22 @@
+## 0.3.7
+
+* ✨ **FloatingActionButton**: componente glass con soporte extended.
+* ✨ **BottomSheet**: fondo glass con blur y borde superior.
+* ✨ **Drawer**: panel lateral con efecto glass.
+* 🐛 **AppBar**: respeta notch / status bar (MediaQuery.viewPadding.top).
+* 🧪 Tests para GlasConfig (valores default, warm preset, overrides).
+* 🧪 Tests de integración (flujo completo con todos los componentes).
+* 🐛 **GlassLayer**: ghost shadow eliminado al scrollear.
+
+## 0.3.6
+
+* 🐛 **GlassLayer**: ghost shadow eliminado al scrollear.
+
+## 0.3.5
+
+* 🚀 Primer release publicado vía CI/CD con OIDC automático.
+* CI/CD: dart-lang/setup-dart para OIDC + flutter-actions.
+
 ## 0.3.3
 
 * 🐛 **Card**: eliminada sombra duplicada (PhysicalModel + customShadows) que

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApliArte Glass Theme — Screenshots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f8f9fc 0%, #e8ecf4 100%);
+      color: #1a1a2e;
+      padding: 40px;
+    }
+
+    /* ── Glass Effect ── */
+    .glass {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    .glass-warm {
+      background: rgba(255, 240, 245, 0.78);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 192, 203, 0.3);
+      border-radius: 28px;
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+    }
+
+    .glass-fab {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #1a1a2e, #005fa9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #6b7280;
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+
+    /* ── Screenshot Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .grid-4 {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    .screenshot-card {
+      overflow: hidden;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .screenshot-card .preview {
+      padding: 32px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8f9fc 0%, #eef1f7 100%);
+    }
+
+    .screenshot-card .label {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* ── Component demos ── */
+    .appbar-demo {
+      width: 100%;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .appbar-demo .title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .appbar-demo .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .appbar-demo .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a1a2e;
+      font-size: 20px;
+      cursor: default;
+    }
+
+    .card-demo {
+      padding: 24px;
+      width: 100%;
+    }
+
+    .card-demo .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-demo .card-desc {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .card-demo .card-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .card-demo .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 95, 169, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #005fa9;
+    }
+
+    .nav-demo {
+      width: 100%;
+      padding: 12px 20px 12px;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .nav-demo .nav-item {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      cursor: default;
+    }
+
+    .nav-demo .nav-item .icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .nav-demo .nav-item .lbl {
+      font-size: 10px;
+      font-weight: 500;
+      color: #6b7280;
+    }
+
+    .nav-demo .nav-item.active .lbl,
+    .nav-demo .nav-item.active .icon {
+      color: #005fa9;
+    }
+
+    .nav-demo .nav-item.active .icon {
+      transform: scale(1.15);
+    }
+
+    .nav-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 2%;
+      width: 22%;
+      height: 42px;
+      background: linear-gradient(135deg, rgba(0, 95, 169, 0.15), rgba(0, 95, 169, 0.05));
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0, 95, 169, 0.15);
+      transition: left 0.3s;
+    }
+
+    .fab-demo {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .fab {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #1a1a2e;
+      cursor: default;
+      transition: transform 0.2s;
+    }
+
+    .fab-small {
+      width: 40px; height: 40px;
+      font-size: 20px;
+      border-radius: 50%;
+    }
+
+    .fab-large {
+      width: 96px; height: 96px;
+      font-size: 40px;
+      border-radius: 50%;
+    }
+
+    .fab-extended {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 28px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .dialog-demo {
+      width: 340px;
+      padding: 28px 24px 20px;
+    }
+
+    .dialog-demo .dialog-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+      color: #f59e0b;
+    }
+
+    .dialog-demo .dialog-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .dialog-demo .dialog-content {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .dialog-demo .dialog-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .dialog-demo .dialog-btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: default;
+    }
+
+    .dialog-demo .dialog-btn.primary {
+      background: #005fa9;
+      color: #fff;
+    }
+
+    .dialog-demo .dialog-btn.secondary {
+      color: #005fa9;
+    }
+
+    .bottom-bar-demo {
+      width: 100%;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bottom-bar-demo .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #1a1a2e;
+      cursor: default;
+    }
+
+    .drawer-demo {
+      width: 304px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer-demo .drawer-header {
+      padding: 48px 16px 24px;
+    }
+
+    .drawer-demo .drawer-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      background: rgba(0, 95, 169, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #005fa9;
+      margin-bottom: 16px;
+    }
+
+    .drawer-demo .drawer-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .drawer-demo .drawer-subtitle {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .drawer-demo .drawer-divider {
+      height: 1px;
+      margin: 0 16px;
+      background: rgba(0, 0, 0, 0.06);
+    }
+
+    .drawer-demo .drawer-items {
+      padding: 8px;
+    }
+
+    .drawer-demo .drawer-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: default;
+    }
+
+    .drawer-demo .drawer-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    /* Dark theme variants */
+    .dark-theme {
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    }
+
+    .dark-theme .glass {
+      background: rgba(15, 15, 26, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .hero {
+      width: 100%;
+      padding: 60px 48px;
+      text-align: center;
+      background: linear-gradient(135deg, #0f0f1a 0%, #001f3f 50%, #1a1a2e 100%);
+      border-radius: 24px;
+      margin-bottom: 48px;
+    }
+
+    .hero h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 24px;
+    }
+
+    .hero .badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero .badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* Glass showcase in dark */
+    .dark-glass {
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      padding: 40px;
+      border-radius: 16px;
+      margin-bottom: 48px;
+    }
+
+    .dark-glass .glass {
+      background: rgba(15, 15, 26, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #e0e0e0;
+    }
+
+    .dark-glass .card-demo .card-desc,
+    .dark-glass .nav-demo .nav-item .lbl,
+    .dark-glass .appbar-demo .icon-btn {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .dark-glass .appbar-demo .title,
+    .dark-glass .card-demo .card-title,
+    .dark-glass .drawer-demo .drawer-title {
+      color: #fff;
+    }
+
+    .dark-glass .drawer-demo .drawer-subtitle {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .dark-glass .drawer-demo .drawer-item {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .dark-glass .drawer-demo .drawer-divider {
+      background: rgba(255,255,255,0.06);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HERO -->
+  <div class="hero">
+    <div style="font-size:64px;margin-bottom:16px;">🪟</div>
+    <h2>ApliArte Glass Theme</h2>
+    <p>Drop-in replacement de Material 3 con efecto glass morphism</p>
+    <div class="badges">
+      <span class="badge">v0.3.6</span>
+      <span class="badge">Drop-in</span>
+      <span class="badge">Material 3</span>
+      <span class="badge">Dark/Light</span>
+      <span class="badge">MIT</span>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 1: LIGHT THEME OVERVIEW -->
+  <h2 class="section-title">🌤️ Light Theme — Componentes</h2>
+  <div class="grid">
+
+    <!-- AppBar -->
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass appbar-demo" style="border-radius:16px;">
+          <span class="title">AppBar</span>
+          <div class="actions">
+            <span class="icon-btn">🔍</span>
+            <span class="icon-btn">⋮</span>
+          </div>
+        </div>
+      </div>
+      <div class="label">AppBar glass con acciones</div>
+    </div>
+
+    <!-- Card -->
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass card-demo" style="width:100%;">
+          <div class="card-row">
+            <div class="card-icon">⭐</div>
+            <div>
+              <div class="card-title">Card glass</div>
+              <div class="card-desc">Frosted glass con sombra y borde suave</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="label">Card con glass morphism</div>
+    </div>
+
+    <!-- NavigationBar -->
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass-nav nav-demo" style="position:relative;width:100%;overflow:hidden;">
+          <div class="nav-indicator" style="left:2%;"></div>
+          <div class="nav-item active">
+            <div class="icon">🏠</div>
+            <div class="lbl">Inicio</div>
+          </div>
+          <div class="nav-item">
+            <div class="icon">❤️</div>
+            <div class="lbl">Fav</div>
+          </div>
+          <div class="nav-item">
+            <div class="icon">👤</div>
+            <div class="lbl">Perfil</div>
+          </div>
+        </div>
+      </div>
+      <div class="label">NavigationBar con indicador</div>
+    </div>
+
+    <!-- FAB Variants -->
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="fab-demo">
+          <div class="fab glass-fab fab-small">+</div>
+          <div class="fab glass-fab">+</div>
+          <div class="fab glass-fab fab-large">+</div>
+          <div class="fab-extended glass-fab">✨ Crear</div>
+        </div>
+      </div>
+      <div class="label">FAB: small, regular, large, extended</div>
+    </div>
+
+    <!-- BottomAppBar -->
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass bottom-bar-demo" style="width:100%;border-radius:16px;">
+          <span class="icon-btn">☰</span>
+          <span style="font-size:14px;color:#6b7280;">Contenido de la barra</span>
+          <div style="display:flex;gap:4px;">
+            <span class="icon-btn">🔍</span>
+            <span class="icon-btn">➕</span>
+          </div>
+        </div>
+      </div>
+      <div class="label">BottomAppBar glass</div>
+    </div>
+
+    <!-- AlertDialog -->
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass dialog-demo">
+          <div class="dialog-icon">🎉</div>
+          <div class="dialog-title">Diálogo Glass</div>
+          <div class="dialog-content">Misma API que Material 3. Se adapta a dark/light automáticamente.</div>
+          <div class="dialog-actions">
+            <span class="dialog-btn secondary">Cancelar</span>
+            <span class="dialog-btn primary">Aceptar</span>
+          </div>
+        </div>
+      </div>
+      <div class="label">AlertDialog modal</div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 2: DRAWER -->
+  <h2 class="section-title">📂 Drawer glass</h2>
+  <div style="display:flex;justify-content:center;margin-bottom:48px;">
+    <div class="glass drawer-demo" style="border-radius:0 16px 16px 0;">
+      <div class="drawer-header">
+        <div class="drawer-icon">🪟</div>
+        <div class="drawer-title">ApliArte Glass</div>
+        <div class="drawer-subtitle">Material 3 Glass Theme</div>
+      </div>
+      <div class="drawer-divider"></div>
+      <div class="drawer-items">
+        <div class="drawer-item">🏠 Inicio</div>
+        <div class="drawer-item">⭐ Favoritos</div>
+        <div class="drawer-item">⚙️ Ajustes</div>
+        <div class="drawer-item">ℹ️ Acerca de</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 3: DARK THEME -->
+  <h2 class="section-title">🌙 Dark Theme</h2>
+  <div class="dark-glass">
+    <div class="grid">
+      <div class="screenshot-card" style="background:transparent;">
+        <div class="preview" style="background:transparent;">
+          <div class="glass appbar-demo" style="border-radius:16px;color:#e0e0e0;">
+            <span class="title" style="color:#fff;">AppBar oscuro</span>
+            <div class="actions">
+              <span class="icon-btn" style="color:rgba(255,255,255,0.6);">🔍</span>
+              <span class="icon-btn" style="color:rgba(255,255,255,0.6);">⋮</span>
+            </div>
+          </div>
+        </div>
+        <div class="label" style="background:#1a1a2e;color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.06);">AppBar en modo oscuro</div>
+      </div>
+
+      <div class="screenshot-card" style="background:transparent;">
+        <div class="preview" style="background:transparent;">
+          <div class="glass nav-demo" style="position:relative;width:100%;overflow:hidden;color:#e0e0e0;">
+            <div class="nav-indicator" style="left:38%;"></div>
+            <div class="nav-item">
+              <div class="icon" style="color:rgba(255,255,255,0.5);">🏠</div>
+              <div class="lbl" style="color:rgba(255,255,255,0.5);">Inicio</div>
+            </div>
+            <div class="nav-item active">
+              <div class="icon" style="color:#005fa9;">❤️</div>
+              <div class="lbl" style="color:#005fa9;">Fav</div>
+            </div>
+            <div class="nav-item">
+              <div class="icon" style="color:rgba(255,255,255,0.5);">👤</div>
+              <div class="lbl" style="color:rgba(255,255,255,0.5);">Perfil</div>
+            </div>
+          </div>
+        </div>
+        <div class="label" style="background:#1a1a2e;color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.06);">NavigationBar oscuro</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 4: FULL APP MOCKUP -->
+  <h2 class="section-title">📱 App completa</h2>
+  <div style="display:flex;justify-content:center;margin-bottom:48px;">
+    <div style="width:390px;border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+      <!-- Phone frame -->
+      <div style="background:linear-gradient(135deg,#f8f9fc 0%,#eef1f7 100%);padding:0;">
+        <!-- AppBar -->
+        <div class="glass" style="border-radius:0;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:20px;font-weight:700;">Inicio</span>
+          <div style="display:flex;gap:8px;">
+            <span style="font-size:20px;cursor:default;">🔍</span>
+          </div>
+        </div>
+        <!-- Content -->
+        <div style="padding:16px;">
+          <div class="glass card-demo" style="margin-bottom:12px;">
+            <div class="card-row">
+              <div class="card-icon">⭐</div>
+              <div>
+                <div class="card-title">Card glass</div>
+                <div class="card-desc">Frosted glass, sombra única, sin artefactos al scrollear</div>
+              </div>
+            </div>
+          </div>
+          <div class="glass card-demo">
+            <div class="card-row">
+              <div class="card-icon">📄</div>
+              <div>
+                <div class="card-title">Segundo card</div>
+                <div class="card-desc">Misma API que Material 3. Sin configuración externa.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- FAB -->
+        <div style="position:relative;padding:0 24px 80px;display:flex;justify-content:flex-end;">
+          <div class="fab glass-fab" style="width:56px;height:56px;font-size:28px;position:absolute;right:24px;bottom:96px;">+</div>
+        </div>
+        <!-- Bottom Nav -->
+        <div class="glass" style="border-radius:0;padding:12px 20px 20px;">
+          <div class="nav-demo" style="position:relative;padding:0;">
+            <div class="nav-indicator" style="left:2%;"></div>
+            <div class="nav-item active">
+              <div class="icon" style="font-size:22px;">🏠</div>
+              <div class="lbl">Inicio</div>
+            </div>
+            <div class="nav-item">
+              <div class="icon" style="font-size:22px;">❤️</div>
+              <div class="lbl">Fav</div>
+            </div>
+            <div class="nav-item">
+              <div class="icon" style="font-size:22px;">👤</div>
+              <div class="lbl">Perfil</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 5: WARM PRESET -->
+  <h2 class="section-title">🔥 Warm Preset</h2>
+  <div class="grid">
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass-warm appbar-demo" style="border-radius:28px;">
+          <span class="title">Warm AppBar</span>
+          <div class="actions">
+            <span class="icon-btn" style="color:#1a1a2e;">🔍</span>
+          </div>
+        </div>
+      </div>
+      <div class="label">Warm preset — vidrio rosado</div>
+    </div>
+    <div class="screenshot-card">
+      <div class="preview">
+        <div class="glass-warm card-demo" style="border-radius:28px;">
+          <div class="card-row">
+            <div class="card-icon" style="background:rgba(255,192,203,0.3);color:#e91e63;">💖</div>
+            <div>
+              <div class="card-title">Warm Card</div>
+              <div class="card-desc">Radio 28px, blur 22px, tinte rosado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="label">Warm preset — tarjeta</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="text-align:center;padding:40px 0 20px;color:#9ca3af;font-size:13px;">
+    ApliArte Glass Theme · v0.3.6 · MIT · Javier Mateo (ApliArte)
+  </div>
+</div>
+
+</body>
+</html>

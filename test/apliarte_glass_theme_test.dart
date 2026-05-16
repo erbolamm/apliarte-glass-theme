@@ -208,6 +208,116 @@ void main() {
       expect(find.byIcon(Icons.search), findsOneWidget);
     });
   });
+
+  group('FloatingActionButton (glass)', () {
+    testWidgets('renders FAB with icon', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: const SizedBox.expand(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.add),
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.add), findsOneWidget);
+    });
+
+    testWidgets('renders extended FAB', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: const SizedBox.expand(),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+            label: const Text('Crear'),
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
+      expect(find.text('Crear'), findsOneWidget);
+    });
+  });
+
+  group('BottomSheet (glass)', () {
+    testWidgets('renders content via showModalBottomSheet', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => const BottomSheet(
+                    child: Text('Sheet content'),
+                  ),
+                );
+              },
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      ));
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sheet content'), findsOneWidget);
+    });
+
+    testWidgets('renders with drag handle', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => const BottomSheet(
+                    child: Text('Content'),
+                    showDragHandle: true,
+                  ),
+                );
+              },
+              child: const Text('Sheet'),
+            ),
+          ),
+        ),
+      ));
+
+      await tester.tap(find.text('Sheet'));
+      await tester.pumpAndSettle();
+      expect(find.text('Content'), findsOneWidget);
+    });
+  });
+
+  group('Drawer (glass)', () {
+    testWidgets('renders child inside drawer', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          drawer: Drawer(
+            child: ListView(
+              children: const [
+                DrawerHeader(child: Text('Header')),
+                ListTile(title: Text('Option 1')),
+              ],
+            ),
+          ),
+          body: const SizedBox.expand(),
+        ),
+      ));
+
+      // Open drawer via ScaffoldState
+      final scaffoldState = tester.state<ScaffoldState>(
+        find.byType(Scaffold),
+      );
+      scaffoldState.openDrawer();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Header'), findsOneWidget);
+      expect(find.text('Option 1'), findsOneWidget);
+    });
+  });
 }
 
 // Helper stateful wrapper for NavigationBar tap tests

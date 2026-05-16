@@ -7,7 +7,8 @@ import '../helpers/glass_layer.dart';
 /// Glass-themed [material.AppBar].
 ///
 /// Drop-in replacement: same constructor API as Material's AppBar.
-/// El leading se resuelve automáticamente:
+/// Respeta el notch / status bar automáticamente sin necesidad de SafeArea.
+/// El leading se resuelve:
 ///   - [leading] explícito si se pasa
 ///   - [DrawerButton] si el [Scaffold] tiene un drawer
 ///   - [BackButton] si [Navigator.canPop]
@@ -71,18 +72,15 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
             (bottom?.preferredSize.height ?? 0.0),
       );
 
-  /// Resuelve el leading según la convención de Material.
   Widget? _resolveLeading(BuildContext context) {
     if (leading != null) return leading;
     if (!automaticallyImplyLeading) return null;
 
-    // DrawerButton si hay un Scaffold con drawer
     final scaffold = material.Scaffold.maybeOf(context);
     if (scaffold != null && scaffold.hasDrawer) {
       return const material.DrawerButton();
     }
 
-    // BackButton si se puede hacer pop
     if (material.Navigator.of(context, rootNavigator: true).canPop()) {
       return const material.BackButton();
     }
@@ -95,48 +93,59 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
     final theme = material.Theme.of(context);
     final effectiveForeground = foregroundColor ?? theme.colorScheme.onSurface;
     final tHeight = toolbarHeight ?? material.kToolbarHeight;
+    final bHeight = bottom?.preferredSize.height ?? 0.0;
     final radius = GlasConfig.mediumRadiusValue();
     final resolvedLeading = _resolveLeading(context);
+    final topInset = material.MediaQuery.of(context).viewPadding.top;
 
-    return GlassLayer(
-      borderRadius: radius,
-      showBorder: false,
-      child: material.Column(
-        mainAxisSize: material.MainAxisSize.min,
-        children: [
-          material.SizedBox(
-            height: tHeight,
-            child: material.NavigationToolbar(
-              leading: resolvedLeading != null
-                  ? material.IconTheme(
-                      data: material.IconThemeData(color: effectiveForeground),
-                      child: resolvedLeading,
-                    )
-                  : null,
-              middle: material.DefaultTextStyle(
-                style: titleTextStyle ??
-                    theme.textTheme.titleLarge?.copyWith(
-                          color: effectiveForeground,
-                        ) ??
-                    const TextStyle(),
-                child: title ?? const material.SizedBox.shrink(),
-              ),
-              trailing: actions != null
-                  ? material.Row(
-                      mainAxisSize: material.MainAxisSize.min,
-                      children: actions!.map((action) {
-                        return material.IconTheme(
+    final totalHeight = topInset + tHeight + bHeight;
+
+    return material.SizedBox(
+      height: totalHeight,
+      child: material.Padding(
+        padding: material.EdgeInsets.only(top: topInset),
+        child: GlassLayer(
+          borderRadius: radius,
+          showBorder: false,
+          child: material.Column(
+            mainAxisSize: material.MainAxisSize.min,
+            children: [
+              material.SizedBox(
+                height: tHeight,
+                child: material.NavigationToolbar(
+                  leading: resolvedLeading != null
+                      ? material.IconTheme(
                           data: material.IconThemeData(
                               color: effectiveForeground),
-                          child: action,
-                        );
-                      }).toList(),
-                    )
-                  : null,
-            ),
+                          child: resolvedLeading,
+                        )
+                      : null,
+                  middle: material.DefaultTextStyle(
+                    style: titleTextStyle ??
+                        theme.textTheme.titleLarge?.copyWith(
+                              color: effectiveForeground,
+                            ) ??
+                        const TextStyle(),
+                    child: title ?? const material.SizedBox.shrink(),
+                  ),
+                  trailing: actions != null
+                      ? material.Row(
+                          mainAxisSize: material.MainAxisSize.min,
+                          children: actions!.map((action) {
+                            return material.IconTheme(
+                              data: material.IconThemeData(
+                                  color: effectiveForeground),
+                              child: action,
+                            );
+                          }).toList(),
+                        )
+                      : null,
+                ),
+              ),
+              if (bottom != null) bottom!,
+            ],
           ),
-          if (bottom != null) bottom!,
-        ],
+        ),
       ),
     );
   }
