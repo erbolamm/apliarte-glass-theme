@@ -1,3 +1,18 @@
+## 0.3.8
+
+* 📝 **Posicionamiento honesto**: ya no se describe como "drop-in replacement de
+  Material" sino como "misma API, identidad visual propia". La compatibilidad es
+  a nivel API, no a nivel apariencia visual.
+* ✨ **Sistema de acento líquido**: `LiquidHighlightDecoration` + `LiquidIntensity`
+  extraídos del NavigationBar como abstracción reutilizable para todos los
+  componentes con distinta intensidad según jerarquía visual.
+* ✨ **GlasConfig**: `liquidHighlightEnabled`, `liquidHighlightIntensity`,
+  `liquidHighlightPreset` (subtle / balanced / expressive).
+* 🎨 **NavigationBar**: refactorizado para usar `LiquidHighlightDecoration`.
+* 🎨 **AppBar**: acento líquido sutil en borde inferior.
+* 📝 pubspec: descripción actualizada.
+* 📝 README: tabla con 8 componentes, badge Demo Web.
+
 ## 0.3.7
 
 * ✨ **FloatingActionButton**: componente glass con soporte extended.
@@ -8,9 +23,10 @@
 * 🧪 Tests de integración (flujo completo con todos los componentes).
 * 🐛 **GlassLayer**: ghost shadow eliminado al scrollear.
 
-## 0.3.6
+## 0.3.5
 
-* 🐛 **GlassLayer**: ghost shadow eliminado al scrollear.
+* 🚀 Primer release publicado vía CI/CD con OIDC automático.
+* CI/CD: dart-lang/setup-dart para OIDC + flutter-actions.
 
 ## 0.3.5
 

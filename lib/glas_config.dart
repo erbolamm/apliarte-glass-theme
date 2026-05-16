@@ -63,6 +63,33 @@ class GlasConfig {
   static double? mediumRadius;
 
   /// ──────────────────────────────────────────────────────────
+  /// Liquid highlight system (acento líquido)
+  /// ──────────────────────────────────────────────────────────
+
+  /// Master switch para el acento líquido/glow en todos los componentes.
+  static bool liquidHighlightEnabled = true;
+
+  /// Intensidad global del acento líquido (0.0 – 1.0).
+  /// Cada componente escala esta intensidad según su jerarquía:
+  ///   AppBar → 0.3× | Card → 0.5× | NavBar selected → 1.0× | CTA → 1.4×
+  static double liquidHighlightIntensity = 0.25;
+
+  /// Color del acento líquido. null → [ColorScheme.primary].
+  static Color? liquidHighlightColor;
+
+  /// Blur del glow líquido en píxeles. null → automático según intensidad.
+  static double? liquidHighlightBlur;
+
+  /// Opacidad base del acento. null → automática según intensidad.
+  static double? liquidHighlightOpacity;
+
+  /// Preset rápido para el sistema de acentos.
+  ///   subtle    → intensidad baja, apenas perceptible
+  ///   balanced  → intensidad media, valor por defecto
+  ///   expressive → intensidad alta, glow marcado
+  static String liquidHighlightPreset = 'balanced';
+
+  /// ──────────────────────────────────────────────────────────
   /// Derived values — read theme at runtime.
   /// ──────────────────────────────────────────────────────────
 

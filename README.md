@@ -3,15 +3,21 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.32-blue.svg)](https://flutter.dev)
 [![pub package](https://img.shields.io/pub/v/apliarte_glass_theme)](https://pub.dev/packages/apliarte_glass_theme)
+[![Demo Web](https://img.shields.io/badge/Demo-Ver%20en%20vivo-purple?style=for-the-badge&logo=dart)](https://erbolamm.github.io/apliarte-glass-theme/)
 
-**Drop-in replacement de Material 3.** Mismas clases `AppBar`, `Card`, `NavigationBar`… mismas APIs. Pero con **efecto glass morphism** que se adapta al tema de tu app.
+**Misma API que Material 3, pero con una identidad visual propia.**
+
+Cambiás UNA línea de import y todos los componentes (`AppBar`, `Card`, `NavigationBar`…)
+pasan a tener un sistema de vidrio con personalidad marcada. No es un skin neutro:
+es una estética glass con blur, tintes cálidos, bordes suaves y acentos líquidos.
 
 ```dart
 // Un solo cambio en todo el proyecto:
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 ```
 
-Sin configurar nada más. Sin copiar setup de ningún lado. Sin refactorizar widgets.
+Sin refactorizar widgets. Sin configuración obligatoria. La API es la misma —
+el aspecto cambia deliberadamente.
 
 ## ✨ Componentes
 
@@ -22,12 +28,15 @@ Sin configurar nada más. Sin copiar setup de ningún lado. Sin refactorizar wid
 | Bottom Navigation | `NavigationBar` | Vidrio + indicador deslizante con drag |
 | Bottom App Bar | `BottomAppBar` | Barra inferior glass |
 | Alert Dialog | `AlertDialog` | Diálogo modal glass |
+| FAB | `FloatingActionButton` | Botón flotante glass |
+| Bottom Sheet | `BottomSheet` | Panel inferior glass |
+| Drawer | `Drawer` | Menú lateral glass |
 
 ## 📦 Instalación
 
 ```yaml
 dependencies:
-  apliarte_glass_theme: ^0.2.1
+  apliarte_glass_theme: ^0.3.7
 ```
 
 ```bash
@@ -90,7 +99,8 @@ Sin obligación. Solo si querés.
 1. Sacar `apliarte_glass_theme` de `pubspec.yaml`
 2. Volver a `import 'package:flutter/material.dart'`
 
-**No tocás ni una línea de código de tu app.**
+**No tocás ni una línea de código de tu app.** El cambio visual se revierte
+al instante porque solo los imports determinan qué versión de los componentes se usa.
 
 ## 🔗 Enlaces
 
@@ -157,4 +167,4 @@ MIT — © 2026 ApliArte
 
 ## About
 
-ApliArte Glass Theme — drop-in replacement de Material 3 con efecto glass morphism para Flutter. v0.3.6. Publicado en pub.dev y GitHub. MIT.
+ApliArte Glass Theme — Misma API que Material 3 con identidad visual glass propia para Flutter. v0.3.8. Componentes: AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, FloatingActionButton, BottomSheet, Drawer. MIT.

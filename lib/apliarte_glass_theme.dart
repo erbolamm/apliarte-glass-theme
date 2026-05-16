@@ -16,6 +16,8 @@ export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
 
 export 'glas_config.dart';
 
+export 'src/helpers/liquid_highlight.dart';
+
 export 'src/widgets/appbar.dart';
 export 'src/widgets/bottom_app_bar.dart';
 export 'src/widgets/bottom_sheet.dart';

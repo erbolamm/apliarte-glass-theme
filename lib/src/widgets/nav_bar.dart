@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
+import '../helpers/liquid_highlight.dart';
 
 /// Glass-themed [material.NavigationBar] (Material 3).
 ///
@@ -145,36 +146,16 @@ class _NavigationBarState extends State<NavigationBar> {
                       child: material.Container(
                         width: itemWidth,
                         height: _navHeight - 14,
-                        decoration: material.BoxDecoration(
-                          gradient: material.LinearGradient(
-                            begin: material.Alignment.topLeft,
-                            end: material.Alignment.bottomRight,
-                            colors: [
-                              indicatorColor.withValues(alpha: 0.25),
-                              indicatorColor.withValues(alpha: 0.10),
-                              indicatorColor.withValues(alpha: 0.03),
-                            ],
-                            stops: const [0.0, 0.4, 1.0],
-                          ),
-                          border: material.Border.all(
-                            color: GlasConfig.borderColor(context),
-                            width: 1.2,
-                          ),
-                          boxShadow: [
-                            material.BoxShadow(
-                              color: indicatorColor.withValues(alpha: 0.30),
-                              blurRadius: 12,
-                              offset: const material.Offset(0, 4),
-                            ),
-                            material.BoxShadow(
-                              color: GlasConfig.glassColor(context)
-                                  .withValues(alpha: 0.4),
-                              blurRadius: 8,
-                              offset: const material.Offset(-2, -2),
-                            ),
-                          ],
+                        decoration: LiquidHighlightDecoration(
+                          color: indicatorColor,
+                          intensity: LiquidIntensity.strong,
                           borderRadius: material.BorderRadius.circular(30),
-                        ),
+                          customOpacity:
+                              GlasConfig.liquidHighlightOpacity ??
+                              (GlasConfig.liquidHighlightEnabled
+                                  ? GlasConfig.liquidHighlightIntensity
+                                  : 0),
+                        ).build(),
                       ),
                     ),
                     // Destinations

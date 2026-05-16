@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
+import '../helpers/liquid_highlight.dart';
 
 /// Glass-themed [material.AppBar].
 ///
@@ -102,50 +103,69 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return material.SizedBox(
       height: totalHeight,
-      child: material.Padding(
-        padding: material.EdgeInsets.only(top: topInset),
-        child: GlassLayer(
-          borderRadius: radius,
-          showBorder: false,
-          child: material.Column(
-            mainAxisSize: material.MainAxisSize.min,
-            children: [
-              material.SizedBox(
-                height: tHeight,
-                child: material.NavigationToolbar(
-                  leading: resolvedLeading != null
-                      ? material.IconTheme(
-                          data: material.IconThemeData(
-                              color: effectiveForeground),
-                          child: resolvedLeading,
-                        )
-                      : null,
-                  middle: material.DefaultTextStyle(
-                    style: titleTextStyle ??
-                        theme.textTheme.titleLarge?.copyWith(
-                              color: effectiveForeground,
-                            ) ??
-                        const TextStyle(),
-                    child: title ?? const material.SizedBox.shrink(),
-                  ),
-                  trailing: actions != null
-                      ? material.Row(
-                          mainAxisSize: material.MainAxisSize.min,
-                          children: actions!.map((action) {
-                            return material.IconTheme(
+      child: Stack(
+        children: [
+          material.Padding(
+            padding: material.EdgeInsets.only(top: topInset),
+            child: GlassLayer(
+              borderRadius: radius,
+              showBorder: false,
+              child: material.Column(
+                mainAxisSize: material.MainAxisSize.min,
+                children: [
+                  material.SizedBox(
+                    height: tHeight,
+                    child: material.NavigationToolbar(
+                      leading: resolvedLeading != null
+                          ? material.IconTheme(
                               data: material.IconThemeData(
                                   color: effectiveForeground),
-                              child: action,
-                            );
-                          }).toList(),
-                        )
-                      : null,
+                              child: resolvedLeading,
+                            )
+                          : null,
+                      middle: material.DefaultTextStyle(
+                        style: titleTextStyle ??
+                            theme.textTheme.titleLarge?.copyWith(
+                                  color: effectiveForeground,
+                                ) ??
+                            const TextStyle(),
+                        child: title ?? const material.SizedBox.shrink(),
+                      ),
+                      trailing: actions != null
+                          ? material.Row(
+                              mainAxisSize: material.MainAxisSize.min,
+                              children: actions!.map((action) {
+                                return material.IconTheme(
+                                  data: material.IconThemeData(
+                                      color: effectiveForeground),
+                                  child: action,
+                                );
+                              }).toList(),
+                            )
+                          : null,
+                    ),
+                  ),
+                  if (bottom != null) bottom!,
+                ],
+              ),
+            ),
+          ),
+          // Acento líquido sutil en el borde inferior
+          if (GlasConfig.liquidHighlightEnabled && bottom == null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: IgnorePointer(
+                child: Container(
+                  height: 1.5,
+                  decoration: LiquidHighlightDecoration.subtle(
+                    theme.colorScheme.primary,
+                  ).build(),
                 ),
               ),
-              if (bottom != null) bottom!,
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }
