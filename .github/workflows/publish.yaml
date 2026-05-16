@@ -4,8 +4,9 @@ on:
   push:
     tags:
       - 'v*.*.*'
+
 permissions:
-  id-token: write 
+  id-token: write
   contents: read
 
 jobs:
@@ -13,16 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
-          
       - run: flutter pub get
-      
       - run: flutter test
-      
-      # 🚀 dart pub publish detecta automáticamente el id-token
-      - name: 📢 Publish
-        run: dart pub publish --force
+      - run: dart pub publish --force
