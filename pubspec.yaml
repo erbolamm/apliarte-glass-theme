@@ -1,6 +1,6 @@
 name: apliarte_glass_theme
 description: "Misma API que Material 3, con identidad visual glass propia. Componentes: AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, FloatingActionButton, BottomSheet, Drawer. Sin refactorizar widgets."
-version: 0.3.9
+version: 0.3.10
 license: MIT
 homepage: https://github.com/erbolamm/apliarte-glass-theme
 repository: https://github.com/erbolamm/apliarte-glass-theme

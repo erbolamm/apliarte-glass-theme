@@ -1,3 +1,9 @@
+## 0.3.10
+
+* 🎨 **AppBar**: opacidad propia (~0.18 claro / ~0.25 oscuro) para que el
+  blur respire y se vea frosted glass real.
+* ⚙️ `GlasConfig.appBarGlassOpacity`, `.appBarColor()`.
+
 ## 0.3.9
 
 * 🪟 **AppBar rediseñado**: ahora usa `BackdropFilter` + `ImageFilter.blur`
