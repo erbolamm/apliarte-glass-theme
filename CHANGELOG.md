@@ -1,3 +1,14 @@
+## 0.3.2
+
+* README: nueva sección "Apoya" con PayPal, Ko-fi, Twitch Tip.
+* README: nueva sección "Comparte" con Twitter, LinkedIn, Reddit, WhatsApp.
+
+## 0.3.1
+
+* NavigationBar indicator más visible.
+* pubspec.yaml: license: MIT explícito.
+* Defaults mejorados para contraste.
+
 ## 0.3.0
 
 * **Arquitectura autosuficiente**: el paquete funciona sin configuración externa.
