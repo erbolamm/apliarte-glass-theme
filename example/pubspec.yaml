@@ -1,0 +1,13 @@
+name: apliarte_glass_theme_example
+description: Example app demonstrating the apliarte_glass_theme package.
+publish_to: none
+
+environment:
+  sdk: ^3.10.4
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  apliarte_glass_theme:
+    path: ../

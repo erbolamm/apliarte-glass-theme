@@ -1,0 +1,16 @@
+# Build artifacts
+build/
+.dart_tool/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Internal docs (not for pub.dev)
+openspec/
+demo.gif
+
+# OS files
+.DS_Store
+*.swp
