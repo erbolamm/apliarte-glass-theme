@@ -2,208 +2,90 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.32-blue.svg)](https://flutter.dev)
+[![pub package](https://img.shields.io/pub/v/apliarte_glass_theme)](https://pub.dev/packages/apliarte_glass_theme)
 
-A beautiful glass morphism UI component library for Flutter with liquid glass effects, smooth animations, and a cohesive frosted-glass design language.
+**Drop-in replacement for Material 3 widgets.** Mismas clases, mismas APIs — pero con efecto vidrio (glass morphism).
 
-## Components
+```dart
+// Antes (Material puro):
+import 'package:flutter/material.dart';
 
-| Component | Class | Description |
-|-----------|-------|-------------|
-| Bottom Nav Bar | `ApliGlasBar` | Glass bottom navigation bar with drag interaction |
-| App Bar | `ApliGlasAppBar` | Glass app bar with frosted background |
-| Card | `ApliGlasCard` | Glass card with frosted background |
-| *More coming soon* | | |
+// Ahora (con vidrio):
+import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
+```
 
-## Features
+Sin cambiar el nombre de las clases. Sin cambiar los parámetros. Sin cambiar nada del código de tu app.
 
-- **Liquid glass morphism** powered by `liquid_glass_renderer`
-- **ApliGlasBar** — sliding indicator, horizontal drag, animated icon bounce, color transitions
-- **ApliGlasAppBar** — frosted glass toolbar with leading, title, actions, and bottom (TabBar)
-- **ApliGlasCard** — frosted glass card with elevation, border overlay, and padding
-- Support for **SVG assets**, **IconData**, and **custom Widget** icons (Bar)
-- Fully customizable styling via `ApliGlasBarStyle` and `LiquidGlassSettings`
-- Dynamic item count (2+ items)
+## Componentes
 
-## Installation
+| Componente | Clase (igual que Material) | Efecto |
+|-----------|----------------------------|--------|
+| App Bar | `AppBar` | Vidrio en toolbar |
+| Card | `Card` | Vidrio con borde |
+| Bottom Navigation | `NavigationBar` | Vidrio + indicador deslizante con drag |
+| Bottom App Bar | `BottomAppBar` | Vidrio en barra inferior |
+| Alert Dialog | `AlertDialog` | Vidrio en diálogo modal |
+| *Más pronto* | | ListTile, FAB, BottomSheet... |
 
-Add the package to your `pubspec.yaml`:
+## Instalación
 
 ```yaml
 dependencies:
   apliarte_glass_theme: ^0.1.0
 ```
 
-Then run:
-
 ```bash
 flutter pub get
 ```
 
-## Quick Start
-
-### ApliGlasBar (Bottom Navigation)
+## Cómo usarlo
 
 ```dart
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 
-Scaffold(
-  extendBody: true,
-  body: pages[_currentIndex],
-  bottomNavigationBar: ApliGlasBar(
-    items: const [
-      ApliGlasBarItem(iconData: Icons.home, label: 'Home'),
-      ApliGlasBarItem(iconData: Icons.search, label: 'Search'),
-      ApliGlasBarItem(iconData: Icons.person, label: 'Profile'),
-    ],
-    currentIndex: _currentIndex,
-    onTap: (index) => setState(() => _currentIndex = index),
-  ),
+// ✅ Todo funciona igual que con Material:
+AppBar(title: const Text('Título'));
+Card(child: const Text('Contenido'));
+NavigationBar(
+  destinations: [...],
+  selectedIndex: 0,
+  onDestinationSelected: (i) {},
 );
 ```
 
-### ApliGlasAppBar (Glass App Bar)
+## Cómo desinstalarlo (sin tocar código)
+
+1. Borrar `glas_config.dart`
+2. Sacar `apliarte_glass_theme` de `pubspec.yaml`
+3. Volver a `import 'package:flutter/material.dart'`
+
+No tocas ni una línea de código de tu app.
+
+## Configuración
+
+Editar `glas_config.dart` para ajustar colores, blur, grosor del vidrio y más.
+Los valores se adaptan automáticamente a tema claro y oscuro.
 
 ```dart
-Scaffold(
-  appBar: ApliGlasAppBar(
-    title: const Text('Home'),
-    actions: [
-      IconButton(
-        icon: const Icon(Icons.settings),
-        onPressed: () {},
-      ),
-    ],
-  ),
-  body: ...
-)
+// Ejemplo: personalizar desde tu app
+void main() {
+  GlasConfig.blur = 24;
+  GlasConfig.lightGlassColor = Color(0xCCF0F0FF);
+  GlasConfig.darkGlassColor = Color(0xCC1A1A2E);
+  runApp(const MyApp());
+}
 ```
 
-### ApliGlasCard (Glass Card)
+## Dark/Light
 
-```dart
-ApliGlasCard(
-  child: Column(
-    children: [
-      Text('Card Title'),
-      SizedBox(height: 8),
-      Text('Card content goes here.'),
-    ],
-  ),
-)
-```
+Todos los componentes se adaptan automáticamente al `ThemeMode` de tu app:
+- **Modo claro**: vidrio blanco semitransparente
+- **Modo oscuro**: vidrio oscuro semitransparente
 
-## API Reference
-
-### ApliGlasBar
-
-The main bottom navigation widget. Place it as the `bottomNavigationBar` of a `Scaffold`.
-
-| Parameter      | Type                     | Required | Description                                |
-| -------------- | ------------------------ | -------- | ------------------------------------------ |
-| `items`        | `List<ApliGlasBarItem>`  | Yes      | Navigation items (minimum 2)               |
-| `currentIndex` | `int`                    | Yes      | Currently selected item index              |
-| `onTap`        | `ValueChanged<int>`      | Yes      | Callback when an item is tapped or dragged |
-| `style`        | `ApliGlasBarStyle?`      | No       | Style customization                        |
-
-### ApliGlasBarItem
-
-Data model for each navigation item. At least one icon source must be provided.
-
-| Parameter      | Type        | Description             |
-| -------------- | ----------- | ----------------------- |
-| `svgAssetPath` | `String?`   | Path to an SVG asset    |
-| `iconData`     | `IconData?` | Material/Cupertino icon |
-| `iconWidget`   | `Widget?`   | Custom widget icon      |
-| `label`        | `String`    | Text label for the item |
-
-### ApliGlasBarStyle
-
-Full style customization for the bottom navigation bar.
-
-| Property              | Type                   | Default                               |
-| --------------------- | ---------------------- | ------------------------------------- |
-| `liquidGlassSettings` | `LiquidGlassSettings?` | Built-in defaults                     |
-| `activeColor`         | `Color`                | `Color(0xFF10B981)` (emerald)         |
-| `inactiveColor`       | `Color`                | `Color(0xFFA1A1AA)` (neutral gray)    |
-| `borderRadius`        | `double`               | `32`                                  |
-| `height`              | `double`               | `57`                                  |
-| `padding`             | `EdgeInsets`           | `EdgeInsets.fromLTRB(20, 12, 20, 32)` |
-| `animationDuration`   | `Duration`             | `250ms`                               |
-| `animationCurve`      | `Curve`                | `Curves.easeOutQuad`                  |
-| `iconSize`            | `double`               | `24`                                  |
-| `selectedIconScale`   | `double`               | `1.2`                                 |
-| `labelStyle`          | `TextStyle?`           | `null` (uses built-in style)          |
-
-### ApliGlasAppBar
-
-A glass morphism app bar. Wraps the standard Material AppBar API.
-
-| Parameter               | Type                   | Default               | Description                             |
-| ----------------------- | ---------------------- | --------------------- | --------------------------------------- |
-| `title`                 | `Widget?`              | `null`                | Primary title widget                    |
-| `leading`               | `Widget?`              | `null`                | Widget before the title                 |
-| `actions`               | `List<Widget>?`        | `null`                | Widgets after the title                 |
-| `automaticallyImplyLeading` | `bool`             | `true`                | Auto back button when route can pop     |
-| `bottom`                | `PreferredSizeWidget?` | `null`                | Bottom widget (e.g. TabBar)             |
-| `elevation`             | `double`               | `0`                   | Shadow elevation                        |
-| `shadow`                | `bool`                 | `true`                | Show shadow beneath the bar             |
-| `liquidGlassSettings`   | `LiquidGlassSettings?` | Built-in defaults     | Glass effect configuration              |
-| `bottomRadius`          | `double`               | `0`                   | Bottom corner radius                    |
-| `foregroundColor`       | `Color?`               | Theme's onSurface     | Color for icons and text                |
-
-### ApliGlasCard
-
-A glass morphism card.
-
-| Parameter             | Type                   | Default                                | Description                    |
-| --------------------- | ---------------------- | -------------------------------------- | ------------------------------ |
-| `child`               | `Widget`               | Required                               | Content widget                 |
-| `borderRadius`        | `double`               | `16.0`                                 | Corner radius                  |
-| `elevation`           | `double`               | `4.0`                                  | Shadow elevation               |
-| `margin`              | `EdgeInsetsGeometry?`  | `EdgeInsets.symmetric(h:16, v:8)`      | Outer margin                   |
-| `padding`             | `EdgeInsetsGeometry?`  | `EdgeInsets.all(16)`                   | Inner padding                  |
-| `liquidGlassSettings` | `LiquidGlassSettings?` | Built-in defaults                      | Glass effect configuration     |
-| `showBorder`          | `bool`                 | `true`                                 | Show glass border overlay      |
-| `clipContent`         | `bool`                 | `true`                                 | Clip to border radius          |
-
-### Glass Effect Settings
-
-Control the liquid glass appearance via `LiquidGlassSettings`. No extra import needed — it's re-exported from this package.
-
-```dart
-ApliGlasBar(
-  items: items,
-  currentIndex: _currentIndex,
-  onTap: (index) => setState(() => _currentIndex = index),
-  style: ApliGlasBarStyle(
-    activeColor: Colors.blue,
-    liquidGlassSettings: LiquidGlassSettings(
-      thickness: 20.0,          // Glass layer thickness
-      blur: 16.0,               // Background blur amount
-      glassColor: Colors.white.withValues(alpha: 0.8), // Glass tint color
-      lightIntensity: 0.6,      // Specular light brightness
-      refractiveIndex: 1.5,     // Light refraction amount
-    ),
-  ),
-);
-```
-
-| Property          | Type     | Default           | Description                             |
-| ----------------- | -------- | ----------------- | --------------------------------------- |
-| `thickness`       | `double` | `20.0`            | Thickness of the glass layer            |
-| `blur`            | `double` | `16.0`            | Background blur intensity               |
-| `glassColor`      | `Color`  | White 80% opacity | Tint color of the glass                 |
-| `lightIntensity`  | `double` | `0.6`             | Brightness of the specular light effect |
-| `refractiveIndex` | `double` | `1.5`             | How much light bends through the glass  |
-
-## Requirements
+## Requisitos
 
 - Flutter 3.32+
 - Dart 3.10+
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/erbolamm/apliarte-glass-theme).
 
 ## Autor
 
@@ -269,4 +151,4 @@ MIT — © 2026 ApliArte
 
 ## About
 
-A glass morphism UI component library for Flutter — bottom navigation bar, app bar, and cards with liquid glass effects.
+Drop-in replacement for Material 3 Flutter widgets with liquid glass morphism effects. AppBar, Card, NavigationBar, BottomAppBar, and AlertDialog with automatic dark/light adaptation.
