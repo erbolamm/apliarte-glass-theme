@@ -7,7 +7,10 @@ import '../helpers/glass_layer.dart';
 /// Glass-themed [material.AppBar].
 ///
 /// Drop-in replacement: same constructor API as Material's AppBar.
-/// Glass color, blur, and radius are derived from the current theme.
+/// El leading se resuelve automáticamente:
+///   - [leading] explícito si se pasa
+///   - [DrawerButton] si el [Scaffold] tiene un drawer
+///   - [BackButton] si [Navigator.canPop]
 class AppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
   final Widget? leading;
@@ -68,12 +71,32 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
             (bottom?.preferredSize.height ?? 0.0),
       );
 
+  /// Resuelve el leading según la convención de Material.
+  Widget? _resolveLeading(BuildContext context) {
+    if (leading != null) return leading;
+    if (!automaticallyImplyLeading) return null;
+
+    // DrawerButton si hay un Scaffold con drawer
+    final scaffold = material.Scaffold.maybeOf(context);
+    if (scaffold != null && scaffold.hasDrawer) {
+      return const material.DrawerButton();
+    }
+
+    // BackButton si se puede hacer pop
+    if (material.Navigator.of(context, rootNavigator: true).canPop()) {
+      return const material.BackButton();
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = material.Theme.of(context);
     final effectiveForeground = foregroundColor ?? theme.colorScheme.onSurface;
     final tHeight = toolbarHeight ?? material.kToolbarHeight;
     final radius = GlasConfig.mediumRadiusValue();
+    final resolvedLeading = _resolveLeading(context);
 
     return GlassLayer(
       borderRadius: radius,
@@ -84,10 +107,10 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
           material.SizedBox(
             height: tHeight,
             child: material.NavigationToolbar(
-              leading: leading != null
+              leading: resolvedLeading != null
                   ? material.IconTheme(
                       data: material.IconThemeData(color: effectiveForeground),
-                      child: leading!,
+                      child: resolvedLeading,
                     )
                   : null,
               middle: material.DefaultTextStyle(

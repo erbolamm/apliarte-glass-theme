@@ -1,3 +1,14 @@
+## 0.3.3
+
+* 🐛 **Card**: eliminada sombra duplicada (PhysicalModel + customShadows) que
+  causaba rectángulos fantasma al hacer scroll. Ahora sombra única vía
+  BoxDecoration.boxShadow + ClipRRect + GlassLayer.
+* 🐛 **GlassLayer**: encapsulado en ClipRRect para evitar artefactos de
+  LiquidGlass.withOwnLayer fuera del radio visual.
+* 🐛 **AppBar**: `automaticallyImplyLeading` ahora funciona correctamente:
+  DrawerButton si hay drawer, BackButton si se puede hacer pop, y
+  leading explícito cuando se pasa.
+
 ## 0.3.2
 
 * README: nueva sección "Apoya" con PayPal, Ko-fi, Twitch Tip.

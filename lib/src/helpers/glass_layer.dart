@@ -6,7 +6,8 @@ import '../../glas_config.dart';
 /// Internal widget that applies the liquid glass effect to any child.
 ///
 /// Reads defaults from [GlasConfig] and adapts to dark/light automatically.
-/// No external setup needed — just use it inside any widget tree.
+/// El contenido se encapsula en [ClipRRect] con el [borderRadius] visual
+/// para evitar artefactos de [LiquidGlass.withOwnLayer] al hacer scroll.
 class GlassLayer extends StatelessWidget {
   final Widget child;
   final double? borderRadius;
@@ -35,48 +36,55 @@ class GlassLayer extends StatelessWidget {
       refractiveIndex: 1.3,
     );
 
-    return Stack(
-      children: [
-        // Shadow layer
-        if (customShadows != null || radius > 0)
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius),
-                boxShadow: customShadows ??
-                    [
-                      BoxShadow(
-                        color: GlasConfig.shadowColor(context),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                        spreadRadius: -4,
-                      ),
-                    ],
-              ),
-            ),
-          ),
-        // Glass layer
-        LiquidGlass.withOwnLayer(
-          shape: LiquidRoundedRectangle(borderRadius: radius),
-          settings: settings,
-          child: child,
-        ),
-        // Border overlay
-        if (showBorder && radius > 0)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(radius),
-                  border: Border.all(
-                    color: GlasConfig.borderColor(context),
-                    width: 1.5,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: Stack(
+        children: [
+          // ── Sombra única ──
+          if (customShadows != null || radius > 0)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(radius),
+                    boxShadow: customShadows ??
+                        [
+                          BoxShadow(
+                            color: GlasConfig.shadowColor(context),
+                            blurRadius: 24,
+                            offset: const Offset(0, 8),
+                            spreadRadius: -4,
+                          ),
+                        ],
                   ),
                 ),
               ),
             ),
+
+          // ── Capa glass ──
+          LiquidGlass.withOwnLayer(
+            shape: LiquidRoundedRectangle(borderRadius: radius),
+            settings: settings,
+            child: child,
           ),
-      ],
+
+          // ── Borde glass ──
+          if (showBorder && radius > 0)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(radius),
+                    border: Border.all(
+                      color: GlasConfig.borderColor(context),
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
