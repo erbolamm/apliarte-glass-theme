@@ -40,8 +40,8 @@ class GlassLayer extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius),
       child: Stack(
         children: [
-          // ── Sombra única ──
-          if (customShadows != null || radius > 0)
+          // ── Sombra única (solo si se pasa explícitamente) ──
+          if (customShadows != null)
             Positioned.fill(
               child: IgnorePointer(
                 child: Container(

@@ -1,6 +1,6 @@
 name: apliarte_glass_theme
 description: Drop-in replacement de Material 3 con efecto glass morphism. Mismas clases, mismas APIs. Sin configuración externa.
-version: 0.3.5
+version: 0.3.6
 license: MIT
 homepage: https://github.com/erbolamm/apliarte-glass-theme
 repository: https://github.com/erbolamm/apliarte-glass-theme
