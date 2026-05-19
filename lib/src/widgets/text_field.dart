@@ -14,7 +14,8 @@ class TextField extends StatelessWidget {
   final material.FocusNode? focusNode;
   final bool autofocus;
   final bool readOnly;
-  final bool enabled;
+  final bool? enabled;
+  final material.TextStyle? style;
 
   const TextField({
     super.key,
@@ -27,7 +28,8 @@ class TextField extends StatelessWidget {
     this.focusNode,
     this.autofocus = false,
     this.readOnly = false,
-    this.enabled = true,
+    this.enabled,
+    this.style,
   });
 
   @override
@@ -42,7 +44,8 @@ class TextField extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       readOnly: readOnly,
-      enabled: enabled != null ? enabled : null,
+      enabled: enabled,
+      style: style,
     );
   }
 }

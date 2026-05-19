@@ -10,15 +10,16 @@ import '../helpers/glass_layer.dart';
 class Switch extends StatelessWidget {
   final bool value;
   final ValueChanged<bool>? onChanged;
+  final material.Color? activeColor;
 
-  const Switch({super.key, required this.value, required this.onChanged});
+  const Switch({super.key, required this.value, required this.onChanged, this.activeColor});
 
   @override
   Widget build(BuildContext context) {
     return material.Switch(
       value: value,
       onChanged: onChanged,
-      activeColor: GlasConfig.primary,
+      activeColor: activeColor ?? GlasConfig.primary,
     );
   }
 }
