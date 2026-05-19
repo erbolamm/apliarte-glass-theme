@@ -12,7 +12,9 @@ export 'package:flutter/material.dart'
         FloatingActionButton,
         ElevatedButton,
         TextButton,
-        OutlinedButton;
+        OutlinedButton,
+        SnackBar,
+        IconButton;
 
 export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
     show LiquidGlassSettings;
@@ -33,3 +35,5 @@ export 'src/widgets/nav_bar.dart';
 export 'src/widgets/elevated_button.dart';
 export 'src/widgets/text_button.dart';
 export 'src/widgets/outlined_button.dart';
+export 'src/widgets/snack_bar.dart';
+export 'src/widgets/icon_button.dart';
