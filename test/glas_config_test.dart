@@ -27,20 +27,20 @@ void main() {
       expect(GlasConfig.useWarmPreset, false);
     });
 
-    test('default blur is 18.0', () {
-      expect(GlasConfig.blur(), 18.0);
+    test('default blur is 14.0', () {
+      expect(GlasConfig.blur(), 14.0);
     });
 
-    test('default highlight is 0.35', () {
-      expect(GlasConfig.highlight(), 0.35);
+    test('default highlight is 0.25', () {
+      expect(GlasConfig.highlight(), 0.25);
     });
 
-    test('default large radius is 20.0', () {
-      expect(GlasConfig.largeRadiusValue(), 20.0);
+    test('default large radius is 14.0', () {
+      expect(GlasConfig.largeRadiusValue(), 14.0);
     });
 
-    test('default medium radius is 16.0', () {
-      expect(GlasConfig.mediumRadiusValue(), 16.0);
+    test('default medium radius is 12.0', () {
+      expect(GlasConfig.mediumRadiusValue(), 12.0);
     });
 
     test('shouldContainDefaultValues', () {
@@ -68,20 +68,20 @@ void main() {
       GlasConfig.useWarmPreset = false;
     });
 
-    test('warm blur is 22.0', () {
-      expect(GlasConfig.blur(), 22.0);
+    test('warm blur is 18.0', () {
+      expect(GlasConfig.blur(), 18.0);
     });
 
-    test('warm highlight is 0.50', () {
-      expect(GlasConfig.highlight(), 0.50);
+    test('warm highlight is 0.40', () {
+      expect(GlasConfig.highlight(), 0.40);
     });
 
-    test('warm large radius is 28.0', () {
-      expect(GlasConfig.largeRadiusValue(), 28.0);
+    test('warm large radius is 24.0', () {
+      expect(GlasConfig.largeRadiusValue(), 24.0);
     });
 
-    test('warm medium radius is 24.0', () {
-      expect(GlasConfig.mediumRadiusValue(), 24.0);
+    test('warm medium radius is 20.0', () {
+      expect(GlasConfig.mediumRadiusValue(), 20.0);
     });
   });
 
@@ -103,7 +103,7 @@ void main() {
     test('override blur', () {
       GlasConfig.glassBlur = 30.0;
       expect(GlasConfig.blur(), 30.0);
-      expect(GlasConfig.blur(), isNot(18.0));
+      expect(GlasConfig.blur(), isNot(14.0));
     });
 
     test('override large radius', () {
