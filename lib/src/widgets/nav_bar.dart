@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
-import '../helpers/liquid_highlight.dart';
 
 /// Glass-themed [material.NavigationBar] (Material 3).
 ///
@@ -146,16 +145,10 @@ class _NavigationBarState extends State<NavigationBar> {
                       child: material.Container(
                         width: itemWidth,
                         height: _navHeight - 14,
-                        decoration: LiquidHighlightDecoration(
-                          color: indicatorColor,
-                          intensity: LiquidIntensity.strong,
-                          borderRadius: material.BorderRadius.circular(30),
-                          customOpacity:
-                              GlasConfig.liquidHighlightOpacity ??
-                              (GlasConfig.liquidHighlightEnabled
-                                  ? GlasConfig.liquidHighlightIntensity
-                                  : 0),
-                        ).build(),
+                        decoration: material.BoxDecoration(
+                          color: indicatorColor.withValues(alpha: 0.12),
+                          borderRadius: material.BorderRadius.circular(GlasConfig.mediumRadiusValue()),
+                        ),
                       ),
                     ),
                     // Destinations

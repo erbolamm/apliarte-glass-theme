@@ -71,65 +71,73 @@ class AlertDialog extends StatelessWidget {
     final effectiveShadowColor =
         shadowColor ?? GlasConfig.shadowColor(context);
 
-    return Stack(
-      children: [
-        // Shadow layer
-        if (effectiveElevation > 0)
-          Positioned.fill(
-            child: material.Material(
-              color: material.Colors.transparent,
-              elevation: effectiveElevation,
-              shadowColor: effectiveShadowColor,
-              borderRadius: material.BorderRadius.circular(radius),
-              child: const material.SizedBox.expand(),
-            ),
-          ),
-        // Glass layer
-        GlassLayer(
-          borderRadius: radius,
-          child: ClipRRect(
-            borderRadius: material.BorderRadius.circular(radius),
-            child: material.AlertDialog(
-              backgroundColor: material.Colors.transparent,
-              elevation: 0,
-              shadowColor: material.Colors.transparent,
-              surfaceTintColor: material.Colors.transparent,
-              shape: material.RoundedRectangleBorder(
+    // Envuelto en material.Dialog para que nunca se muestre fullscreen,
+    // incluso cuando Material 3 usa Dialog.fullscreen en celulares.
+    return material.Dialog(
+      backgroundColor: material.Colors.transparent,
+      elevation: 0,
+      shadowColor: material.Colors.transparent,
+      surfaceTintColor: material.Colors.transparent,
+      child: Stack(
+        children: [
+          // Shadow layer
+          if (effectiveElevation > 0)
+            Positioned.fill(
+              child: material.Material(
+                color: material.Colors.transparent,
+                elevation: effectiveElevation,
+                shadowColor: effectiveShadowColor,
                 borderRadius: material.BorderRadius.circular(radius),
+                child: const material.SizedBox.expand(),
               ),
-              clipBehavior: Clip.hardEdge,
-              titlePadding: titlePadding,
-              titleTextStyle: effectiveTitleStyle,
-              contentPadding: contentPadding,
-              contentTextStyle: effectiveContentStyle,
-              actionsPadding: actionsPadding,
-              actionsAlignment: actionsAlignment,
-              actionsOverflowAlignment: actionsOverflowAlignment,
-              actionsOverflowDirection: actionsOverflowDirection,
-              buttonPadding: buttonPadding,
-              scrollable: scrollable,
-              semanticLabel: semanticLabel,
-              icon: icon,
-              iconPadding: iconPadding,
-              iconColor: iconColor,
-              title: icon != null
-                  ? material.Column(
-                      mainAxisSize: material.MainAxisSize.min,
-                      children: [
-                        if (icon != null) icon!,
-                        if (title != null) ...[
-                          const material.SizedBox(height: 16),
-                          title!,
+            ),
+          // Glass layer
+          GlassLayer(
+            borderRadius: radius,
+            child: ClipRRect(
+              borderRadius: material.BorderRadius.circular(radius),
+              child: material.AlertDialog(
+                backgroundColor: material.Colors.transparent,
+                elevation: 0,
+                shadowColor: material.Colors.transparent,
+                surfaceTintColor: material.Colors.transparent,
+                shape: material.RoundedRectangleBorder(
+                  borderRadius: material.BorderRadius.circular(radius),
+                ),
+                clipBehavior: Clip.hardEdge,
+                titlePadding: titlePadding,
+                titleTextStyle: effectiveTitleStyle,
+                contentPadding: contentPadding,
+                contentTextStyle: effectiveContentStyle,
+                actionsPadding: actionsPadding,
+                actionsAlignment: actionsAlignment,
+                actionsOverflowAlignment: actionsOverflowAlignment,
+                actionsOverflowDirection: actionsOverflowDirection,
+                buttonPadding: buttonPadding,
+                scrollable: scrollable,
+                semanticLabel: semanticLabel,
+                icon: icon,
+                iconPadding: iconPadding,
+                iconColor: iconColor,
+                title: icon != null
+                    ? material.Column(
+                        mainAxisSize: material.MainAxisSize.min,
+                        children: [
+                          if (icon != null) icon!,
+                          if (title != null) ...[
+                            const material.SizedBox(height: 16),
+                            title!,
+                          ],
                         ],
-                      ],
-                    )
-                  : title,
-              content: content,
-              actions: actions,
+                      )
+                    : title,
+                content: content,
+                actions: actions,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

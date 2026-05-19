@@ -1,0 +1,24 @@
+// ───────────────────────────────────────────────
+// Código Strudel de referencia para: ApliArte-Glass-Theme
+// Tipo: Flutter
+// Usar generate-audio.html para render real con Tone.js
+// ───────────────────────────────────────────────
+
+setCpm(120/4)
+
+let pads = note("<[c3 eb3 g3 bb3]>")
+  .s("supersaw").attack(0.3).release(1)
+  .lpf(1200).gain(0.25)
+
+let bass = note("c2 ~ c2 c2 ~ g1 ~ c2")
+  .s("sawtooth").lpf(500).gain(0.6)
+
+let drums = s("bd*4, ~ sd:1 ~ sd:1")
+  .bank("LinnDrum").gain(0.9)
+
+arrange(
+  [4, stack(pads, drums)],
+  [8, stack(pads, bass, drums)],
+  [4, stack(pads, bass, drums)],
+  [4, stack(pads, drums)],
+)

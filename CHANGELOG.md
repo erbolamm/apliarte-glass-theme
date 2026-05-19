@@ -1,3 +1,26 @@
+## 0.4.0-dev.1
+
+* 🎨 **`GlasConfig` color tokens**: 26 getters estáticos (`primary`, `surface`,
+  `secondaryContainer`, etc.) accesibles sin `BuildContext`. Se inicializan
+  automáticamente al llamar `GlassTheme.light/dark()`.
+* 🪟 **`AlertDialog` nunca fullscreen**: envuelto en `material.Dialog()`
+  transparente para que fuerce constraints de diálogo incluso cuando
+  Material 3 usa `Dialog.fullscreen` en celulares.
+* 🏷️ **`FloatingActionButton.heroTag`**: soporte para `heroTag` en todas
+  las variantes (regular, small, large, extended).
+* 🚪 **`Drawer.showBranding`**: controla visibilidad del header "ApliArte
+  Glass" (default `true`).
+* 🧭 **`NavigationBar`**: indicador simplificado (sin `LiquidHighlight`).
+* ⚙️ **`GlasConfig`**: intensidad de blur y highlight reducida, radios
+  más compactos.
+* 🧹 Lints: null-aware elements, `sort_child_properties_last`,
+  `non_constant_identifier_names`.
+
+## 0.3.12-dev.1
+
+* docs: patrones de import explícitos (sin prefijos, sin alias)
+* Publicación como pre-release por dependencia de liquid_glass_renderer ^0.2.0-dev.4
+
 ## 0.3.10
 
 * 🎨 **AppBar**: opacidad propia (~0.18 claro / ~0.25 oscuro) para que el

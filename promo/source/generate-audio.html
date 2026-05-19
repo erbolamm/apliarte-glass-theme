@@ -1,43 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Audio Generator — Funk 120 BPM</title>
+  <title>Audio Generator — ApliArte-Glass-Theme</title>
 </head>
 <body>
 <script>
-// ─── Strudel → Tone.js — Funk 80s Pop-Funk 120 BPM ───
+// ─── Tone.js — Funk 80s Pop-Funk 120 BPM ───
+// Generado por ErBolamm Studio · Marketing Agent para: ApliArte-Glass-Theme
 // SIN osciladores continuos — solo notas programadas
 
 const BPM = 120;
-// Se pasa por URL: ?duration=22 o ?duration=30
 const SECONDS = new URLSearchParams(window.location.search).get('duration')
   ? parseInt(new URLSearchParams(window.location.search).get('duration'))
   : 22;
 
 async function generateAudio() {
   const offlineCtx = new OfflineAudioContext(2, 44100 * SECONDS, 44100);
-  
+
   // ── Filtros compartidos ──
   const padFilter = offlineCtx.createBiquadFilter();
   padFilter.type = 'lowpass';
   padFilter.frequency.value = 1200;
   padFilter.Q.value = 2;
   padFilter.connect(offlineCtx.destination);
-  
+
   const bassFilter = offlineCtx.createBiquadFilter();
   bassFilter.type = 'lowpass';
   bassFilter.frequency.value = 500;
   bassFilter.connect(offlineCtx.destination);
-  
-  const leadFilter = offlineCtx.createBiquadFilter();
-  leadFilter.type = 'lowpass';
-  leadFilter.frequency.value = 1800;
-  leadFilter.connect(offlineCtx.destination);
-  
+
   const bdGain = offlineCtx.createGain();
   bdGain.gain.value = 0.4;
   bdGain.connect(offlineCtx.destination);
-  
+
   const sdFilter = offlineCtx.createBiquadFilter();
   sdFilter.type = 'bandpass';
   sdFilter.frequency.value = 200;
@@ -48,205 +43,149 @@ async function generateAudio() {
   sdGain.connect(offlineCtx.destination);
 
   const beatDuration = 60 / BPM;
-  const barDuration = beatDuration * 4;
-  const now = offlineCtx.currentTime;
-  const totalBars = Math.ceil(SECONDS / barDuration);
+  const totalBeats = (SECONDS / beatDuration) | 0;
 
-  // ── Función helper: programar nota ──
-  function playNote(time, freq, type, gainVal, duration, filter) {
+  // ── Helpers ──
+  function note(freq, startBeat, durBeats, dest, vel) {
+    const t = startBeat * beatDuration;
+    const dur = durBeats * beatDuration * 0.9;
     const osc = offlineCtx.createOscillator();
     const gain = offlineCtx.createGain();
-    osc.type = type;
+    osc.type = 'sawtooth';
     osc.frequency.value = freq;
-    // Second oscillator for detune (supersaw)
-    if (type === 'sawtooth') {
-      const osc2 = offlineCtx.createOscillator();
-      osc2.type = 'sawtooth';
-      osc2.frequency.value = freq;
-      osc2.detune.value = 7;
-      const gain2 = offlineCtx.createGain();
-      gain2.gain.value = gainVal;
-      osc2.connect(gain2);
-      gain2.connect(filter);
-      osc2.start(time);
-      osc2.stop(time + duration);
-    }
-    gain.gain.setValueAtTime(0, time);
-    gain.gain.linearRampToValueAtTime(gainVal, time + 0.02);
-    gain.gain.setValueAtTime(gainVal, time + duration - 0.05);
-    gain.gain.linearRampToValueAtTime(0, time + duration);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(vel || 0.3, t + 0.02);
+    gain.gain.setValueAtTime(vel || 0.3, t + dur - 0.05);
+    gain.gain.linearRampToValueAtTime(0, t + dur);
     osc.connect(gain);
-    gain.connect(filter);
-    osc.start(time);
-    osc.stop(time + duration);
+    gain.connect(dest);
+    osc.start(t);
+    osc.stop(t + dur);
   }
 
-  function playNoise(time, duration, gainVal, filter) {
-    const bufferSize = Math.ceil(44100 * duration);
-    const noiseBuffer = offlineCtx.createBuffer(1, bufferSize, 44100);
-    const data = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.15));
-    }
-    const noise = offlineCtx.createBufferSource();
-    noise.buffer = noiseBuffer;
+  function noise(startBeat, durBeats, dest, vel) {
+    const t = startBeat * beatDuration;
+    const dur = durBeats * beatDuration;
+    const bufferSize = offlineCtx.sampleRate * dur;
+    const buffer = offlineCtx.createBuffer(1, bufferSize, offlineCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1);
+    const src = offlineCtx.createBufferSource();
+    src.buffer = buffer;
     const gain = offlineCtx.createGain();
-    gain.gain.setValueAtTime(gainVal, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-    noise.connect(gain);
-    gain.connect(filter);
-    noise.start(time);
+    gain.gain.setValueAtTime(vel || 0.3, t);
+    gain.gain.setValueAtTime(vel || 0.3, t + dur - 0.02);
+    gain.gain.linearRampToValueAtTime(0, t + dur);
+    src.connect(gain);
+    gain.connect(dest);
+    src.start(t);
   }
 
-  // ── Pads: Cm sostenido ──
-  for (let bar = 0; bar < totalBars; bar++) {
-    const t = now + bar * barDuration;
-    const dur = Math.min(barDuration * 2, SECONDS - bar * barDuration);
-    [130.81, 155.56, 196.00, 233.08].forEach(freq => {
-      playNote(t, freq, 'sawtooth', 0.035, dur, padFilter);
-    });
-  }
+  // ── Patrones ──
+  const bassNotes = [65.41, 65.41, 65.41, 65.41, 98.00, 98.00, 65.41, 65.41]; // C2, G2
+  const padNotes = [261.63, 329.63, 392.00, 466.16]; // C4 E4 G4 Bb4
 
-  // ── Bass: groove Cm ──
-  const bassPattern = [
-    { note: 0, beat: 0 },   // C2
-    { note: null, beat: 1 },
-    { note: 0, beat: 2 },   // C2
-    { note: 0, beat: 2.5 },
-    { note: null, beat: 3 },
-    { note: -5, beat: 3.5 }, // G1
-    { note: null, beat: 4 },
-    { note: 0, beat: 5 },   // C2
-  ];
-  
-  for (let bar = 0; bar < totalBars; bar++) {
-    bassPattern.forEach(p => {
-      if (p.note !== null) {
-        const freq = 65.41 * Math.pow(2, p.note / 12);
-        const t = now + bar * barDuration + p.beat * beatDuration;
-        playNote(t, freq, 'sawtooth', 0.18, 0.3, bassFilter);
-      }
-    });
-  }
+  for (let beat = 0; beat < totalBeats; beat++) {
+    const bar = beat % 8;
+    const beat4 = beat % 4;
+    const isFill = beat % 16 >= 12 && beat % 16 < 15;
 
-  // ── Lead: coros ──
-  const leadMelody = [0, 5, 7, 12, 7, 5, 3, 2];
-  for (let bar = 4; bar < totalBars; bar++) {
-    const isChorus = (bar >= 4 && bar < 8) || (bar >= 11 && bar < totalBars);
-    if (!isChorus) continue;
-    
-    leadMelody.forEach((note, i) => {
-      const freq = 65.41 * Math.pow(2, (note + 24) / 12); // C4 range
-      const t = now + bar * barDuration + i * beatDuration * 0.5;
-      playNote(t, freq, 'sawtooth', 0.12, 0.35, leadFilter);
-    });
-  }
-
-  // ── Arpegio: pre-coro ──
-  const arpNotes = [0, 3, 7, 10, 7, 3, 0, -2]; // Cm add9
-  for (let bar = 3; bar < totalBars; bar += 8) {
-    arpNotes.forEach((note, i) => {
-      const freq = 65.41 * Math.pow(2, (note + 24) / 12);
-      const t = now + bar * barDuration + i * beatDuration * 0.25;
-      playNote(t, freq, 'sawtooth', 0.08, 0.15, leadFilter);
-    });
-  }
-
-  // ── Batería ──
-  for (let beat = 0; beat < Math.ceil(SECONDS / beatDuration); beat++) {
-    // Kick: beats 0, 2 de cada compás
-    if (beat % 2 === 0) {
+    // Kick (1 y 3)
+    if (beat4 === 0 || beat4 === 2) {
       const osc = offlineCtx.createOscillator();
       const gain = offlineCtx.createGain();
       osc.type = 'sine';
-      const t = now + beat * beatDuration;
-      osc.frequency.setValueAtTime(150, t);
-      osc.frequency.exponentialRampToValueAtTime(35, t + 0.12);
-      gain.gain.setValueAtTime(0.5, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+      osc.frequency.setValueAtTime(150, beat * beatDuration);
+      osc.frequency.exponentialRampToValueAtTime(40, beat * beatDuration + 0.08);
+      gain.gain.setValueAtTime(0.5, beat * beatDuration);
+      gain.gain.exponentialRampToValueAtTime(0.01, beat * beatDuration + 0.1);
       osc.connect(gain);
       gain.connect(bdGain);
-      osc.start(t);
-      osc.stop(t + 0.15);
+      osc.start(beat * beatDuration);
+      osc.stop(beat * beatDuration + 0.12);
     }
-    
-    // Snare gated: beats 1, 3
-    const beatInBar = beat % 4;
-    if (beatInBar === 1 || beatInBar === 3) {
-      const t = now + beat * beatDuration;
-      playNoise(t, 0.08, 0.35, sdFilter);
-      // Extra body tone
+
+    // Snare (2 y 4)
+    if (beat4 === 1 || beat4 === 3) {
+      noise(beat, 0.15, sdFilter, 0.5);
+      const t = beat * beatDuration;
       const osc = offlineCtx.createOscillator();
       const gain = offlineCtx.createGain();
       osc.type = 'triangle';
       osc.frequency.value = 180;
-      gain.gain.setValueAtTime(0.15, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      gain.gain.setValueAtTime(0.4, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.06);
       osc.connect(gain);
-      gain.connect(sdFilter);
+      gain.connect(sdGain);
       osc.start(t);
-      osc.stop(t + 0.06);
+      osc.stop(t + 0.08);
     }
-    
-    // Hi-hat: every off-beat 8th note
-    if (beat % 1 === 0) {
-      const t = now + (beat + 0.5) * beatDuration;
-      if (t < now + SECONDS) {
-        playNoise(t, 0.04, 0.08, offlineCtx.destination);
+
+    // Hi-hat (8ths)
+    if (beat4 !== 3 || !isFill) {
+      noise(beat, 0.05, offlineCtx.destination, 0.08);
+    }
+
+    // Bass
+    if (beat4 === 0 || beat4 === 2) {
+      const freq = bassNotes[bar];
+      note(freq, beat, 1.7, bassFilter, 0.5);
+    }
+
+    // Pads (cada 2 compases)
+    if (beat % 8 === 0) {
+      for (const f of padNotes) {
+        note(f, beat, 3.5, padFilter, 0.12);
       }
     }
   }
 
-  // ── Renderizar ──
-  const renderedBuffer = await offlineCtx.startRendering();
-  
-  // ── Convertir a WAV ──
-  const wav = bufferToWav(renderedBuffer);
-  const blob = new Blob([wav], { type: 'audio/wav' });
-  
-  const reader = new FileReader();
-  reader.onload = () => {
-    console.log('AUDIO_DATA:' + reader.result.split(',')[1]);
-    document.title = 'AUDIO_READY';
-  };
-  reader.readAsDataURL(blob);
+  const rendered = await offlineCtx.startRendering();
+  const wav = audioBufferToWav(rendered);
+  console.log('AUDIO_DATA:' + btoa(String.fromCharCode(...new Uint8Array(wav))));
+  document.title = 'AUDIO_READY';
 }
 
-function bufferToWav(buffer) {
+// ── WAV export ──
+function audioBufferToWav(buffer) {
   const numChannels = buffer.numberOfChannels;
   const sampleRate = buffer.sampleRate;
-  const samples = buffer.getChannelData(0);
-  const dataSize = samples.length * 2;
-  const headerSize = 44;
-  const totalSize = headerSize + dataSize;
-  const arrayBuffer = new ArrayBuffer(totalSize);
+  const format = 1;
+  const bitDepth = 16;
+  const data = buffer.getChannelData(0);
+  const dataLength = data.length * (bitDepth / 8);
+  const headerLength = 44;
+  const totalLength = headerLength + dataLength;
+  const arrayBuffer = new ArrayBuffer(totalLength);
   const view = new DataView(arrayBuffer);
-  
-  function writeString(offset, str) {
-    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-  }
-  
-  writeString(0, 'RIFF');
-  view.setUint32(4, totalSize - 8, true);
-  writeString(8, 'WAVE');
-  writeString(12, 'fmt ');
+
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, totalLength - 8, true);
+  writeString(view, 8, 'WAVE');
+  writeString(view, 12, 'fmt ');
   view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
+  view.setUint16(20, format, true);
   view.setUint16(22, numChannels, true);
   view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * 2 * 2, true);
-  view.setUint16(32, 4, true);
-  view.setUint16(34, 16, true);
-  writeString(36, 'data');
-  view.setUint32(40, dataSize, true);
-  
+  view.setUint32(28, sampleRate * numChannels * (bitDepth / 8), true);
+  view.setUint16(32, numChannels * (bitDepth / 8), true);
+  view.setUint16(34, bitDepth, true);
+  writeString(view, 36, 'data');
+  view.setUint32(40, dataLength, true);
+
   let offset = 44;
-  for (let i = 0; i < samples.length; i++) {
-    const sample = Math.max(-1, Math.min(1, samples[i]));
-    view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+  for (let i = 0; i < data.length; i++) {
+    const sample = Math.max(-1, Math.min(1, data[i]));
+    const val = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+    view.setInt16(offset, val, true);
     offset += 2;
   }
   return arrayBuffer;
+}
+
+function writeString(view, offset, string) {
+  for (let i = 0; i < string.length; i++)
+    view.setUint8(offset + i, string.charCodeAt(i));
 }
 
 generateAudio().catch(console.error);

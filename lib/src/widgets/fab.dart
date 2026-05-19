@@ -31,6 +31,7 @@ class FloatingActionButton extends StatelessWidget {
   final material.FocusNode? focusNode;
   final bool? autofocus;
   final bool enableFeedback;
+  final Object? heroTag;
 
   const FloatingActionButton({
     super.key,
@@ -53,6 +54,7 @@ class FloatingActionButton extends StatelessWidget {
     this.focusNode,
     this.autofocus,
     this.enableFeedback = true,
+    this.heroTag,
   }) : _variant = _FabVariant.regular;
 
   /// Small FAB (40×40).
@@ -77,6 +79,7 @@ class FloatingActionButton extends StatelessWidget {
     this.focusNode,
     this.autofocus,
     this.enableFeedback = true,
+    this.heroTag,
   }) : _variant = _FabVariant.small;
 
   /// Large FAB (96×96).
@@ -101,6 +104,7 @@ class FloatingActionButton extends StatelessWidget {
     this.focusNode,
     this.autofocus,
     this.enableFeedback = true,
+    this.heroTag,
   }) : _variant = _FabVariant.large;
 
   /// Extended FAB with label (and optional icon).
@@ -125,6 +129,7 @@ class FloatingActionButton extends StatelessWidget {
     this.focusNode,
     this.autofocus,
     this.enableFeedback = true,
+    this.heroTag,
   }) : _variant = _FabVariant.extended;
 
   final _FabVariant _variant;
@@ -218,11 +223,14 @@ class FloatingActionButton extends StatelessWidget {
       ),
     );
 
-    if (tooltip != null) {
-      return material.Tooltip(message: tooltip!, child: wrapped);
+    Widget result = wrapped;
+    if (heroTag != null) {
+      result = material.Hero(tag: heroTag!, child: result);
     }
-
-    return wrapped;
+    if (tooltip != null) {
+      result = material.Tooltip(message: tooltip!, child: result);
+    }
+    return result;
   }
 }
 

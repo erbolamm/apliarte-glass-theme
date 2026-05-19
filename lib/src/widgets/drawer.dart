@@ -8,6 +8,9 @@ import '../helpers/glass_layer.dart';
 ///
 /// Drop-in replacement: same constructor API as Material's Drawer.
 /// Applies a frosted glass effect to the entire drawer surface.
+///
+/// Set [showBranding] to `false` to hide the "ApliArte Glass" header
+/// if you prefer a clean drawer without branding.
 class Drawer extends StatelessWidget {
   final Widget? child;
   final Color? backgroundColor;
@@ -18,6 +21,7 @@ class Drawer extends StatelessWidget {
   final double? width;
   final Color? shadowColor;
   final Color? surfaceTintColor;
+  final bool showBranding;
 
   const Drawer({
     super.key,
@@ -30,6 +34,7 @@ class Drawer extends StatelessWidget {
     this.width,
     this.shadowColor,
     this.surfaceTintColor,
+    this.showBranding = true,
   });
 
   @override
@@ -47,9 +52,10 @@ class Drawer extends StatelessWidget {
           crossAxisAlignment: material.CrossAxisAlignment.stretch,
           children: [
             // Header area with glass branding
-            _DrawerHeader(context),
-            // Divider
-            material.Divider(
+            if (showBranding) _drawerHeader(context),
+            // Divider (only with header)
+            if (showBranding)
+              material.Divider(
               height: 1,
               indent: 16,
               endIndent: 16,
@@ -58,6 +64,9 @@ class Drawer extends StatelessWidget {
                   .outlineVariant
                   .withValues(alpha: 0.3),
             ),
+            if (!showBranding)
+              // Spacer at top when no branding header
+              const material.SizedBox(height: 48),
             // Scrollable content
             material.Expanded(
               child: child ?? const material.SizedBox.shrink(),
@@ -88,7 +97,7 @@ class Drawer extends StatelessWidget {
 }
 
 /// Internal header for the glass drawer.
-Widget _DrawerHeader(BuildContext context) {
+Widget _drawerHeader(BuildContext context) {
   final theme = material.Theme.of(context);
   return material.Container(
     padding: const material.EdgeInsets.fromLTRB(16, 48, 16, 24),

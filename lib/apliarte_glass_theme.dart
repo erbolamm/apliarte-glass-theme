@@ -15,6 +15,7 @@ export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
     show LiquidGlassSettings;
 
 export 'glas_config.dart';
+export 'glass_theme.dart';
 
 export 'src/helpers/liquid_highlight.dart';
 

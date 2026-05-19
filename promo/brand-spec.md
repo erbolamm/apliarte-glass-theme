@@ -1,72 +1,36 @@
-# ApliArte Glass Theme — Brand Spec
+# ApliArte-Glass-Theme — Brand Spec
 
-> Generado: 2026-05-16
+> Generado por ErBolamm Studio · Marketing Agent
 
 ## Identidad
 
 | Campo | Valor |
 |-------|-------|
-| Nombre | ApliArte Glass Theme |
-| ID | `apliarte-glass-theme` |
-| Pilar | Herramientas Dev (`#FF8F00`) |
-| Tipo | Paquete Flutter / Pub.dev |
-| Versión | 0.3.6 |
-| Autor | Javier Mateo (ApliArte) |
+| Nombre | ApliArte-Glass-Theme |
+| Tipo | Flutter |
+| Versión | Generando... |
 | Licencia | MIT |
 
 ## Paleta
 
-### Pilar (Herramientas)
-
 | Uso | Color | HEX |
 |-----|-------|-----|
-| Principal | Naranja herramientas | `#FF8F00` |
-| Acento | Naranja claro | `#FFB74D` |
-| Fondo claro | Blanco hueso | `#F8F9FC` |
-| Fondo oscuro | Azul noche | `#0F0F1A` |
-
-### Glass (propios del tema)
-
-| Uso | Color | HEX |
-|-----|-------|-----|
-| Glass claro | Blanco semitransparente | `rgba(255,255,255,0.82)` |
-| Glass oscuro | Negro semitransparente | `rgba(15,15,26,0.82)` |
-| Borde glass claro | Outline suave | `--colorScheme.outlineVariant` |
-| Warm preset | Rosa pálido | `#FFF0F5` |
-| Highlight | Especular blanco | `rgba(255,255,255,0.35)` |
-
-### Timing
-
-| Efecto | Valor |
-|--------|-------|
-| Blur glass | 18px (neutral) / 22px (warm) |
-| Opacidad glass | 0.82 (neutral) / 0.78 (warm) |
-| Opacidad borde | 0.35 (neutral) / 0.50 (warm) |
-| Highlight | 0.35 (neutral) / 0.50 (warm) |
-| Radius grande | 20px (neutral) / 28px (warm) |
-| Radius medio | 16px (neutral) / 24px (warm) |
-
-## Tipografía
-
-| Uso | Fuente | Peso |
-|-----|--------|------|
-| Código | JetBrains Mono | 400 / 700 |
-| UI general | Inter | 300 / 400 / 600 / 800 / 900 |
-| Fallback | System UI | — |
+| Principal | Por determinar | — |
+| Acento | Por determinar | — |
+| Fondo claro | #F8F9FC | `#F8F9FC` |
+| Fondo oscuro | #0F0F1A | `#0F0F1A` |
 
 ## Assets necesarios
 
 | Asset | Estado | Notas |
 |-------|--------|-------|
-| Logo / Icono | ❌ Pendiente | Usar icono de Flutter + glass overlay |
-| Screenshots | ✅ Listo (17 capturas) | browser/ — 4 generales + 10 individuales + 3 secciones |
-| Video vertical | ✅ Listo (22s, 650KB) | promo/videos/promo-vertical.mp4 — TikTok/Reels/Shorts |
-| Video horizontal | ✅ Listo (30s, 813KB) | promo/videos/promo-horizontal.mp4 — YouTube/Facebook |
-| Música | ⬜ Pendiente | Agregar MP3 de Suno en music/ |
-| Landing | ✅ Existente | GitHub Pages: erbolamm.github.io/apliarte-glass-theme/ (erbolamm.github.io/apliarte-glass-theme/) |
+| Logo / Icono | ⬜ Pendiente | Buscar en assets/ del proyecto |
+| Screenshots | ⬜ Pendiente | Generar desde web demo o mockups |
+| Video vertical | ⬜ Pendiente | TikTok/Reels: 1080×1920 |
+| Video horizontal | ⬜ Pendiente | YouTube: 1920×1080 |
+| Música | ⬜ Pendiente | Código Strudel en source/ |
 
 ## Enlaces
 
-- 📦 Pub.dev: https://pub.dev/packages/apliarte_glass_theme
-- 🐙 GitHub: https://github.com/erbolamm/apliarte-glass-theme
-- 🌐 Demo: https://erbolamm.github.io/apliarte-glass-theme/
+- GitHub: pendiente
+- Publicación: pendiente

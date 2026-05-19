@@ -104,9 +104,9 @@ Future<T?> showGlassModalBottomSheet<T>({
   return material.showModalBottomSheet<T>(
     context: context,
     builder: (ctx) => BottomSheet(
-      child: builder(ctx),
       elevation: elevation,
       showDragHandle: showDragHandle,
+      child: builder(ctx),
     ),
     backgroundColor: material.Colors.transparent,
     barrierColor: barrierColor,
