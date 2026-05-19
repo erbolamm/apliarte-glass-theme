@@ -1,17 +1,19 @@
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart' as material;
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 
-void main() => runApp(const GlassToggleDemo());
+void main() => runApp(const GlassLanding());
 
 // ── App ──────────────────────────────────────────────
 
-class GlassToggleDemo extends StatelessWidget {
-  const GlassToggleDemo({super.key});
+class GlassLanding extends StatelessWidget {
+  const GlassLanding({super.key});
 
   @override
   Widget build(BuildContext context) {
     return material.MaterialApp(
-      title: 'ApliArte Glass — Toggle Demo',
+      title: 'ApliArte Glass Theme',
       debugShowCheckedModeBanner: false,
       theme: material.ThemeData(
         useMaterial3: true,
@@ -19,94 +21,327 @@ class GlassToggleDemo extends StatelessWidget {
           seedColor: const material.Color(0xFF005FA9),
         ),
       ),
-      home: const ToggleHome(),
+      home: const LandingPage(),
     );
   }
 }
 
-// ── Home — Adaptive showroom ─────────────────────────
+// ── Constants ────────────────────────────────────────
 
-class ToggleHome extends StatefulWidget {
-  const ToggleHome({super.key});
+const _primary = material.Color(0xFF005FA9);
+const _githubUrl = 'https://github.com/erbolamm/apliarte-glass-theme';
+const _pubUrl = 'https://pub.dev/packages/apliarte_glass_theme';
+const _paypalUrl = 'https://www.paypal.com/paypalme/erbolamm';
+
+// ── Landing Page ─────────────────────────────────────
+
+class LandingPage extends StatefulWidget {
+  const LandingPage({super.key});
 
   @override
-  State<ToggleHome> createState() => _ToggleHomeState();
+  State<LandingPage> createState() => _LandingPageState();
 }
 
-class _ToggleHomeState extends State<ToggleHome> {
-  bool _isGlass = false;
+class _LandingPageState extends State<LandingPage> {
+  bool _glass = false;
 
-  // ── Widget switchers ──────────────────────────
+  // ── Hero ───────────────────────────────────────
 
-  material.PreferredSizeWidget _appBar() {
-    final title = _isGlass ? '🧊 Glass Mode' : '📄 Material Mode';
-    return _isGlass
-        ? AppBar(
-            title: Text(title),
-            actions: [
-              IconButton(icon: const material.Icon(material.Icons.info_outline), onPressed: _showDialog),
-            ],
+  Widget _hero() {
+    return material.Container(
+      width: double.infinity,
+      padding: const material.EdgeInsets.fromLTRB(24, 48, 24, 32),
+      decoration: const material.BoxDecoration(
+        gradient: material.LinearGradient(
+          begin: material.Alignment.topLeft,
+          end: material.Alignment.bottomRight,
+          colors: [_primary, material.Color(0xFF003D6B)],
+        ),
+      ),
+      child: material.Column(
+        children: [
+          // Logo / title
+          material.Text(
+            'ApliArte\nGlass Theme',
+            textAlign: material.TextAlign.center,
+            style: material.TextStyle(
+              fontSize: 36,
+              fontWeight: material.FontWeight.w800,
+              color: material.Colors.white,
+              height: 1.1,
+            ),
+          ),
+          const material.SizedBox(height: 12),
+          material.Text(
+            'Same API. One import. All glass.',
+            textAlign: material.TextAlign.center,
+            style: material.TextStyle(
+              fontSize: 16,
+              color: material.Colors.white.withValues(alpha: 0.85),
+            ),
+          ),
+          const material.SizedBox(height: 24),
+
+          // Toggle
+          _buildToggle(),
+          const material.SizedBox(height: 16),
+
+          // Code
+          _codeSnippet(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggle() {
+    return material.Row(
+      mainAxisAlignment: material.MainAxisAlignment.center,
+      children: [
+        material.Text(
+          'MATERIAL',
+          style: material.TextStyle(
+            fontSize: 13,
+            fontWeight: material.FontWeight.w700,
+            letterSpacing: 1.2,
+            color: _glass
+                ? material.Colors.white.withValues(alpha: 0.4)
+                : material.Colors.white,
+          ),
+        ),
+        const material.SizedBox(width: 14),
+        material.GestureDetector(
+          onTap: () => setState(() => _glass = !_glass),
+          child: material.AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            width: 60,
+            height: 30,
+            decoration: material.BoxDecoration(
+              borderRadius: material.BorderRadius.circular(15),
+              color: _glass
+                  ? material.Colors.white
+                  : material.Colors.white.withValues(alpha: 0.25),
+              border: material.Border.all(
+                color: material.Colors.white.withValues(alpha: 0.5),
+                width: 2,
+              ),
+            ),
+            alignment: _glass
+                ? material.Alignment.centerRight
+                : material.Alignment.centerLeft,
+            padding: const material.EdgeInsets.symmetric(horizontal: 3),
+            child: material.Container(
+              width: 22,
+              height: 22,
+              decoration: const material.BoxDecoration(
+                shape: material.BoxShape.circle,
+                color: _primary,
+              ),
+            ),
+          ),
+        ),
+        const material.SizedBox(width: 14),
+        material.Text(
+          'GLASS',
+          style: material.TextStyle(
+            fontSize: 13,
+            fontWeight: material.FontWeight.w700,
+            letterSpacing: 1.2,
+            color: _glass
+                ? material.Colors.white
+                : material.Colors.white.withValues(alpha: 0.4),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _codeSnippet() {
+    final code = _glass
+        ? "import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';"
+        : "import 'package:flutter/material.dart';";
+    return material.Container(
+      padding: const material.EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: material.BoxDecoration(
+        color: material.Colors.black.withValues(alpha: 0.3),
+        borderRadius: material.BorderRadius.circular(10),
+      ),
+      child: material.Text(
+        code,
+        style: material.TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 12,
+          color: _glass ? material.Colors.greenAccent : material.Colors.white70,
+        ),
+      ),
+    );
+  }
+
+  // ── Widget Showcase ────────────────────────────
+
+  Widget _showcase() {
+    return material.Padding(
+      padding: const material.EdgeInsets.symmetric(horizontal: 16),
+      child: material.Column(
+        crossAxisAlignment: material.CrossAxisAlignment.start,
+        children: [
+          const material.SizedBox(height: 32),
+          _sectionTitle('Widget Showcase'),
+          const material.SizedBox(height: 16),
+
+          // Row 1: Elevated + Outlined + Text
+          _widgetCard('ElevatedButton', _elevatedDemo()),
+          _widgetCard('OutlinedButton', _outlinedDemo()),
+          _widgetCard('TextButton', _textDemo()),
+
+          // Row 2: IconButtons
+          _widgetCard('IconButton', _iconButtons()),
+          _widgetCard('Card', _cardDemo()),
+          _widgetCard('Slider', _sliderDemo()),
+
+          // Row 3: ListTile + Switch
+          _widgetCard('ListTile', _listTileDemo()),
+          _widgetCard('TextField', _textFieldDemo()),
+          _widgetCard('Progress', _progressDemo()),
+
+          // Row 4: Buttons row
+          _widgetCard('AlertDialog', _dialogTrigger()),
+          _widgetCard('SnackBar', _snackTrigger()),
+          _widgetCard('TabBar', _tabBarDemo()),
+        ],
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String text) {
+    return material.Text(
+      text,
+      style: material.TextStyle(
+        fontSize: 22,
+        fontWeight: material.FontWeight.w700,
+        color: material.Theme.of(context).colorScheme.onSurface,
+      ),
+    );
+  }
+
+  Widget _widgetCard(String label, Widget child) {
+    return material.Padding(
+      padding: const material.EdgeInsets.only(bottom: 12),
+      child: material.Column(
+        crossAxisAlignment: material.CrossAxisAlignment.start,
+        children: [
+          material.Padding(
+            padding: const material.EdgeInsets.only(left: 4, bottom: 4),
+            child: material.Text(
+              label,
+              style: material.TextStyle(
+                fontSize: 12,
+                fontWeight: material.FontWeight.w600,
+                color: material.Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
+          ),
+          child,
+        ],
+      ),
+    );
+  }
+
+  // ── Widget demos ───────────────────────────────
+
+  Widget _elevatedDemo() {
+    return _glass
+        ? ElevatedButton.icon(
+            onPressed: () {},
+            icon: const material.Icon(material.Icons.star),
+            label: const Text('Elevated'),
           )
-        : material.AppBar(
-            title: material.Text(title),
-            actions: [
-              material.IconButton(icon: const material.Icon(material.Icons.info_outline), onPressed: _showDialog),
-            ],
+        : material.ElevatedButton.icon(
+            onPressed: () {},
+            icon: const material.Icon(material.Icons.star),
+            label: const material.Text('Elevated'),
           );
   }
 
-  Widget _actionButtons() {
-    return material.Wrap(
-      spacing: 8,
-      runSpacing: 8,
+  Widget _outlinedDemo() {
+    return _glass
+        ? OutlinedButton.icon(
+            onPressed: () {},
+            icon: const material.Icon(material.Icons.favorite_border),
+            label: const Text('Outlined'),
+          )
+        : material.OutlinedButton.icon(
+            onPressed: () {},
+            icon: const material.Icon(material.Icons.favorite_border),
+            label: const material.Text('Outlined'),
+          );
+  }
+
+  Widget _textDemo() {
+    return _glass
+        ? TextButton(
+            onPressed: () {},
+            child: const Text('Text Button'),
+          )
+        : material.TextButton(
+            onPressed: () {},
+            child: const material.Text('Text Button'),
+          );
+  }
+
+  Widget _iconButtons() {
+    return material.Row(
+      mainAxisAlignment: material.MainAxisAlignment.spaceEvenly,
       children: [
-        _isGlass
-            ? ElevatedButton.icon(
-                onPressed: _showSnackBar,
-                icon: const material.Icon(material.Icons.notifications),
-                label: const Text('SnackBar'),
+        _glass
+            ? IconButton(
+                icon: const material.Icon(material.Icons.thumb_up),
+                onPressed: () {},
               )
-            : material.ElevatedButton.icon(
-                onPressed: _showSnackBar,
-                icon: const material.Icon(material.Icons.notifications),
-                label: const material.Text('SnackBar'),
+            : material.IconButton(
+                icon: const material.Icon(material.Icons.thumb_up),
+                onPressed: () {},
               ),
-        _isGlass
-            ? TextButton(
-                onPressed: _showDialog,
-                child: const Text('Dialog'),
+        _glass
+            ? IconButton.filled(
+                icon: const material.Icon(material.Icons.favorite),
+                onPressed: () {},
               )
-            : material.TextButton(
-                onPressed: _showDialog,
-                child: const material.Text('Dialog'),
+            : material.IconButton(
+                icon: const material.Icon(material.Icons.favorite),
+                onPressed: () {},
               ),
-        _isGlass
-            ? OutlinedButton.icon(
-                onPressed: null,
-                icon: const material.Icon(material.Icons.block),
-                label: const Text('Disabled'),
+        _glass
+            ? IconButton.outlined(
+                icon: const material.Icon(material.Icons.share),
+                onPressed: () {},
               )
-            : material.OutlinedButton.icon(
-                onPressed: null,
-                icon: const material.Icon(material.Icons.block),
-                label: const material.Text('Disabled'),
+            : material.IconButton(
+                icon: const material.Icon(material.Icons.share),
+                onPressed: () {},
               ),
       ],
     );
   }
 
-  Widget _card() {
-    return _isGlass
+  Widget _cardDemo() {
+    return _glass
         ? Card(
-            child: Padding(
+            child: material.Padding(
               padding: const material.EdgeInsets.all(16),
-              child: Column(
+              child: material.Column(
                 crossAxisAlignment: material.CrossAxisAlignment.start,
                 mainAxisSize: material.MainAxisSize.min,
                 children: [
-                  Text('Card', style: material.Theme.of(context).textTheme.titleMedium),
+                  Row(
+                    children: [
+                      const material.Icon(material.Icons.auto_awesome, size: 20),
+                      const material.SizedBox(width: 8),
+                      const Text('Glass Card'),
+                    ],
+                  ),
                   const material.SizedBox(height: 8),
-                  const Text('This Card uses GlassLayer for a frosted effect.'),
+                  const Text('Frosted glass effect with blur.'),
                 ],
               ),
             ),
@@ -118,92 +353,96 @@ class _ToggleHomeState extends State<ToggleHome> {
                 crossAxisAlignment: material.CrossAxisAlignment.start,
                 mainAxisSize: material.MainAxisSize.min,
                 children: [
-                  material.Text('Card', style: material.Theme.of(context).textTheme.titleMedium),
+                  material.Row(
+                    children: [
+                      const material.Icon(material.Icons.auto_awesome, size: 20),
+                      const material.SizedBox(width: 8),
+                      const material.Text('Material Card'),
+                    ],
+                  ),
                   const material.SizedBox(height: 8),
-                  const material.Text('Standard Material Card.'),
+                  const material.Text('Standard Material card.'),
                 ],
               ),
             ),
           );
   }
 
-  Widget _listTile() {
-    return _isGlass
+  Widget _sliderDemo() {
+    return _glass
+        ? Slider(value: 60, onChanged: (_) {})
+        : material.Slider(value: 60, onChanged: (_) {});
+  }
+
+  Widget _listTileDemo() {
+    return _glass
         ? ListTile(
             leading: const material.Icon(material.Icons.star),
             title: const Text('ListTile'),
-            subtitle: const Text('With frosted glass background'),
-            trailing: Switch(value: _isGlass, onChanged: (_) {}),
+            subtitle: const Text('Glass background'),
+            trailing: material.Switch(
+              value: _glass,
+              activeColor: _primary,
+              onChanged: (_) => setState(() => _glass = !_glass),
+            ),
           )
         : material.ListTile(
             leading: const material.Icon(material.Icons.star),
             title: const material.Text('ListTile'),
-            subtitle: const material.Text('Standard Material'),
-            trailing: material.Switch(value: _isGlass, onChanged: (_) {}),
+            subtitle: const material.Text('Material background'),
+            trailing: material.Switch(
+              value: _glass,
+              activeColor: _primary,
+              onChanged: (_) => setState(() => _glass = !_glass),
+            ),
           );
   }
 
-  Widget _slider() {
-    return _isGlass
-        ? Slider(value: 50, onChanged: (_) {})
-        : material.Slider(value: 50, onChanged: (_) {});
-  }
-
-  Widget _codeBlock() {
-    final code = 'import \'package:apliarte_glass_theme/apliarte_glass_theme.dart\';';
-    final codeMaterial = 'import \'package:flutter/material.dart\';';
-    return material.Container(
-      width: double.infinity,
-      padding: const material.EdgeInsets.all(10),
-      decoration: material.BoxDecoration(
-        color: material.Colors.black.withValues(alpha: 0.2),
-        borderRadius: material.BorderRadius.circular(8),
-      ),
-      child: material.Column(
-        crossAxisAlignment: material.CrossAxisAlignment.start,
-        children: [
-          material.Text(
-            _isGlass ? code : codeMaterial,
-            style: material.TextStyle(
-              fontFamily: 'monospace',
-              fontSize: 11,
-              color: _isGlass ? material.Colors.greenAccent : material.Colors.white70,
+  Widget _textFieldDemo() {
+    return _glass
+        ? TextField(
+            decoration: const material.InputDecoration(
+              hintText: 'Glass TextField',
+              border: material.OutlineInputBorder(),
             ),
-          ),
-          const material.SizedBox(height: 2),
-          material.Text(
-            _isGlass ? '// Glass is ACTIVE' : '// Glass is OFF',
-            style: material.TextStyle(
-              fontFamily: 'monospace',
-              fontSize: 10,
-              color: material.Colors.white.withValues(alpha: 0.5),
+          )
+        : material.TextField(
+            decoration: const material.InputDecoration(
+              hintText: 'Material TextField',
+              border: material.OutlineInputBorder(),
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
-  // ── Callbacks ──────────────────────────────────
-
-  void _showSnackBar() {
-    final msg = _isGlass ? '🧊 Glass SnackBar' : '📄 Material SnackBar';
-    material.ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), behavior: material.SnackBarBehavior.floating),
-    );
+  Widget _progressDemo() {
+    return _glass
+        ? const CircularProgressIndicator()
+        : const material.CircularProgressIndicator();
   }
 
-  void _showDialog() {
+  Widget _dialogTrigger() {
+    return _glass
+        ? ElevatedButton.icon(
+            onPressed: () => _showDialog(context),
+            icon: const material.Icon(material.Icons.chat),
+            label: const Text('Open Dialog'),
+          )
+        : material.ElevatedButton.icon(
+            onPressed: () => _showDialog(context),
+            icon: const material.Icon(material.Icons.chat),
+            label: const material.Text('Open Dialog'),
+          );
+  }
+
+  void _showDialog(material.BuildContext ctx) {
     showDialog(
-      context: context,
+      context: ctx,
       builder: (_) => AlertDialog(
-        title: Text(_isGlass ? '🧊 Glass AlertDialog' : '📄 Material AlertDialog'),
-        content: Text(_isGlass
-            ? 'This dialog has a frosted glass effect.'
-            : 'Standard Material dialog.'),
+        title: const Text('Glass Dialog'),
+        content: const Text('This AlertDialog has a frosted glass effect.'),
         actions: [
           TextButton(
-            onPressed: () => material.Navigator.of(context).pop(),
+            onPressed: () => material.Navigator.of(ctx).pop(),
             child: const Text('OK'),
           ),
         ],
@@ -211,102 +450,255 @@ class _ToggleHomeState extends State<ToggleHome> {
     );
   }
 
-  // ── Hero toggle ───────────────────────────────
+  Widget _snackTrigger() {
+    return _glass
+        ? ElevatedButton.icon(
+            onPressed: () {
+              material.ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('🧊 Glass SnackBar!'),
+                  behavior: material.SnackBarBehavior.floating,
+                ),
+              );
+            },
+            icon: const material.Icon(material.Icons.notifications),
+            label: const Text('Show SnackBar'),
+          )
+        : material.ElevatedButton.icon(
+            onPressed: () {
+              material.ScaffoldMessenger.of(context).showSnackBar(
+                const material.SnackBar(
+                  content: material.Text('📄 Material SnackBar'),
+                  behavior: material.SnackBarBehavior.floating,
+                ),
+              );
+            },
+            icon: const material.Icon(material.Icons.notifications),
+            label: const material.Text('Show SnackBar'),
+          );
+  }
 
-  Widget _buildHeroToggle(material.ThemeData theme) {
+  Widget _tabBarDemo() {
+    return _glass
+        ? SizedBox(
+            height: 48,
+            child: TabBar(
+              tabs: const [
+                Tab(text: 'Tab 1'),
+                Tab(text: 'Tab 2'),
+                Tab(text: 'Tab 3'),
+              ],
+            ),
+          )
+        : SizedBox(
+            height: 48,
+            child: material.TabBar(
+              tabs: const [
+                material.Tab(text: 'Tab 1'),
+                material.Tab(text: 'Tab 2'),
+                material.Tab(text: 'Tab 3'),
+              ],
+            ),
+          );
+  }
+
+  // ── How to use ──────────────────────────────────
+
+  Widget _howToUse() {
+    final theme = material.Theme.of(context);
     return material.Container(
       width: double.infinity,
-      padding: const material.EdgeInsets.all(20),
-      decoration: material.BoxDecoration(
-        gradient: material.LinearGradient(
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withValues(alpha: 0.7),
-          ],
-        ),
-        borderRadius: material.BorderRadius.circular(16),
+      padding: const material.EdgeInsets.all(24),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+      child: material.Column(
+        crossAxisAlignment: material.CrossAxisAlignment.start,
+        children: [
+          _sectionTitle('How to use'),
+          const material.SizedBox(height: 16),
+          material.Text(
+            '1. Add the dependency:',
+            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: material.FontWeight.w600),
+          ),
+          const material.SizedBox(height: 8),
+          _codeBox('dependencies:\n  apliarte_glass_theme: ^0.6.0-dev.1'),
+          const material.SizedBox(height: 16),
+          material.Text(
+            '2. Swap one import:',
+            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: material.FontWeight.w600),
+          ),
+          const material.SizedBox(height: 8),
+          _codeBox("// Before\nimport 'package:flutter/material.dart';\n\n// After\nimport 'package:apliarte_glass_theme/apliarte_glass_theme.dart';"),
+          const material.SizedBox(height: 16),
+          material.Text(
+            '3. That\'s it. Everything works.',
+            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: material.FontWeight.w600),
+          ),
+          const material.SizedBox(height: 8),
+          material.Text(
+            'All Material widgets are replaced with glass versions. Same API, same parameters, same behavior — just with a frosted glass effect.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _codeBox(String code) {
+    final theme = material.Theme.of(context);
+    return material.Container(
+      width: double.infinity,
+      padding: const material.EdgeInsets.all(16),
+      decoration: material.BoxDecoration(
+        color: const material.Color(0xFF1A1A2E),
+        borderRadius: material.BorderRadius.circular(12),
+      ),
+      child: material.Text(
+        code,
+        style: material.TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 13,
+          color: theme.colorScheme.primary.withValues(alpha: 0.9),
+          height: 1.5,
+        ),
+      ),
+    );
+  }
+
+  // ── Links ───────────────────────────────────────
+
+  Widget _linksSection() {
+    return material.Padding(
+      padding: const material.EdgeInsets.symmetric(horizontal: 16, vertical: 32),
       child: material.Column(
         children: [
-          material.Text(
-            'ApliArte Glass Theme',
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: material.Colors.white,
-              fontWeight: material.FontWeight.bold,
-            ),
-          ),
-          const material.SizedBox(height: 4),
-          material.Text(
-            'Same API. One import. All glass.',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: material.Colors.white.withValues(alpha: 0.85),
-            ),
-          ),
-          const material.SizedBox(height: 20),
-          // Toggle row
-          material.Row(
-            mainAxisAlignment: material.MainAxisAlignment.center,
+          _sectionTitle('Links'),
+          const material.SizedBox(height: 16),
+          material.Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            alignment: material.WrapAlignment.center,
             children: [
-              material.Text(
-                'MATERIAL',
-                style: material.TextStyle(
-                  color: _isGlass
-                      ? material.Colors.white.withValues(alpha: 0.5)
-                      : material.Colors.white,
-                  fontWeight: _isGlass
-                      ? material.FontWeight.normal
-                      : material.FontWeight.bold,
-                  fontSize: 14,
-                ),
+              _linkButton(
+                icon: material.Icons.code,
+                label: 'GitHub',
+                url: _githubUrl,
               ),
-              const material.SizedBox(width: 12),
-              material.GestureDetector(
-                onTap: () => setState(() => _isGlass = !_isGlass),
-                child: material.AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: 64,
-                  height: 32,
-                  decoration: material.BoxDecoration(
-                    borderRadius: material.BorderRadius.circular(16),
-                    color: _isGlass
-                        ? material.Colors.white
-                        : material.Colors.white.withValues(alpha: 0.3),
-                    border: material.Border.all(
-                      color: material.Colors.white.withValues(alpha: 0.5),
-                      width: 2,
-                    ),
-                  ),
-                  alignment: _isGlass
-                      ? material.Alignment.centerRight
-                      : material.Alignment.centerLeft,
-                  padding: const material.EdgeInsets.symmetric(horizontal: 4),
-                  child: material.Container(
-                    width: 22,
-                    height: 22,
-                    decoration: const material.BoxDecoration(
-                      shape: material.BoxShape.circle,
-                      color: material.Color(0xFF005FA9),
-                    ),
-                  ),
-                ),
-              ),
-              const material.SizedBox(width: 12),
-              material.Text(
-                'GLASS',
-                style: material.TextStyle(
-                  color: _isGlass
-                      ? material.Colors.white
-                      : material.Colors.white.withValues(alpha: 0.5),
-                  fontWeight: _isGlass
-                      ? material.FontWeight.bold
-                      : material.FontWeight.normal,
-                  fontSize: 14,
-                ),
+              _linkButton(
+                icon: material.Icons.public,
+                label: 'pub.dev',
+                url: _pubUrl,
               ),
             ],
           ),
-          const material.SizedBox(height: 16),
-          _codeBlock(),
+        ],
+      ),
+    );
+  }
+
+  Widget _linkButton({
+    required material.IconData icon,
+    required String label,
+    required String url,
+  }) {
+    return material.GestureDetector(
+      onTap: () => html.window.open(url, '_blank'),
+      child: material.Container(
+        padding: const material.EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        decoration: material.BoxDecoration(
+          color: _primary,
+          borderRadius: material.BorderRadius.circular(12),
+        ),
+        child: material.Row(
+          mainAxisSize: material.MainAxisSize.min,
+          children: [
+            material.Icon(icon, color: material.Colors.white, size: 20),
+            const material.SizedBox(width: 8),
+            material.Text(
+              label,
+              style: const material.TextStyle(
+                color: material.Colors.white,
+                fontWeight: material.FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Support ─────────────────────────────────────
+
+  Widget _supportSection() {
+    final theme = material.Theme.of(context);
+    return material.Container(
+      width: double.infinity,
+      padding: const material.EdgeInsets.all(32),
+      decoration: material.BoxDecoration(
+        gradient: material.LinearGradient(
+          colors: [
+            theme.colorScheme.primaryContainer,
+            theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+          ],
+        ),
+      ),
+      child: material.Column(
+        children: [
+          const material.Icon(
+            material.Icons.favorite,
+            color: material.Colors.redAccent,
+            size: 32,
+          ),
+          const material.SizedBox(height: 12),
+          material.Text(
+            'Support this project',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: material.FontWeight.w700,
+            ),
+          ),
+          const material.SizedBox(height: 8),
+          material.Text(
+            'If ApliArte Glass Theme helps you build beautiful apps,\nconsider supporting its development.',
+            textAlign: material.TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+          const material.SizedBox(height: 20),
+          material.GestureDetector(
+            onTap: () => html.window.open(_paypalUrl, '_blank'),
+            child: material.Container(
+              padding: const material.EdgeInsets.symmetric(
+                horizontal: 32,
+                vertical: 14,
+              ),
+              decoration: material.BoxDecoration(
+                color: const material.Color(0xFF0070BA),
+                borderRadius: material.BorderRadius.circular(12),
+              ),
+              child: material.Row(
+                mainAxisSize: material.MainAxisSize.min,
+                children: [
+                  material.Text(
+                    'PayPal',
+                    style: material.TextStyle(
+                      color: material.Colors.white,
+                      fontWeight: material.FontWeight.w700,
+                    ),
+                  ),
+                  const material.SizedBox(width: 6),
+                  material.Text(
+                    'Donate',
+                    style: material.TextStyle(
+                      color: material.Colors.lightBlueAccent,
+                      fontWeight: material.FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -320,64 +712,80 @@ class _ToggleHomeState extends State<ToggleHome> {
     final isDark = theme.brightness == material.Brightness.dark;
 
     return material.Scaffold(
-      backgroundColor: isDark ? const material.Color(0xFF0F0F1A) : const material.Color(0xFFF5F5F7),
-      appBar: _appBar(),
+      backgroundColor: isDark
+          ? const material.Color(0xFF0A0A14)
+          : const material.Color(0xFFF5F5F7),
       body: material.SingleChildScrollView(
-        padding: const material.EdgeInsets.all(16),
         child: material.Column(
-          crossAxisAlignment: material.CrossAxisAlignment.start,
           children: [
-            // ── Hero toggle section ──
-            _buildHeroToggle(theme),
+            _hero(),
+            _showcase(),
+            const material.SizedBox(height: 24),
+            _howToUse(),
+            _linksSection(),
+            _supportSection(),
             const material.SizedBox(height: 24),
 
-            // Action buttons
-            _actionButtons(),
-            const material.SizedBox(height: 24),
-
-            // Card
-            _card(),
-            const material.SizedBox(height: 16),
-
-            // ListTile
-            _listTile(),
-            const material.SizedBox(height: 16),
-
-            // Slider
-            material.Text('Slider', style: theme.textTheme.titleSmall),
-            _slider(),
-            const material.SizedBox(height: 80),
+            // Footer
+            material.Padding(
+              padding: const material.EdgeInsets.only(bottom: 32),
+              child: material.Text(
+                'Made with ❤️ by erbolamm',
+                style: material.TextStyle(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                  fontSize: 13,
+                ),
+              ),
+            ),
           ],
         ),
       ),
 
-      // Toggle FAB (quick-access)
+      // Toggle FAB
       floatingActionButton: FloatingActionButton(
         heroTag: 'toggle',
-        onPressed: () => setState(() => _isGlass = !_isGlass),
+        onPressed: () => setState(() => _glass = !_glass),
         child: material.Icon(
-          _isGlass ? material.Icons.auto_awesome : material.Icons.auto_awesome_outlined,
+          _glass ? material.Icons.auto_awesome : material.Icons.auto_awesome_outlined,
         ),
       ),
 
-      // Bottom nav
-      bottomNavigationBar: _isGlass
+      // NavigationBar (glass only active when _glass is true)
+      bottomNavigationBar: _glass
           ? NavigationBar(
               selectedIndex: 0,
               onDestinationSelected: (_) {},
               destinations: const [
-                material.NavigationDestination(icon: material.Icon(material.Icons.home), label: 'Home'),
-                material.NavigationDestination(icon: material.Icon(material.Icons.search), label: 'Search'),
-                material.NavigationDestination(icon: material.Icon(material.Icons.settings), label: 'Settings'),
+                material.NavigationDestination(
+                  icon: material.Icon(material.Icons.home),
+                  label: 'Home',
+                ),
+                material.NavigationDestination(
+                  icon: material.Icon(material.Icons.widgets),
+                  label: 'Widgets',
+                ),
+                material.NavigationDestination(
+                  icon: material.Icon(material.Icons.favorite),
+                  label: 'Support',
+                ),
               ],
             )
           : material.NavigationBar(
               selectedIndex: 0,
               onDestinationSelected: (_) {},
               destinations: const [
-                material.NavigationDestination(icon: material.Icon(material.Icons.home), label: 'Home'),
-                material.NavigationDestination(icon: material.Icon(material.Icons.search), label: 'Search'),
-                material.NavigationDestination(icon: material.Icon(material.Icons.settings), label: 'Settings'),
+                material.NavigationDestination(
+                  icon: material.Icon(material.Icons.home),
+                  label: 'Home',
+                ),
+                material.NavigationDestination(
+                  icon: material.Icon(material.Icons.widgets),
+                  label: 'Widgets',
+                ),
+                material.NavigationDestination(
+                  icon: material.Icon(material.Icons.favorite),
+                  label: 'Support',
+                ),
               ],
             ),
     );
