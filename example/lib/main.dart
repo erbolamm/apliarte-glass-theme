@@ -150,17 +150,37 @@ class _ToggleHomeState extends State<ToggleHome> {
   }
 
   Widget _codeBlock() {
-    final code = _isGlass
-        ? 'import \'package:apliarte_glass_theme/apliarte_glass_theme.dart\';'
-        : 'import \'package:flutter/material.dart\';';
+    final code = 'import \'package:apliarte_glass_theme/apliarte_glass_theme.dart\';';
+    final codeMaterial = 'import \'package:flutter/material.dart\';';
     return material.Container(
       width: double.infinity,
-      padding: const material.EdgeInsets.all(12),
+      padding: const material.EdgeInsets.all(10),
       decoration: material.BoxDecoration(
-        color: material.Theme.of(context).colorScheme.surfaceContainerHighest,
+        color: material.Colors.black.withValues(alpha: 0.2),
         borderRadius: material.BorderRadius.circular(8),
       ),
-      child: material.Text(code, style: const material.TextStyle(fontFamily: 'monospace', fontSize: 12)),
+      child: material.Column(
+        crossAxisAlignment: material.CrossAxisAlignment.start,
+        children: [
+          material.Text(
+            _isGlass ? code : codeMaterial,
+            style: material.TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 11,
+              color: _isGlass ? material.Colors.greenAccent : material.Colors.white70,
+            ),
+          ),
+          const material.SizedBox(height: 2),
+          material.Text(
+            _isGlass ? '// Glass is ACTIVE' : '// Glass is OFF',
+            style: material.TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 10,
+              color: material.Colors.white.withValues(alpha: 0.5),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -191,6 +211,107 @@ class _ToggleHomeState extends State<ToggleHome> {
     );
   }
 
+  // ── Hero toggle ───────────────────────────────
+
+  Widget _buildHeroToggle(material.ThemeData theme) {
+    return material.Container(
+      width: double.infinity,
+      padding: const material.EdgeInsets.all(20),
+      decoration: material.BoxDecoration(
+        gradient: material.LinearGradient(
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.primary.withValues(alpha: 0.7),
+          ],
+        ),
+        borderRadius: material.BorderRadius.circular(16),
+      ),
+      child: material.Column(
+        children: [
+          material.Text(
+            'ApliArte Glass Theme',
+            style: theme.textTheme.headlineMedium?.copyWith(
+              color: material.Colors.white,
+              fontWeight: material.FontWeight.bold,
+            ),
+          ),
+          const material.SizedBox(height: 4),
+          material.Text(
+            'Same API. One import. All glass.',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: material.Colors.white.withValues(alpha: 0.85),
+            ),
+          ),
+          const material.SizedBox(height: 20),
+          // Toggle row
+          material.Row(
+            mainAxisAlignment: material.MainAxisAlignment.center,
+            children: [
+              material.Text(
+                'MATERIAL',
+                style: material.TextStyle(
+                  color: _isGlass
+                      ? material.Colors.white.withValues(alpha: 0.5)
+                      : material.Colors.white,
+                  fontWeight: _isGlass
+                      ? material.FontWeight.normal
+                      : material.FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              const material.SizedBox(width: 12),
+              material.GestureDetector(
+                onTap: () => setState(() => _isGlass = !_isGlass),
+                child: material.AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 64,
+                  height: 32,
+                  decoration: material.BoxDecoration(
+                    borderRadius: material.BorderRadius.circular(16),
+                    color: _isGlass
+                        ? material.Colors.white
+                        : material.Colors.white.withValues(alpha: 0.3),
+                    border: material.Border.all(
+                      color: material.Colors.white.withValues(alpha: 0.5),
+                      width: 2,
+                    ),
+                  ),
+                  alignment: _isGlass
+                      ? material.Alignment.centerRight
+                      : material.Alignment.centerLeft,
+                  padding: const material.EdgeInsets.symmetric(horizontal: 4),
+                  child: material.Container(
+                    width: 22,
+                    height: 22,
+                    decoration: const material.BoxDecoration(
+                      shape: material.BoxShape.circle,
+                      color: material.Color(0xFF005FA9),
+                    ),
+                  ),
+                ),
+              ),
+              const material.SizedBox(width: 12),
+              material.Text(
+                'GLASS',
+                style: material.TextStyle(
+                  color: _isGlass
+                      ? material.Colors.white
+                      : material.Colors.white.withValues(alpha: 0.5),
+                  fontWeight: _isGlass
+                      ? material.FontWeight.bold
+                      : material.FontWeight.normal,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const material.SizedBox(height: 16),
+          _codeBlock(),
+        ],
+      ),
+    );
+  }
+
   // ── Build ──────────────────────────────────────
 
   @override
@@ -206,18 +327,8 @@ class _ToggleHomeState extends State<ToggleHome> {
         child: material.Column(
           crossAxisAlignment: material.CrossAxisAlignment.start,
           children: [
-            // Header
-            material.Text(
-              _isGlass ? 'Glass Mode' : 'Material Mode',
-              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: material.FontWeight.bold),
-            ),
-            const material.SizedBox(height: 4),
-            material.Text(
-              'Same API, one toggle.',
-              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
-            ),
-            const material.SizedBox(height: 8),
-            _codeBlock(),
+            // ── Hero toggle section ──
+            _buildHeroToggle(theme),
             const material.SizedBox(height: 24),
 
             // Action buttons
@@ -240,20 +351,14 @@ class _ToggleHomeState extends State<ToggleHome> {
         ),
       ),
 
-      // Toggle FAB
-      floatingActionButton: _isGlass
-          ? FloatingActionButton.extended(
-              heroTag: 'toggle',
-              onPressed: () => setState(() => _isGlass = false),
-              icon: const material.Icon(material.Icons.swap_horiz),
-              label: const Text('Material'),
-            )
-          : material.FloatingActionButton.extended(
-              heroTag: 'toggle',
-              onPressed: () => setState(() => _isGlass = true),
-              icon: const material.Icon(material.Icons.swap_horiz),
-              label: const material.Text('Glass'),
-            ),
+      // Toggle FAB (quick-access)
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'toggle',
+        onPressed: () => setState(() => _isGlass = !_isGlass),
+        child: material.Icon(
+          _isGlass ? material.Icons.auto_awesome : material.Icons.auto_awesome_outlined,
+        ),
+      ),
 
       // Bottom nav
       bottomNavigationBar: _isGlass
