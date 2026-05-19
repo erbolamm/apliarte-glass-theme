@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, BottomSheet, Drawer, FloatingActionButton, ElevatedButton, TextButton, OutlinedButton, IconButton, ListTile, Divider, CircularProgressIndicator, LinearProgressIndicator, Slider;
+import 'package:flutter/material.dart' hide AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, BottomSheet, Drawer, FloatingActionButton, ElevatedButton, TextButton, OutlinedButton, IconButton, ListTile, Divider, CircularProgressIndicator, LinearProgressIndicator, Slider, SnackBar, Tab, TabBar, TabBarView, TextField, Switch, PopupMenuButton, Badge, ExpansionTile;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 

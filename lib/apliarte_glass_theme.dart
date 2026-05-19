@@ -19,7 +19,15 @@ export 'package:flutter/material.dart'
         Divider,
         CircularProgressIndicator,
         LinearProgressIndicator,
-        Slider;
+        Slider,
+        Tab,
+        TabBar,
+        TabBarView,
+        TextField,
+        Switch,
+        PopupMenuButton,
+        Badge,
+        ExpansionTile;
 
 export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
     show LiquidGlassSettings;
@@ -47,3 +55,9 @@ export 'src/widgets/linear_progress_indicator.dart';
 export 'src/widgets/slider.dart';
 export 'src/widgets/list_tile.dart';
 export 'src/widgets/divider.dart';
+export 'src/widgets/tab_bar.dart';
+export 'src/widgets/text_field.dart';
+export 'src/widgets/switch.dart';
+export 'src/widgets/popup_menu_button.dart';
+export 'src/widgets/badge.dart';
+export 'src/widgets/expansion_tile.dart';
