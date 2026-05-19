@@ -9,7 +9,10 @@ export 'package:flutter/material.dart'
         NavigationBar,
         BottomSheet,
         Drawer,
-        FloatingActionButton;
+        FloatingActionButton,
+        ElevatedButton,
+        TextButton,
+        OutlinedButton;
 
 export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
     show LiquidGlassSettings;
@@ -27,3 +30,6 @@ export 'src/widgets/dialog.dart';
 export 'src/widgets/drawer.dart';
 export 'src/widgets/fab.dart';
 export 'src/widgets/nav_bar.dart';
+export 'src/widgets/elevated_button.dart';
+export 'src/widgets/text_button.dart';
+export 'src/widgets/outlined_button.dart';
