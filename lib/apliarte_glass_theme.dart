@@ -14,7 +14,12 @@ export 'package:flutter/material.dart'
         TextButton,
         OutlinedButton,
         SnackBar,
-        IconButton;
+        IconButton,
+        ListTile,
+        Divider,
+        CircularProgressIndicator,
+        LinearProgressIndicator,
+        Slider;
 
 export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
     show LiquidGlassSettings;
@@ -37,3 +42,8 @@ export 'src/widgets/text_button.dart';
 export 'src/widgets/outlined_button.dart';
 export 'src/widgets/snack_bar.dart';
 export 'src/widgets/icon_button.dart';
+export 'src/widgets/circular_progress_indicator.dart';
+export 'src/widgets/linear_progress_indicator.dart';
+export 'src/widgets/slider.dart';
+export 'src/widgets/list_tile.dart';
+export 'src/widgets/divider.dart';
