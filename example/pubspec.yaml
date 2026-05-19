@@ -1,5 +1,5 @@
 name: apliarte_glass_theme_example
-description: Example app demonstrating the apliarte_glass_theme package.
+description: Demo — one toggle switches between Material and Glass.
 publish_to: none
 
 environment:
@@ -11,9 +11,6 @@ dependencies:
     sdk: flutter
   apliarte_glass_theme:
     path: ../
-  google_fonts: ^6.2.1
-  url_launcher: ^6.3.1
-  flutter_adaptive_scaffold: ^0.3.3+1
 
 flutter:
   uses-material-design: true
