@@ -1,13 +1,13 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../glas_config.dart';
 
-/// Internal widget that applies the liquid glass effect to any child.
+/// Internal widget that applies a frosted-glass layer to any child.
 ///
-/// Reads defaults from [GlasConfig] and adapts to dark/light automatically.
-/// El contenido se encapsula en [ClipRRect] con el [borderRadius] visual
-/// para evitar artefactos de [LiquidGlass.withOwnLayer] al hacer scroll.
+/// Uses Flutter's built-in [BackdropFilter] instead of shader packages so the
+/// package can be published as a stable production release.
 class GlassLayer extends StatelessWidget {
   final Widget child;
   final double? borderRadius;
@@ -28,51 +28,38 @@ class GlassLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = borderRadius ?? 0;
     final blur = customBlur ?? GlasConfig.blur();
-    final settings = LiquidGlassSettings(
-      thickness: GlasConfig.highlight() * 30,
-      blur: blur,
-      glassColor: GlasConfig.glassColor(context),
-      lightIntensity: GlasConfig.highlight(),
-      refractiveIndex: 1.3,
-    );
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: Stack(
         children: [
-          // ── Sombra única (solo si se pasa explícitamente) ──
           if (customShadows != null)
             Positioned.fill(
               child: IgnorePointer(
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(radius),
-                    boxShadow: customShadows ??
-                        [
-                          BoxShadow(
-                            color: GlasConfig.shadowColor(context),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
-                            spreadRadius: -4,
-                          ),
-                        ],
+                    boxShadow: customShadows,
                   ),
                 ),
               ),
             ),
-
-          // ── Capa glass ──
-          LiquidGlass.withOwnLayer(
-            shape: LiquidRoundedRectangle(borderRadius: radius),
-            settings: settings,
-            child: child,
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: GlasConfig.glassColor(context),
+                  borderRadius: BorderRadius.circular(radius),
+                ),
+              ),
+            ),
           ),
-
-          // ── Borde glass ──
+          child,
           if (showBorder && radius > 0)
             Positioned.fill(
               child: IgnorePointer(
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(radius),
                     border: Border.all(

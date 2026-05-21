@@ -1,7 +1,10 @@
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
+
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart' as material;
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
+import 'package:apliarte_glass_theme/glass_widgets.dart' as glass;
 
 void main() => runApp(const GlassLanding());
 
@@ -251,7 +254,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _elevatedDemo() {
     return _glass
-        ? ElevatedButton.icon(
+        ? glass.ElevatedButton.icon(
             onPressed: () {},
             icon: const material.Icon(material.Icons.star),
             label: const Text('Elevated'),
@@ -265,7 +268,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _outlinedDemo() {
     return _glass
-        ? OutlinedButton.icon(
+        ? glass.OutlinedButton.icon(
             onPressed: () {},
             icon: const material.Icon(material.Icons.favorite_border),
             label: const Text('Outlined'),
@@ -279,7 +282,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _textDemo() {
     return _glass
-        ? TextButton(
+        ? glass.TextButton(
             onPressed: () {},
             child: const Text('Text Button'),
           )
@@ -294,7 +297,7 @@ class _LandingPageState extends State<LandingPage> {
       mainAxisAlignment: material.MainAxisAlignment.spaceEvenly,
       children: [
         _glass
-            ? IconButton(
+            ? glass.IconButton(
                 icon: const material.Icon(material.Icons.thumb_up),
                 onPressed: () {},
               )
@@ -303,7 +306,7 @@ class _LandingPageState extends State<LandingPage> {
                 onPressed: () {},
               ),
         _glass
-            ? IconButton.filled(
+            ? glass.IconButton.filled(
                 icon: const material.Icon(material.Icons.favorite),
                 onPressed: () {},
               )
@@ -312,7 +315,7 @@ class _LandingPageState extends State<LandingPage> {
                 onPressed: () {},
               ),
         _glass
-            ? IconButton.outlined(
+            ? glass.IconButton.outlined(
                 icon: const material.Icon(material.Icons.share),
                 onPressed: () {},
               )
@@ -326,7 +329,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _cardDemo() {
     return _glass
-        ? Card(
+        ? glass.Card(
             child: material.Padding(
               padding: const material.EdgeInsets.all(16),
               child: material.Column(
@@ -370,19 +373,19 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _sliderDemo() {
     return _glass
-        ? Slider(value: 60, onChanged: (_) {})
+        ? glass.Slider(value: 60, onChanged: (_) {})
         : material.Slider(value: 60, onChanged: (_) {});
   }
 
   Widget _listTileDemo() {
     return _glass
-        ? ListTile(
+        ? glass.ListTile(
             leading: const material.Icon(material.Icons.star),
             title: const Text('ListTile'),
             subtitle: const Text('Glass background'),
             trailing: material.Switch(
               value: _glass,
-              activeColor: _primary,
+              activeThumbColor: _primary,
               onChanged: (_) => setState(() => _glass = !_glass),
             ),
           )
@@ -392,7 +395,7 @@ class _LandingPageState extends State<LandingPage> {
             subtitle: const material.Text('Material background'),
             trailing: material.Switch(
               value: _glass,
-              activeColor: _primary,
+              activeThumbColor: _primary,
               onChanged: (_) => setState(() => _glass = !_glass),
             ),
           );
@@ -400,7 +403,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _textFieldDemo() {
     return _glass
-        ? TextField(
+        ? glass.TextField(
             decoration: const material.InputDecoration(
               hintText: 'Glass TextField',
               border: material.OutlineInputBorder(),
@@ -416,13 +419,13 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _progressDemo() {
     return _glass
-        ? const CircularProgressIndicator()
+        ? const glass.CircularProgressIndicator()
         : const material.CircularProgressIndicator();
   }
 
   Widget _dialogTrigger() {
     return _glass
-        ? ElevatedButton.icon(
+        ? glass.ElevatedButton.icon(
             onPressed: () => _showDialog(context),
             icon: const material.Icon(material.Icons.chat),
             label: const Text('Open Dialog'),
@@ -437,11 +440,11 @@ class _LandingPageState extends State<LandingPage> {
   void _showDialog(material.BuildContext ctx) {
     showDialog(
       context: ctx,
-      builder: (_) => AlertDialog(
+      builder: (_) => glass.AlertDialog(
         title: const Text('Glass Dialog'),
         content: const Text('This AlertDialog has a frosted glass effect.'),
         actions: [
-          TextButton(
+          glass.TextButton(
             onPressed: () => material.Navigator.of(ctx).pop(),
             child: const Text('OK'),
           ),
@@ -452,10 +455,10 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _snackTrigger() {
     return _glass
-        ? ElevatedButton.icon(
+        ? glass.ElevatedButton.icon(
             onPressed: () {
               material.ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                glass.SnackBar(
                   content: const Text('🧊 Glass SnackBar!'),
                   behavior: material.SnackBarBehavior.floating,
                 ),
@@ -482,11 +485,11 @@ class _LandingPageState extends State<LandingPage> {
     return _glass
         ? SizedBox(
             height: 48,
-            child: TabBar(
+            child: glass.TabBar(
               tabs: const [
-                Tab(text: 'Tab 1'),
-                Tab(text: 'Tab 2'),
-                Tab(text: 'Tab 3'),
+                glass.Tab(text: 'Tab 1'),
+                glass.Tab(text: 'Tab 2'),
+                glass.Tab(text: 'Tab 3'),
               ],
             ),
           )
@@ -752,7 +755,7 @@ class _LandingPageState extends State<LandingPage> {
 
       // NavigationBar (glass only active when _glass is true)
       bottomNavigationBar: _glass
-          ? NavigationBar(
+          ? glass.NavigationBar(
               selectedIndex: 0,
               onDestinationSelected: (_) {},
               destinations: const [

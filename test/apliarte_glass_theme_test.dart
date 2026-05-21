@@ -240,7 +240,7 @@ void main() {
     });
   });
 
-  group('BottomSheet (glass)', () {
+  group('BottomSheet', () {
     testWidgets('renders content via showModalBottomSheet', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
@@ -249,7 +249,8 @@ void main() {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (_) => const BottomSheet(
+                  builder: (_) => const Padding(
+                    padding: EdgeInsets.all(16),
                     child: Text('Sheet content'),
                   ),
                 );
@@ -273,9 +274,10 @@ void main() {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (_) => const BottomSheet(
+                  showDragHandle: true,
+                  builder: (_) => const Padding(
+                    padding: EdgeInsets.all(16),
                     child: Text('Content'),
-                    showDragHandle: true,
                   ),
                 );
               },

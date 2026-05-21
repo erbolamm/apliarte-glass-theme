@@ -19,9 +19,9 @@ class Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return material.Badge(
-      child: child,
       label: label,
       isLabelVisible: isLabelVisible,
+      child: child,
     );
   }
 }

@@ -1,63 +1,20 @@
 library;
 
-export 'package:flutter/material.dart'
-    hide
-        AppBar,
-        BottomAppBar,
-        Card,
-        AlertDialog,
-        NavigationBar,
-        BottomSheet,
-        Drawer,
-        FloatingActionButton,
-        ElevatedButton,
-        TextButton,
-        OutlinedButton,
-        SnackBar,
-        IconButton,
-        ListTile,
-        Divider,
-        CircularProgressIndicator,
-        LinearProgressIndicator,
-        Slider,
-        Tab,
-        TabBar,
-        TabBarView,
-        TextField,
-        Switch,
-        PopupMenuButton,
-        Badge,
-        ExpansionTile;
-
-export 'package:liquid_glass_renderer/liquid_glass_renderer.dart'
-    show LiquidGlassSettings;
+/// Safe public entrypoint.
+///
+/// This file intentionally re-exports Flutter Material without hiding or
+/// replacing core widgets. Apps can import this file instead of
+/// `package:flutter/material.dart` and keep Material API compatibility while
+/// gaining [GlasConfig], [GlassTheme], and helpers.
+///
+/// Real glass widgets live in `glass_widgets.dart` and should be imported
+/// explicitly when blur/BackdropFilter behavior is desired:
+///
+/// ```dart
+/// import 'package:apliarte_glass_theme/glass_widgets.dart' as glass;
+/// ```
+export 'package:flutter/material.dart';
 
 export 'glas_config.dart';
 export 'glass_theme.dart';
-
 export 'src/helpers/liquid_highlight.dart';
-
-export 'src/widgets/appbar.dart';
-export 'src/widgets/bottom_app_bar.dart';
-export 'src/widgets/bottom_sheet.dart';
-export 'src/widgets/card.dart';
-export 'src/widgets/dialog.dart';
-export 'src/widgets/drawer.dart';
-export 'src/widgets/fab.dart';
-export 'src/widgets/nav_bar.dart';
-export 'src/widgets/elevated_button.dart';
-export 'src/widgets/text_button.dart';
-export 'src/widgets/outlined_button.dart';
-export 'src/widgets/snack_bar.dart';
-export 'src/widgets/icon_button.dart';
-export 'src/widgets/circular_progress_indicator.dart';
-export 'src/widgets/linear_progress_indicator.dart';
-export 'src/widgets/slider.dart';
-export 'src/widgets/list_tile.dart';
-export 'src/widgets/divider.dart';
-export 'src/widgets/tab_bar.dart';
-export 'src/widgets/text_field.dart';
-export 'src/widgets/switch.dart';
-export 'src/widgets/popup_menu_button.dart';
-export 'src/widgets/badge.dart';
-export 'src/widgets/expansion_tile.dart';

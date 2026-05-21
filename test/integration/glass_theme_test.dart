@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' hide AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, BottomSheet, Drawer, FloatingActionButton, ElevatedButton, TextButton, OutlinedButton, IconButton, ListTile, Divider, CircularProgressIndicator, LinearProgressIndicator, Slider, SnackBar, Tab, TabBar, TabBarView, TextField, Switch, PopupMenuButton, Badge, ExpansionTile;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 
@@ -100,7 +99,7 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('BottomSheet renders with glass effect', (tester) async {
+  testWidgets('BottomSheet renders through Material API', (tester) async {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: Builder(
@@ -108,9 +107,10 @@ void main() {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
-                builder: (_) => const BottomSheet(
+                showDragHandle: true,
+                builder: (_) => const Padding(
+                  padding: EdgeInsets.all(16),
                   child: Text('Sheet content'),
-                  showDragHandle: true,
                 ),
               );
             },

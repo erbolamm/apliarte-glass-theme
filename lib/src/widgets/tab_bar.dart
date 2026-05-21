@@ -17,7 +17,7 @@ class Tab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return material.Tab(child: child, text: text, icon: icon);
+    return material.Tab(text: text, icon: icon, child: child);
   }
 }
 
@@ -59,6 +59,6 @@ class TabBarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return material.TabBarView(children: children, controller: controller);
+    return material.TabBarView(controller: controller, children: children);
   }
 }

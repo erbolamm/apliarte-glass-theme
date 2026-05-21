@@ -1,6 +1,6 @@
 name: apliarte_glass_theme
-description: "Misma API que Material 3, con identidad visual glass propia. Componentes: AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, FloatingActionButton, BottomSheet, Drawer. Sin refactorizar widgets."
-version: 0.6.0-dev.1
+description: "Material-safe glass theme for Flutter. The default entrypoint preserves Material API compatibility; glass widget wrappers are opt-in."
+version: 0.7.0
 license: MIT
 homepage: https://github.com/erbolamm/apliarte-glass-theme
 repository: https://github.com/erbolamm/apliarte-glass-theme
@@ -13,7 +13,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  liquid_glass_renderer: ^0.2.0-dev.4
   flutter_svg: ^2.0.10+1
 
 dev_dependencies:

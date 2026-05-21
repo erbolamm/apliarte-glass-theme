@@ -90,9 +90,9 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(
-        (toolbarHeight ?? material.kToolbarHeight) +
-            (bottom?.preferredSize.height ?? 0.0),
-      );
+    (toolbarHeight ?? material.kToolbarHeight) +
+        (bottom?.preferredSize.height ?? 0.0),
+  );
 
   Widget? _resolveLeading(BuildContext context) {
     if (leading != null) return leading;
@@ -111,14 +111,54 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = material.Theme.of(context);
-    final effectiveForeground = foregroundColor ?? theme.colorScheme.onSurface;
+    final appBarTheme = theme.appBarTheme;
+    final effectiveForeground =
+        foregroundColor ??
+        appBarTheme.foregroundColor ??
+        theme.colorScheme.onSurface;
     final tHeight = toolbarHeight ?? material.kToolbarHeight;
     final bHeight = bottom?.preferredSize.height ?? 0.0;
-    final rBottom = bottomRadius ?? GlasConfig.appBarBottomRadius ?? GlasConfig.mediumRadiusValue();
+    final rBottom =
+        bottomRadius ??
+        GlasConfig.appBarBottomRadius ??
+        GlasConfig.mediumRadiusValue();
     final topInset = material.MediaQuery.of(context).viewPadding.top;
     final resolvedLeading = _resolveLeading(context);
     final sigma = blurSigma ?? GlasConfig.appBarBlurSigma ?? GlasConfig.blur();
-    final tint = glassTint ?? GlasConfig.appBarColor(context);
+    final tint =
+        glassTint ?? backgroundColor ?? GlasConfig.appBarColor(context);
+    final effectiveIconTheme =
+        (iconTheme ?? appBarTheme.iconTheme ?? const material.IconThemeData())
+            .copyWith(
+              color:
+                  iconTheme?.color ??
+                  appBarTheme.iconTheme?.color ??
+                  effectiveForeground,
+            );
+    final effectiveActionsIconTheme =
+        (actionsIconTheme ?? appBarTheme.actionsIconTheme ?? effectiveIconTheme)
+            .copyWith(
+              color:
+                  actionsIconTheme?.color ??
+                  appBarTheme.actionsIconTheme?.color ??
+                  effectiveIconTheme.color ??
+                  effectiveForeground,
+            );
+    final effectiveToolbarTextStyle =
+        toolbarTextStyle ??
+        appBarTheme.toolbarTextStyle ??
+        theme.textTheme.bodyMedium;
+    final effectiveLeadingWidth =
+        leadingWidth ?? appBarTheme.leadingWidth ?? material.kToolbarHeight;
+    final effectiveTitleSpacing =
+        titleSpacing ??
+        appBarTheme.titleSpacing ??
+        material.NavigationToolbar.kMiddleSpacing;
+    final effectiveTitleTextStyle =
+        titleTextStyle ??
+        appBarTheme.titleTextStyle ??
+        theme.textTheme.titleLarge?.copyWith(color: effectiveForeground) ??
+        const TextStyle();
 
     final totalHeight = topInset + tHeight + bHeight;
 
@@ -126,21 +166,19 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
       height: totalHeight,
       child: Stack(
         children: [
-          // ── Frosted glass background ──
+          // ── Frosted glass background (cubre todo el AppBar + status bar) ──
           Positioned(
-            top: topInset,
+            top: 0,
             left: 0,
             right: 0,
             bottom: 0,
             child: ClipRRect(
+              clipBehavior: clipBehavior,
               borderRadius: material.BorderRadius.vertical(
                 bottom: material.Radius.circular(rBottom),
               ),
               child: material.BackdropFilter(
-                filter: ui.ImageFilter.blur(
-                  sigmaX: sigma,
-                  sigmaY: sigma,
-                ),
+                filter: ui.ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
                 child: Container(
                   decoration: BoxDecoration(
                     color: tint,
@@ -156,6 +194,8 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
 
+          if (flexibleSpace != null) Positioned.fill(child: flexibleSpace!),
+
           // ── Content ──
           material.Padding(
             padding: material.EdgeInsets.only(top: topInset),
@@ -164,34 +204,36 @@ class AppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 material.SizedBox(
                   height: tHeight,
-                  child: material.NavigationToolbar(
-                    leading: resolvedLeading != null
-                        ? material.IconTheme(
-                            data: material.IconThemeData(
-                                color: effectiveForeground),
-                            child: resolvedLeading,
-                          )
-                        : null,
-                    middle: material.DefaultTextStyle(
-                      style: titleTextStyle ??
-                          theme.textTheme.titleLarge?.copyWith(
-                                color: effectiveForeground,
-                              ) ??
-                          const TextStyle(),
-                      child: title ?? const material.SizedBox.shrink(),
+                  child: material.DefaultTextStyle.merge(
+                    style: effectiveToolbarTextStyle,
+                    child: material.NavigationToolbar(
+                      leading: resolvedLeading != null
+                          ? material.SizedBox(
+                              width: effectiveLeadingWidth,
+                              child: material.IconTheme(
+                                data: effectiveIconTheme,
+                                child: resolvedLeading,
+                              ),
+                            )
+                          : null,
+                      middle: material.DefaultTextStyle(
+                        style: effectiveTitleTextStyle,
+                        child: title ?? const material.SizedBox.shrink(),
+                      ),
+                      trailing: actions != null
+                          ? material.Row(
+                              mainAxisSize: material.MainAxisSize.min,
+                              children: actions!.map((action) {
+                                return material.IconTheme(
+                                  data: effectiveActionsIconTheme,
+                                  child: action,
+                                );
+                              }).toList(),
+                            )
+                          : null,
+                      centerMiddle: centerTitle,
+                      middleSpacing: effectiveTitleSpacing,
                     ),
-                    trailing: actions != null
-                        ? material.Row(
-                            mainAxisSize: material.MainAxisSize.min,
-                            children: actions!.map((action) {
-                              return material.IconTheme(
-                                data: material.IconThemeData(
-                                    color: effectiveForeground),
-                                child: action,
-                              );
-                            }).toList(),
-                          )
-                        : null,
                   ),
                 ),
                 if (bottom != null) bottom!,

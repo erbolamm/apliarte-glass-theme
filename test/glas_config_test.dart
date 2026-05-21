@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
-import 'package:flutter/material.dart';
 
 /// Tests para [GlasConfig] — la configuración central del glass theme.
 ///
@@ -160,8 +159,9 @@ void main() {
               final color = GlasConfig.glassColor(context);
               expect(color, isA<Color>());
               // Should have some alpha (transparency)
-              expect(color.alpha, greaterThan(0));
-              expect(color.alpha, lessThan(255));
+              final alpha = (color.a * 255.0).round().clamp(0, 255);
+              expect(alpha, greaterThan(0));
+              expect(alpha, lessThan(255));
               return const SizedBox.shrink();
             },
           ),
@@ -178,7 +178,8 @@ void main() {
             builder: (context) {
               final color = GlasConfig.glassColor(context);
               expect(color, isA<Color>());
-              expect(color.alpha, greaterThan(0));
+              final alpha = (color.a * 255.0).round().clamp(0, 255);
+              expect(alpha, greaterThan(0));
               return const SizedBox.shrink();
             },
           ),
@@ -223,7 +224,8 @@ void main() {
               final color = GlasConfig.glassColor(context);
               expect(color, isA<Color>());
               // Warm preset uses pink tint → red component should be > average
-              expect(color.red, greaterThan(200));
+              final red = (color.r * 255.0).round().clamp(0, 255);
+              expect(red, greaterThan(200));
               return const SizedBox.shrink();
             },
           ),

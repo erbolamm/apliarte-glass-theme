@@ -116,18 +116,22 @@ class GlasConfig {
   /// Returns the effective glass color for the current [context] theme.
   static Color glassColor(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final base = glassTintColor ?? (_w
-        ? Color.lerp(cs.surface, const Color(0xFFFFF0F5), 0.30)!
-        : cs.surface);
+    final base =
+        glassTintColor ??
+        (_w
+            ? Color.lerp(cs.surface, const Color(0xFFFFF0F5), 0.30)!
+            : cs.surface);
     return base.withValues(alpha: glassOpacity ?? (_w ? 0.78 : 0.82));
   }
 
   /// Returns the effective glass border color.
   static Color borderColor(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final raw = glassBorderColor ?? (_w
-        ? Color.lerp(cs.outlineVariant, const Color(0xFFFFC0CB), 0.20)!
-        : cs.outlineVariant);
+    final raw =
+        glassBorderColor ??
+        (_w
+            ? Color.lerp(cs.outlineVariant, const Color(0xFFFFC0CB), 0.20)!
+            : cs.outlineVariant);
     return raw.withValues(alpha: borderOpacity ?? (_w ? 0.50 : 0.35));
   }
 
@@ -155,7 +159,7 @@ class GlasConfig {
     if (appBarGlassTint != null) return appBarGlassTint!;
     final cs = Theme.of(context).colorScheme;
     final isDark = cs.brightness == Brightness.dark;
-    final opacity = appBarGlassOpacity ?? (isDark ? 0.25 : 0.18);
+    final opacity = appBarGlassOpacity ?? (isDark ? 0.55 : 0.50);
     final base = glassTintColor ?? cs.surface;
     return base.withValues(alpha: opacity);
   }
@@ -168,8 +172,9 @@ class GlasConfig {
   // uninitialized.
 
   static ColorScheme? _colorScheme;
-  static final ColorScheme _defaultScheme =
-      ColorScheme.fromSeed(seedColor: Colors.blue);
+  static final ColorScheme _defaultScheme = ColorScheme.fromSeed(
+    seedColor: Colors.blue,
+  );
   static ColorScheme get _scheme => _colorScheme ?? _defaultScheme;
 
   /// Called by [GlassTheme] when a new theme is created.

@@ -1,3 +1,21 @@
+## 0.7.0
+
+* ✅ **Release estable**: eliminado `liquid_glass_renderer` como dependencia
+  pre-release. Los wrappers glass usan `BackdropFilter` nativo de Flutter.
+* ⚠️ **Cambio de diseño importante**: `apliarte_glass_theme.dart` ya no oculta
+  ni reemplaza widgets core de Flutter Material. Ahora reexporta Material intacto
+  junto con `GlasConfig`, `GlassTheme` y helpers.
+* ✨ **Nuevo entrypoint opt-in**: `glass_widgets.dart` exporta los wrappers glass.
+  Importalo con prefijo (`as glass`) para evitar secuestrar `Card`,
+  `AlertDialog`, botones, etc.
+* 🐛 **Card estable**: el wrapper glass ya no agrega `padding: 16` ni margen
+  horizontal/vertical oculto por defecto. Esto evita textos angostos y wrapping
+  prematuro.
+* 🐛 **AlertDialog estable**: eliminado el anidado `Dialog + AlertDialog + Stack`,
+  que podía provocar diálogos fullscreen o constraints incorrectas en móviles.
+* 🧪 Tests de compatibilidad para confirmar que el entrypoint principal usa
+  Material por defecto y que los widgets glass siguen disponibles como opt-in.
+
 ## 0.4.0-dev.1
 
 * 🎨 **`GlasConfig` color tokens**: 26 getters estáticos (`primary`, `surface`,

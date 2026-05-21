@@ -4,13 +4,10 @@ import 'package:flutter/widgets.dart';
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
 
-/// Glass-themed [material.Card].
+/// Opt-in glass-themed card.
 ///
-/// Drop-in replacement: same constructor API as Material's Card.
-/// Glass color, blur, and radius are derived from the current theme.
-///
-/// ⚠️ Una sola fuente de sombra: [BoxDecoration.boxShadow].
-/// Sin [PhysicalModel] para evitar artefactos visuales al hacer scroll.
+/// This widget must stay layout-neutral: no hidden padding and no custom default
+/// margin. The caller owns content spacing, just like with Material [material.Card].
 class Card extends StatelessWidget {
   final Widget? child;
   final double? elevation;
@@ -43,29 +40,40 @@ class Card extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = GlasConfig.largeRadiusValue();
     final effectiveElevation = elevation ?? 4.0;
+    final effectiveShape = shape ??
+        material.RoundedRectangleBorder(
+          borderRadius: material.BorderRadius.circular(radius),
+        );
 
-    return material.Container(
-      margin: margin ??
-          const material.EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: material.BoxDecoration(
-        borderRadius: material.BorderRadius.circular(radius),
-        boxShadow: [
-          material.BoxShadow(
-            color: GlasConfig.shadowColor(context),
-            blurRadius: effectiveElevation * 4,
-            offset: material.Offset(0, effectiveElevation * 0.5),
-            spreadRadius: -2,
-          ),
-        ],
-      ),
-      child: material.ClipRRect(
-        borderRadius: material.BorderRadius.circular(radius),
+    return material.Card(
+      elevation: 0,
+      shape: effectiveShape,
+      borderOnForeground: borderOnForeground,
+      clipBehavior: clipBehavior,
+      color: material.Colors.transparent,
+      margin: margin,
+      shadowColor: material.Colors.transparent,
+      surfaceTintColor: material.Colors.transparent,
+      semanticContainer: semanticContainer,
+      child: material.DecoratedBox(
+        decoration: material.BoxDecoration(
+          borderRadius: material.BorderRadius.circular(radius),
+          boxShadow: effectiveElevation > 0
+              ? [
+                  material.BoxShadow(
+                    color: shadowColor ?? GlasConfig.shadowColor(context),
+                    blurRadius: effectiveElevation * 4,
+                    offset: material.Offset(0, effectiveElevation * 0.5),
+                    spreadRadius: -2,
+                  ),
+                ]
+              : const [],
+        ),
         child: GlassLayer(
           borderRadius: radius,
           showBorder: true,
-          customShadows: null,
-          child: material.Container(
-            padding: insetPadding ?? const material.EdgeInsets.all(16),
+          child: material.Padding(
+            padding: insetPadding ?? material.EdgeInsets.zero,
             child: child,
           ),
         ),

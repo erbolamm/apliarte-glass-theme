@@ -5,175 +5,120 @@
 [![pub package](https://img.shields.io/pub/v/apliarte_glass_theme)](https://pub.dev/packages/apliarte_glass_theme)
 [![Demo Web](https://img.shields.io/badge/Demo-Ver%20en%20vivo-purple?style=for-the-badge&logo=dart)](https://erbolamm.github.io/apliarte-glass-theme/)
 
-**Misma API que Material 3, pero con una identidad visual propia.**
+Glass theme utilities and opt-in glass widgets for Flutter.
 
-Cambiás UNA línea de import y todos los componentes (`AppBar`, `Card`, `NavigationBar`…)
-pasan a tener un sistema de vidrio con personalidad marcada. No es un skin neutro:
-es una estética glass con blur, tintes cálidos, bordes suaves y acentos líquidos.
+## Safe by default
+
+The main entrypoint preserves Flutter Material compatibility:
 
 ```dart
-// ✅ Recomendado: un solo import, todo funciona
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 
-AppBar(title: const Text('Inicio'));
-Card(child: const Text('Contenido'));
+MaterialApp(
+  theme: GlassTheme.light(Colors.indigo),
+  darkTheme: GlassTheme.dark(Colors.indigo),
+  home: const MyHomePage(),
+);
 ```
 
-Sin prefijos. Sin alias. Sin `glass.` delante de cada componente.
+`apliarte_glass_theme.dart` reexports Material without replacing `Card`,
+`AlertDialog`, buttons, `BottomSheet`, etc. Existing Material layouts keep their
+normal constraints and APIs.
 
-> Si necesitás importar `material.dart` además (p.ej. para widgets que el
-> paquete no sobreescribe), usá `hide` para evitar ambigüedades:
-> ```dart
-> import 'package:flutter/material.dart' hide AppBar, Card, NavigationBar, AlertDialog, BottomAppBar;
-> import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
-> ```
+## Opt-in glass widgets
 
-## ✨ Componentes
+Use the glass wrappers explicitly with a prefix:
 
-| Componente | Clase (igual que Material 3) | Efecto |
-|-----------|-----------------------------|--------|
-| App Bar | `AppBar` | Toolbar de vidrio |
-| Card | `Card` | Frosted glass |
-| Bottom Navigation | `NavigationBar` | Vidrio + indicador deslizante con drag |
-| Bottom App Bar | `BottomAppBar` | Barra inferior glass |
-| Alert Dialog | `AlertDialog` | Diálogo modal glass |
-| FAB | `FloatingActionButton` | Botón flotante glass |
-| Bottom Sheet | `BottomSheet` | Panel inferior glass |
-| Drawer | `Drawer` | Menú lateral glass |
+```dart
+import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
+import 'package:apliarte_glass_theme/glass_widgets.dart' as glass;
 
-## 📦 Instalación
+glass.Card(
+  child: const Padding(
+    padding: EdgeInsets.all(16),
+    child: Text('Glass content'),
+  ),
+);
+
+glass.AlertDialog(
+  title: const Text('Glass dialog'),
+  content: const Text('Uses Material dialog constraints.'),
+);
+```
+
+This avoids hidden layout changes in production apps.
+
+## Components available as opt-in wrappers
+
+- `glass.AppBar`
+- `glass.Card`
+- `glass.NavigationBar`
+- `glass.BottomAppBar`
+- `glass.AlertDialog`
+- `glass.FloatingActionButton`
+- `glass.BottomSheet`
+- `glass.Drawer`
+- Buttons, list tiles, dividers, sliders, progress indicators, tabs, text fields,
+  switches, popup menus, badges and expansion tiles.
+
+## Installation
 
 ```yaml
 dependencies:
-  apliarte_glass_theme: ^0.3.7
+  apliarte_glass_theme: ^0.7.0
 ```
 
 ```bash
 flutter pub get
 ```
 
-## 🚀 Uso
+## Dark/light theme
 
 ```dart
-import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
-
-// Todo funciona igual que con Material 3:
-AppBar(title: const Text('Inicio'));
-Card(child: const Text('Contenido'));
-NavigationBar(
-  destinations: const [
-    NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
-  ],
-  selectedIndex: 0,
-  onDestinationSelected: (i) {},
+MaterialApp(
+  theme: GlassTheme.light(Colors.blue),
+  darkTheme: GlassTheme.dark(Colors.blue),
 );
 ```
 
-Sin refactorizar. Sin config externa. Sin depender de ejemplos.
-
-## 🌗 Dark/Light automático
-
-Los colores del vidrio se derivan de `Theme.of(context).colorScheme`:
-- **Modo claro**: vidrio sobre `colorScheme.surface`
-- **Modo oscuro**: vidrio sobre `colorScheme.surface` con tinte cálido
-
-Sin mantener una paleta paralela. Sin configuración extra.
-
-## 🔥 Preset warm
-
-Para un glass más cálido, rosado y elegante:
+## Optional configuration
 
 ```dart
-void main() {
-  GlasConfig.useWarmPreset = true;
-  runApp(const MyApp());
-}
-```
-
-## ⚙️ Personalización opcional
-
-Todo tiene valores por defecto que funcionan solos. Pero podés overridear:
-
-```dart
+GlasConfig.useWarmPreset = true;
 GlasConfig.glassTintColor = const Color(0xFFFFF0F5);
-GlasConfig.largeRadius = 32.0;  // cards, dialogs
-GlasConfig.mediumRadius = 24.0; // nav bar, app bar
+GlasConfig.largeRadius = 32.0;
+GlasConfig.mediumRadius = 24.0;
 GlasConfig.glassBlur = 24.0;
 ```
 
-Sin obligación. Solo si querés.
+## Why the API changed in 0.7
 
-## 🔄 Cómo desinstalar
+Earlier versions replaced Material widgets globally from one import. That was
+convenient, but unsafe: wrappers can accidentally add padding, margins, stacks,
+or constraints that Material does not add. Version 0.7 keeps Material stable by
+default and makes glass widgets explicit.
 
-1. Sacar `apliarte_glass_theme` de `pubspec.yaml`
-2. Volver a `import 'package:flutter/material.dart'`
+## Links
 
-**No tocás ni una línea de código de tu app.** El cambio visual se revierte
-al instante porque solo los imports determinan qué versión de los componentes se usa.
+- [pub.dev](https://pub.dev/packages/apliarte_glass_theme)
+- [GitHub](https://github.com/erbolamm/apliarte-glass-theme)
+- [Web demo](https://erbolamm.github.io/apliarte-glass-theme/)
+- [Documentation](https://pub.dev/documentation/apliarte_glass_theme/latest/)
 
-## 🔗 Enlaces
-
-- 📦 [pub.dev](https://pub.dev/packages/apliarte_glass_theme)
-- 🐙 [GitHub](https://github.com/erbolamm/apliarte-glass-theme)
-- 🌐 [Web demo](https://erbolamm.github.io/apliarte-glass-theme/)
-- 📖 [Documentación](https://pub.dev/documentation/apliarte_glass_theme/latest/)
-
-## Autor
+## Author
 
 Javier Mateo (ApliArte) — [github.com/erbolamm](https://github.com/erbolamm)
 
-## 💬 Una nota personal del autor
+## Support
 
-<details>
-<summary>🇪🇸 Español</summary>
+If this package saves you time, a coffee helps keep development going.
 
-ApliArte Glass Theme nació de una idea simple: ¿por qué los componentes de Flutter tienen que ser siempre opacos? Quería crear una biblioteca drop-in que le diera a cualquier app ese toque elegante sin tener que cambiar nada del código. Si te sirve, úsalo, modificalo, compártelo. ¡Gracias por llegar hasta aquí!
-</details>
+| Platform | Link |
+|----------|------|
+| PayPal | [paypal.me/erbolamm](https://paypal.me/erbolamm) |
+| Ko-fi | [ko-fi.com/C0C11TWR1K](https://ko-fi.com/C0C11TWR1K) |
+| Twitch Tip | [streamelements.com/apliarte/tip](https://streamelements.com/apliarte/tip) |
 
-<details>
-<summary>🇬🇧 English</summary>
-
-ApliArte Glass Theme was born from a simple idea: why do Flutter components always have to be opaque? I wanted to create a drop-in library that gives any app an elegant touch without changing a single line of code. If it's useful to you, use it, modify it, share it. Thank you for making it this far!
-</details>
-
-<details>
-<summary>🇧🇷 Português</summary>
-
-O ApliArte Glass Theme nasceu de uma ideia simples: por que os componentes do Flutter precisam ser sempre opacos? Queria criar uma biblioteca drop-in que desse a qualquer aplicativo um toque elegante sem precisar mudar nada no código. Se for útil, use, modifique, compartilhe. Obrigado por chegar até aqui!
-</details>
-
-<details>
-<summary>🇫🇷 Français</summary>
-
-ApliArte Glass Theme est né d'une idée simple : pourquoi les composants Flutter doivent-ils toujours être opaques ? Je voulais créer une bibliothèque drop-in qui donne à toute application une touche élégante sans rien changer au code. Si cela vous est utile, utilisez-le, modifiez-le, partagez-le. Merci d'être arrivé jusqu'ici !
-</details>
-
-<details>
-<summary>🇩🇪 Deutsch</summary>
-
-ApliArte Glass Theme entstand aus einer einfachen Idee: Warum müssen Flutter-Komponenten immer undurchsichtig sein? Ich wollte eine Drop-in-Bibliothek erstellen, die jeder App eine elegante Note verleiht, ohne eine Zeile Code zu ändern. Wenn es dir nützt, verwende es, verändere es, teile es. Danke, dass du bis hierher gekommen bist!
-</details>
-
-<details>
-<summary>🇮🇹 Italiano</summary>
-
-ApliArte Glass Theme è nato da un'idea semplice: perché i componenti Flutter devono essere sempre opachi? Volevo creare una libreria drop-in che dia a qualsiasi app un tocco elegante senza dover cambiare nulla nel codice. Se ti è utile, usalo, modificalo, condividilo. Grazie per essere arrivato fino a qui!
-</details>
-
-## 💖 Apoya el proyecto
-
-Si te ahorra tiempo, un café ayuda a mantener el desarrollo.
-
-| Plataforma | Enlace |
-|-----------|--------|
-| 💳 PayPal | [paypal.me/erbolamm](https://paypal.me/erbolamm) |
-| ☕ Ko-fi | [ko-fi.com/C0C11TWR1K](https://ko-fi.com/C0C11TWR1K) |
-| 📺 Twitch Tip | [streamelements.com/apliarte/tip](https://streamelements.com/apliarte/tip) |
-
-## Licencia
+## License
 
 MIT — © 2026 ApliArte
-
-## About
-
-ApliArte Glass Theme — Misma API que Material 3 con identidad visual glass propia para Flutter. v0.3.8. Componentes: AppBar, Card, NavigationBar, BottomAppBar, AlertDialog, FloatingActionButton, BottomSheet, Drawer. MIT.

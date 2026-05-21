@@ -2,12 +2,16 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
-import '../helpers/glass_layer.dart';
 
-/// Glass-themed [material.AlertDialog].
+/// Opt-in glass-themed [material.AlertDialog].
 ///
-/// Drop-in replacement: same constructor API as Material's AlertDialog.
+/// This wrapper deliberately delegates to Material's dialog instead of nesting a
+/// `Dialog` around an `AlertDialog`. Nested dialogs and full-size stacks change
+/// constraints and can make mobile dialogs appear fullscreen.
 class AlertDialog extends StatelessWidget {
+  final Widget? icon;
+  final material.EdgeInsetsGeometry? iconPadding;
+  final Color? iconColor;
   final Widget? title;
   final material.EdgeInsetsGeometry? titlePadding;
   final TextStyle? titleTextStyle;
@@ -19,21 +23,25 @@ class AlertDialog extends StatelessWidget {
   final material.MainAxisAlignment? actionsAlignment;
   final material.OverflowBarAlignment? actionsOverflowAlignment;
   final material.VerticalDirection? actionsOverflowDirection;
+  final double? actionsOverflowButtonSpacing;
   final material.EdgeInsetsGeometry? buttonPadding;
   final Color? backgroundColor;
   final double? elevation;
   final Color? shadowColor;
   final Color? surfaceTintColor;
-  final Widget? icon;
-  final material.EdgeInsetsGeometry? iconPadding;
-  final Color? iconColor;
-  final material.ShapeBorder? shape;
-  final Clip clipBehavior;
-  final bool scrollable;
   final String? semanticLabel;
+  final material.EdgeInsets? insetPadding;
+  final Clip clipBehavior;
+  final material.ShapeBorder? shape;
+  final AlignmentGeometry? alignment;
+  final BoxConstraints? constraints;
+  final bool scrollable;
 
   const AlertDialog({
     super.key,
+    this.icon,
+    this.iconPadding,
+    this.iconColor,
     this.title,
     this.titlePadding,
     this.titleTextStyle,
@@ -45,99 +53,57 @@ class AlertDialog extends StatelessWidget {
     this.actionsAlignment,
     this.actionsOverflowAlignment,
     this.actionsOverflowDirection,
+    this.actionsOverflowButtonSpacing,
     this.buttonPadding,
     this.backgroundColor,
     this.elevation,
     this.shadowColor,
     this.surfaceTintColor,
-    this.icon,
-    this.iconPadding,
-    this.iconColor,
-    this.shape,
-    this.clipBehavior = Clip.none,
-    this.scrollable = false,
     this.semanticLabel,
+    this.insetPadding,
+    this.clipBehavior = Clip.none,
+    this.shape,
+    this.alignment,
+    this.constraints,
+    this.scrollable = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final radius = GlasConfig.largeRadiusValue();
-    final effectiveElevation = elevation ?? 8.0;
-    final theme = material.Theme.of(context);
-    final effectiveTitleStyle =
-        titleTextStyle ?? theme.textTheme.headlineSmall;
-    final effectiveContentStyle =
-        contentTextStyle ?? theme.textTheme.bodyMedium;
-    final effectiveShadowColor =
-        shadowColor ?? GlasConfig.shadowColor(context);
+    final effectiveShape = shape ??
+        material.RoundedRectangleBorder(
+          borderRadius: material.BorderRadius.circular(radius),
+        );
 
-    // Envuelto en material.Dialog para que nunca se muestre fullscreen,
-    // incluso cuando Material 3 usa Dialog.fullscreen en celulares.
-    return material.Dialog(
-      backgroundColor: material.Colors.transparent,
-      elevation: 0,
-      shadowColor: material.Colors.transparent,
-      surfaceTintColor: material.Colors.transparent,
-      child: Stack(
-        children: [
-          // Shadow layer
-          if (effectiveElevation > 0)
-            Positioned.fill(
-              child: material.Material(
-                color: material.Colors.transparent,
-                elevation: effectiveElevation,
-                shadowColor: effectiveShadowColor,
-                borderRadius: material.BorderRadius.circular(radius),
-                child: const material.SizedBox.expand(),
-              ),
-            ),
-          // Glass layer
-          GlassLayer(
-            borderRadius: radius,
-            child: ClipRRect(
-              borderRadius: material.BorderRadius.circular(radius),
-              child: material.AlertDialog(
-                backgroundColor: material.Colors.transparent,
-                elevation: 0,
-                shadowColor: material.Colors.transparent,
-                surfaceTintColor: material.Colors.transparent,
-                shape: material.RoundedRectangleBorder(
-                  borderRadius: material.BorderRadius.circular(radius),
-                ),
-                clipBehavior: Clip.hardEdge,
-                titlePadding: titlePadding,
-                titleTextStyle: effectiveTitleStyle,
-                contentPadding: contentPadding,
-                contentTextStyle: effectiveContentStyle,
-                actionsPadding: actionsPadding,
-                actionsAlignment: actionsAlignment,
-                actionsOverflowAlignment: actionsOverflowAlignment,
-                actionsOverflowDirection: actionsOverflowDirection,
-                buttonPadding: buttonPadding,
-                scrollable: scrollable,
-                semanticLabel: semanticLabel,
-                icon: icon,
-                iconPadding: iconPadding,
-                iconColor: iconColor,
-                title: icon != null
-                    ? material.Column(
-                        mainAxisSize: material.MainAxisSize.min,
-                        children: [
-                          if (icon != null) icon!,
-                          if (title != null) ...[
-                            const material.SizedBox(height: 16),
-                            title!,
-                          ],
-                        ],
-                      )
-                    : title,
-                content: content,
-                actions: actions,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return material.AlertDialog(
+      icon: icon,
+      iconPadding: iconPadding,
+      iconColor: iconColor,
+      title: title,
+      titlePadding: titlePadding,
+      titleTextStyle: titleTextStyle,
+      content: content,
+      contentPadding: contentPadding,
+      contentTextStyle: contentTextStyle,
+      actions: actions,
+      actionsPadding: actionsPadding,
+      actionsAlignment: actionsAlignment,
+      actionsOverflowAlignment: actionsOverflowAlignment,
+      actionsOverflowDirection: actionsOverflowDirection,
+      actionsOverflowButtonSpacing: actionsOverflowButtonSpacing,
+      buttonPadding: buttonPadding,
+      backgroundColor: backgroundColor ?? GlasConfig.glassColor(context),
+      elevation: elevation,
+      shadowColor: shadowColor ?? GlasConfig.shadowColor(context),
+      surfaceTintColor: surfaceTintColor ?? material.Colors.transparent,
+      semanticLabel: semanticLabel,
+      insetPadding: insetPadding,
+      clipBehavior: clipBehavior,
+      shape: effectiveShape,
+      alignment: alignment,
+      constraints: constraints,
+      scrollable: scrollable,
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
-import '../helpers/glass_layer.dart';
 
 /// Glass-themed [material.Switch].
 ///
@@ -19,7 +18,7 @@ class Switch extends StatelessWidget {
     return material.Switch(
       value: value,
       onChanged: onChanged,
-      activeColor: activeColor ?? GlasConfig.primary,
+      activeThumbColor: activeColor ?? GlasConfig.primary,
     );
   }
 }

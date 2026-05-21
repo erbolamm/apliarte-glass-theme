@@ -1,18 +1,8 @@
-# Build artifacts
-build/
+.atl/
+.pi/
 .dart_tool/
-
-# IDE
-.vscode/
-.idea/
-*.iml
-
-# Internal docs (not for pub.dev)
-openspec/
-demo.gif
+build/
 docs/
-example/docs/
-
-# OS files
+openspec/
+promo/
 .DS_Store
-*.swp

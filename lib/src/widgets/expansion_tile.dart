@@ -33,11 +33,11 @@ class ExpansionTile extends StatelessWidget {
         leading: leading,
         title: title,
         subtitle: subtitle,
-        children: children,
         initiallyExpanded: initiallyExpanded,
         onExpansionChanged: onExpansionChanged,
         backgroundColor: material.Colors.transparent,
         collapsedBackgroundColor: material.Colors.transparent,
+        children: children,
       ),
     );
   }

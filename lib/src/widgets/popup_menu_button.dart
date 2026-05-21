@@ -23,8 +23,8 @@ class PopupMenuButton<T> extends StatelessWidget {
     return material.PopupMenuButton<T>(
       itemBuilder: (_) => items,
       onSelected: onSelected,
-      child: child,
       icon: icon,
+      child: child,
     );
   }
 }
