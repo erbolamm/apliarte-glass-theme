@@ -18,12 +18,8 @@ class GlassLanding extends StatelessWidget {
     return material.MaterialApp(
       title: 'ApliArte Glass Theme',
       debugShowCheckedModeBanner: false,
-      theme: material.ThemeData(
-        useMaterial3: true,
-        colorScheme: material.ColorScheme.fromSeed(
-          seedColor: const material.Color(0xFF005FA9),
-        ),
-      ),
+      theme: GlassTheme.light(material.Colors.blue),
+      darkTheme: GlassTheme.dark(material.Colors.blue),
       home: const LandingPage(),
     );
   }
@@ -47,6 +43,26 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   bool _glass = false;
+  int _selectedSection = 0;
+  final _scrollController = material.ScrollController();
+  final _sectionKeys = List.generate(4, (_) => material.GlobalKey());
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSection(int index) {
+    setState(() => _selectedSection = index);
+    final context = _sectionKeys[index].currentContext;
+    if (context == null) return;
+    material.Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeInOutCubic,
+    );
+  }
 
   // ── Hero ───────────────────────────────────────
 
@@ -76,7 +92,7 @@ class _LandingPageState extends State<LandingPage> {
           ),
           const material.SizedBox(height: 12),
           material.Text(
-            'Same API. One import. All glass.',
+            'Material-safe theme. Real glass widgets when you opt in.',
             textAlign: material.TextAlign.center,
             style: material.TextStyle(
               fontSize: 16,
@@ -161,10 +177,13 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _codeSnippet() {
     final code = _glass
-        ? "import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';"
-        : "import 'package:flutter/material.dart';";
+        ? "import 'package:apliarte_glass_theme/glass_widgets.dart' as glass;"
+        : "theme: GlassTheme.light(Colors.blue)";
     return material.Container(
-      padding: const material.EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const material.EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 10,
+      ),
       decoration: material.BoxDecoration(
         color: material.Colors.black.withValues(alpha: 0.3),
         borderRadius: material.BorderRadius.circular(10),
@@ -240,7 +259,9 @@ class _LandingPageState extends State<LandingPage> {
               style: material.TextStyle(
                 fontSize: 12,
                 fontWeight: material.FontWeight.w600,
-                color: material.Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                color: material.Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ),
@@ -282,10 +303,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _textDemo() {
     return _glass
-        ? glass.TextButton(
-            onPressed: () {},
-            child: const Text('Text Button'),
-          )
+        ? glass.TextButton(onPressed: () {}, child: const Text('Text Button'))
         : material.TextButton(
             onPressed: () {},
             child: const material.Text('Text Button'),
@@ -338,7 +356,10 @@ class _LandingPageState extends State<LandingPage> {
                 children: [
                   Row(
                     children: [
-                      const material.Icon(material.Icons.auto_awesome, size: 20),
+                      const material.Icon(
+                        material.Icons.auto_awesome,
+                        size: 20,
+                      ),
                       const material.SizedBox(width: 8),
                       const Text('Glass Card'),
                     ],
@@ -358,7 +379,10 @@ class _LandingPageState extends State<LandingPage> {
                 children: [
                   material.Row(
                     children: [
-                      const material.Icon(material.Icons.auto_awesome, size: 20),
+                      const material.Icon(
+                        material.Icons.auto_awesome,
+                        size: 20,
+                      ),
                       const material.SizedBox(width: 8),
                       const material.Text('Material Card'),
                     ],
@@ -440,16 +464,29 @@ class _LandingPageState extends State<LandingPage> {
   void _showDialog(material.BuildContext ctx) {
     showDialog(
       context: ctx,
-      builder: (_) => glass.AlertDialog(
-        title: const Text('Glass Dialog'),
-        content: const Text('This AlertDialog has a frosted glass effect.'),
-        actions: [
-          glass.TextButton(
-            onPressed: () => material.Navigator.of(ctx).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
+      builder: (_) => _glass
+          ? glass.AlertDialog(
+              title: const Text('Glass Dialog'),
+              content: const Text(
+                'This AlertDialog has a frosted glass effect.',
+              ),
+              actions: [
+                glass.TextButton(
+                  onPressed: () => material.Navigator.of(ctx).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            )
+          : material.AlertDialog(
+              title: const material.Text('Material Dialog'),
+              content: const material.Text('Standard Material dialog.'),
+              actions: [
+                material.TextButton(
+                  onPressed: () => material.Navigator.of(ctx).pop(),
+                  child: const material.Text('OK'),
+                ),
+              ],
+            ),
     );
   }
 
@@ -520,25 +557,33 @@ class _LandingPageState extends State<LandingPage> {
           const material.SizedBox(height: 16),
           material.Text(
             '1. Add the dependency:',
-            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: material.FontWeight.w600),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: material.FontWeight.w600,
+            ),
           ),
           const material.SizedBox(height: 8),
-          _codeBox('dependencies:\n  apliarte_glass_theme: ^0.6.0-dev.1'),
+          _codeBox('dependencies:\n  apliarte_glass_theme: ^0.7.0'),
           const material.SizedBox(height: 16),
           material.Text(
-            '2. Swap one import:',
-            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: material.FontWeight.w600),
+            '2. Add the safe theme:',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: material.FontWeight.w600,
+            ),
           ),
           const material.SizedBox(height: 8),
-          _codeBox("// Before\nimport 'package:flutter/material.dart';\n\n// After\nimport 'package:apliarte_glass_theme/apliarte_glass_theme.dart';"),
+          _codeBox(
+            "import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';\n\nMaterialApp(\n  theme: GlassTheme.light(Colors.blue),\n  darkTheme: GlassTheme.dark(Colors.blue),\n)",
+          ),
           const material.SizedBox(height: 16),
           material.Text(
-            '3. That\'s it. Everything works.',
-            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: material.FontWeight.w600),
+            '3. Opt in to real glass widgets where you want blur:',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: material.FontWeight.w600,
+            ),
           ),
           const material.SizedBox(height: 8),
           material.Text(
-            'All Material widgets are replaced with glass versions. Same API, same parameters, same behavior — just with a frosted glass effect.',
+            'The default entrypoint keeps Material stable. For real blur, import glass_widgets.dart with a prefix and use glass.AppBar, glass.Card, glass.NavigationBar, and friends.',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
@@ -573,7 +618,10 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _linksSection() {
     return material.Padding(
-      padding: const material.EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+      padding: const material.EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 32,
+      ),
       child: material.Column(
         children: [
           _sectionTitle('Links'),
@@ -608,7 +656,10 @@ class _LandingPageState extends State<LandingPage> {
     return material.GestureDetector(
       onTap: () => html.window.open(url, '_blank'),
       child: material.Container(
-        padding: const material.EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        padding: const material.EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 14,
+        ),
         decoration: material.BoxDecoration(
           color: _primary,
           borderRadius: material.BorderRadius.circular(12),
@@ -709,88 +760,160 @@ class _LandingPageState extends State<LandingPage> {
 
   // ── Build ──────────────────────────────────────
 
+  List<material.NavigationRailDestination> get _railDestinations => const [
+    material.NavigationRailDestination(
+      icon: material.Icon(material.Icons.home_outlined),
+      selectedIcon: material.Icon(material.Icons.home),
+      label: material.Text('Home'),
+    ),
+    material.NavigationRailDestination(
+      icon: material.Icon(material.Icons.widgets_outlined),
+      selectedIcon: material.Icon(material.Icons.widgets),
+      label: material.Text('Widgets'),
+    ),
+    material.NavigationRailDestination(
+      icon: material.Icon(material.Icons.integration_instructions_outlined),
+      selectedIcon: material.Icon(material.Icons.integration_instructions),
+      label: material.Text('Usage'),
+    ),
+    material.NavigationRailDestination(
+      icon: material.Icon(material.Icons.favorite_border),
+      selectedIcon: material.Icon(material.Icons.favorite),
+      label: material.Text('Support'),
+    ),
+  ];
+
+  List<material.NavigationDestination> get _barDestinations => const [
+    material.NavigationDestination(
+      icon: material.Icon(material.Icons.home_outlined),
+      selectedIcon: material.Icon(material.Icons.home),
+      label: 'Home',
+    ),
+    material.NavigationDestination(
+      icon: material.Icon(material.Icons.widgets_outlined),
+      selectedIcon: material.Icon(material.Icons.widgets),
+      label: 'Widgets',
+    ),
+    material.NavigationDestination(
+      icon: material.Icon(material.Icons.integration_instructions_outlined),
+      selectedIcon: material.Icon(material.Icons.integration_instructions),
+      label: 'Usage',
+    ),
+    material.NavigationDestination(
+      icon: material.Icon(material.Icons.favorite_border),
+      selectedIcon: material.Icon(material.Icons.favorite),
+      label: 'Support',
+    ),
+  ];
+
+  Widget _pageContent() {
+    final theme = material.Theme.of(context);
+    return material.SingleChildScrollView(
+      controller: _scrollController,
+      child: material.Column(
+        children: [
+          material.KeyedSubtree(key: _sectionKeys[0], child: _hero()),
+          material.KeyedSubtree(key: _sectionKeys[1], child: _showcase()),
+          const material.SizedBox(height: 24),
+          material.KeyedSubtree(key: _sectionKeys[2], child: _howToUse()),
+          _linksSection(),
+          material.KeyedSubtree(key: _sectionKeys[3], child: _supportSection()),
+          const material.SizedBox(height: 24),
+          material.Padding(
+            padding: const material.EdgeInsets.only(bottom: 32),
+            child: material.Text(
+              'Made with ❤️ by erbolamm',
+              style: material.TextStyle(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _desktopRail() {
+    final rail = material.NavigationRail(
+      selectedIndex: _selectedSection,
+      onDestinationSelected: _scrollToSection,
+      labelType: material.NavigationRailLabelType.all,
+      leading: material.Padding(
+        padding: const material.EdgeInsets.only(top: 16, bottom: 8),
+        child: material.IconButton(
+          tooltip: _glass ? 'Switch to Material' : 'Switch to Glass',
+          onPressed: () => setState(() => _glass = !_glass),
+          icon: material.Icon(
+            _glass
+                ? material.Icons.auto_awesome
+                : material.Icons.auto_awesome_outlined,
+          ),
+        ),
+      ),
+      destinations: _railDestinations,
+    );
+
+    if (!_glass) return rail;
+
+    return material.Padding(
+      padding: const material.EdgeInsets.all(12),
+      child: glass.Card(child: material.SizedBox(width: 104, child: rail)),
+    );
+  }
+
+  Widget _bottomBar() {
+    if (_glass) {
+      return glass.NavigationBar(
+        selectedIndex: _selectedSection,
+        onDestinationSelected: _scrollToSection,
+        destinations: _barDestinations,
+      );
+    }
+
+    return material.NavigationBar(
+      selectedIndex: _selectedSection,
+      onDestinationSelected: _scrollToSection,
+      destinations: _barDestinations,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = material.Theme.of(context);
     final isDark = theme.brightness == material.Brightness.dark;
 
-    return material.Scaffold(
-      backgroundColor: isDark
-          ? const material.Color(0xFF0A0A14)
-          : const material.Color(0xFFF5F5F7),
-      body: material.SingleChildScrollView(
-        child: material.Column(
-          children: [
-            _hero(),
-            _showcase(),
-            const material.SizedBox(height: 24),
-            _howToUse(),
-            _linksSection(),
-            _supportSection(),
-            const material.SizedBox(height: 24),
+    return material.LayoutBuilder(
+      builder: (context, constraints) {
+        final useRail = constraints.maxWidth >= 900;
 
-            // Footer
-            material.Padding(
-              padding: const material.EdgeInsets.only(bottom: 32),
-              child: material.Text(
-                'Made with ❤️ by erbolamm',
-                style: material.TextStyle(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                  fontSize: 13,
+        return material.Scaffold(
+          backgroundColor: isDark
+              ? const material.Color(0xFF0A0A14)
+              : const material.Color(0xFFF5F5F7),
+          body: useRail
+              ? material.Row(
+                  children: [
+                    _desktopRail(),
+                    const material.VerticalDivider(width: 1),
+                    material.Expanded(child: _pageContent()),
+                  ],
+                )
+              : _pageContent(),
+          floatingActionButton: useRail
+              ? null
+              : FloatingActionButton(
+                  heroTag: 'toggle',
+                  onPressed: () => setState(() => _glass = !_glass),
+                  child: material.Icon(
+                    _glass
+                        ? material.Icons.auto_awesome
+                        : material.Icons.auto_awesome_outlined,
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      // Toggle FAB
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'toggle',
-        onPressed: () => setState(() => _glass = !_glass),
-        child: material.Icon(
-          _glass ? material.Icons.auto_awesome : material.Icons.auto_awesome_outlined,
-        ),
-      ),
-
-      // NavigationBar (glass only active when _glass is true)
-      bottomNavigationBar: _glass
-          ? glass.NavigationBar(
-              selectedIndex: 0,
-              onDestinationSelected: (_) {},
-              destinations: const [
-                material.NavigationDestination(
-                  icon: material.Icon(material.Icons.home),
-                  label: 'Home',
-                ),
-                material.NavigationDestination(
-                  icon: material.Icon(material.Icons.widgets),
-                  label: 'Widgets',
-                ),
-                material.NavigationDestination(
-                  icon: material.Icon(material.Icons.favorite),
-                  label: 'Support',
-                ),
-              ],
-            )
-          : material.NavigationBar(
-              selectedIndex: 0,
-              onDestinationSelected: (_) {},
-              destinations: const [
-                material.NavigationDestination(
-                  icon: material.Icon(material.Icons.home),
-                  label: 'Home',
-                ),
-                material.NavigationDestination(
-                  icon: material.Icon(material.Icons.widgets),
-                  label: 'Widgets',
-                ),
-                material.NavigationDestination(
-                  icon: material.Icon(material.Icons.favorite),
-                  label: 'Support',
-                ),
-              ],
-            ),
+          bottomNavigationBar: useRail ? null : _bottomBar(),
+        );
+      },
     );
   }
 }
