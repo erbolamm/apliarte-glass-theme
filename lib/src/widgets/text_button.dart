@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
+import '../helpers/press_feedback.dart';
 
 /// Glass-themed [material.TextButton].
 ///
@@ -165,12 +166,14 @@ class TextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = GlasConfig.mediumRadiusValue();
+    final isEnabled = onPressed != null || onLongPress != null;
 
     final baseStyle = material.TextButton.styleFrom(
       backgroundColor: material.Colors.transparent,
       foregroundColor: material.Theme.of(context).colorScheme.primary,
-      overlayColor:
-          material.Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+      overlayColor: material.Theme.of(
+        context,
+      ).colorScheme.primary.withValues(alpha: 0.08),
       shadowColor: material.Colors.transparent,
       surfaceTintColor: material.Colors.transparent,
       elevation: 0,
@@ -178,21 +181,47 @@ class TextButton extends StatelessWidget {
 
     final merged = style != null ? baseStyle.merge(style) : baseStyle;
 
-    return GlassLayer(
-      borderRadius: radius,
-      showBorder: false,
-      child: material.TextButton(
-        onPressed: onPressed,
-        onLongPress: onLongPress,
-        onHover: onHover,
-        onFocusChange: onFocusChange,
-        style: merged,
-        focusNode: focusNode,
-        autofocus: autofocus,
-        clipBehavior: clipBehavior,
-        statesController: statesController,
-        child: child,
-      ),
+    if (!GlasConfig.buttonPressFeedbackEnabled) {
+      return GlassLayer(
+        borderRadius: radius,
+        showBorder: false,
+        child: material.TextButton(
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          onHover: onHover,
+          onFocusChange: onFocusChange,
+          style: merged,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          clipBehavior: clipBehavior,
+          statesController: statesController,
+          child: child,
+        ),
+      );
+    }
+
+    return buildButtonPressFeedback(
+      statesController: statesController,
+      enabled: isEnabled,
+      pressedScale: GlasConfig.buttonPressScaleValue(),
+      builder: (effectiveStatesController) {
+        return GlassLayer(
+          borderRadius: radius,
+          showBorder: false,
+          child: material.TextButton(
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+            onHover: onHover,
+            onFocusChange: onFocusChange,
+            style: merged,
+            focusNode: focusNode,
+            autofocus: autofocus,
+            clipBehavior: clipBehavior,
+            statesController: effectiveStatesController,
+            child: child,
+          ),
+        );
+      },
     );
   }
 }

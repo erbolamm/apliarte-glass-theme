@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
+import '../helpers/press_feedback.dart';
 
 /// Glass-themed [material.IconButton].
 ///
@@ -230,15 +231,55 @@ class IconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = GlasConfig.mediumRadiusValue();
-
-    return GlassLayer(
+    final isEnabled = onPressed != null || onLongPress != null;
+    final button = GlassLayer(
       borderRadius: radius,
       showBorder: _variant == _IconButtonVariant.outlined,
-      child: _buildMaterialButton(context),
+      child: _buildMaterialButton(context, statesController),
+    );
+
+    if (!GlasConfig.buttonPressFeedbackEnabled) {
+      return button;
+    }
+
+    return buildButtonPressFeedback(
+      statesController: statesController,
+      enabled: isEnabled,
+      pressedScale: GlasConfig.buttonPressScaleValue(),
+      builder: (effectiveStatesController) {
+        return GlassLayer(
+          borderRadius: radius,
+          showBorder: _variant == _IconButtonVariant.outlined,
+          child: Listener(
+            onPointerDown: isEnabled
+                ? (_) => effectiveStatesController.update(
+                    material.WidgetState.pressed,
+                    true,
+                  )
+                : null,
+            onPointerUp: isEnabled
+                ? (_) => effectiveStatesController.update(
+                    material.WidgetState.pressed,
+                    false,
+                  )
+                : null,
+            onPointerCancel: isEnabled
+                ? (_) => effectiveStatesController.update(
+                    material.WidgetState.pressed,
+                    false,
+                  )
+                : null,
+            child: _buildMaterialButton(context, effectiveStatesController),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildMaterialButton(BuildContext context) {
+  Widget _buildMaterialButton(
+    BuildContext context,
+    material.MaterialStatesController? effectiveStatesController,
+  ) {
     final glassBg = GlasConfig.glassColor(context);
     final effectiveStyle = _effectiveStyle(context, glassBg);
 
@@ -267,7 +308,7 @@ class IconButton extends StatelessWidget {
       style: effectiveStyle,
       isSelected: isSelected,
       selectedIcon: selectedIcon,
-      statesController: statesController,
+      statesController: effectiveStatesController,
       icon: icon,
     );
 
@@ -394,34 +435,29 @@ class IconButton extends StatelessWidget {
     }
   }
 
-  material.ButtonStyle _effectiveStyle(
-    BuildContext context,
-    Color glassBg,
-  ) {
+  material.ButtonStyle _effectiveStyle(BuildContext context, Color glassBg) {
     final baseStyle = switch (_variant) {
       _IconButtonVariant.standard ||
-      _IconButtonVariant.outlined =>
-        material.ButtonStyle(
-          backgroundColor: material.WidgetStatePropertyAll(glassBg),
-          shadowColor: const material.WidgetStatePropertyAll(
-            material.Colors.transparent,
-          ),
-          surfaceTintColor: const material.WidgetStatePropertyAll(
-            material.Colors.transparent,
-          ),
-          elevation: const material.WidgetStatePropertyAll(0),
+      _IconButtonVariant.outlined => material.ButtonStyle(
+        backgroundColor: material.WidgetStatePropertyAll(glassBg),
+        shadowColor: const material.WidgetStatePropertyAll(
+          material.Colors.transparent,
         ),
+        surfaceTintColor: const material.WidgetStatePropertyAll(
+          material.Colors.transparent,
+        ),
+        elevation: const material.WidgetStatePropertyAll(0),
+      ),
       _IconButtonVariant.filled ||
-      _IconButtonVariant.filledTonal =>
-        material.ButtonStyle(
-          shadowColor: const material.WidgetStatePropertyAll(
-            material.Colors.transparent,
-          ),
-          surfaceTintColor: const material.WidgetStatePropertyAll(
-            material.Colors.transparent,
-          ),
-          elevation: const material.WidgetStatePropertyAll(0),
+      _IconButtonVariant.filledTonal => material.ButtonStyle(
+        shadowColor: const material.WidgetStatePropertyAll(
+          material.Colors.transparent,
         ),
+        surfaceTintColor: const material.WidgetStatePropertyAll(
+          material.Colors.transparent,
+        ),
+        elevation: const material.WidgetStatePropertyAll(0),
+      ),
     };
 
     if (style != null) {

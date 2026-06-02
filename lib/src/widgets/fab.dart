@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
+import '../helpers/press_feedback.dart';
 
 /// Glass-themed [material.FloatingActionButton].
 ///
@@ -11,7 +12,7 @@ import '../helpers/glass_layer.dart';
 ///
 /// El efecto glass se aplica sobre el botón completo. El FAB interno
 /// se renderiza transparente y el glass layer maneja la apariencia.
-class FloatingActionButton extends StatelessWidget {
+class FloatingActionButton extends StatefulWidget {
   final Widget? child;
   final Widget? icon;
   final Widget? label;
@@ -147,39 +148,63 @@ class FloatingActionButton extends StatelessWidget {
   }
 
   @override
+  State<FloatingActionButton> createState() => _FloatingActionButtonState();
+}
+
+class _FloatingActionButtonState extends State<FloatingActionButton> {
+  late final WidgetStatesController _statesController;
+
+  @override
+  void initState() {
+    super.initState();
+    _statesController = WidgetStatesController();
+  }
+
+  @override
+  void dispose() {
+    _statesController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = material.Theme.of(context);
     final effectiveForeground =
-        foregroundColor ?? theme.colorScheme.onPrimaryContainer;
-    final size = _size;
-    final effectiveElevation = elevation ?? 6.0;
+        widget.foregroundColor ?? theme.colorScheme.onPrimaryContainer;
+    final size = widget._size;
+    final effectiveElevation = widget.elevation ?? 6.0;
+    final isEnabled = widget.onPressed != null || widget.onLongPress != null;
 
     Widget fabBody;
 
-    if (_variant == _FabVariant.extended) {
+    if (widget._variant == _FabVariant.extended) {
       fabBody = material.Container(
-        padding: padding ??
+        padding:
+            widget.padding ??
             const material.EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: material.Row(
           mainAxisSize: material.MainAxisSize.min,
           children: [
-            if (icon != null)
+            if (widget.icon != null)
               material.IconTheme(
                 data: material.IconThemeData(
-                    color: effectiveForeground, size: 18),
-                child: icon!,
+                  color: effectiveForeground,
+                  size: 18,
+                ),
+                child: widget.icon!,
               ),
-            if (icon != null && label != null)
+            if (widget.icon != null && widget.label != null)
               const material.SizedBox(width: 8),
-            if (label != null)
+            if (widget.label != null)
               material.DefaultTextStyle(
-                style: theme.textTheme.labelLarge?.copyWith(
+                style:
+                    theme.textTheme.labelLarge?.copyWith(
                       color: effectiveForeground,
                     ) ??
                     const TextStyle(),
-                child: label!,
+                child: widget.label!,
               ),
-            if (child != null) child!,
+            if (widget.child != null) widget.child!,
           ],
         ),
       );
@@ -188,12 +213,13 @@ class FloatingActionButton extends StatelessWidget {
         width: size,
         height: size,
         child: material.Center(
-          child: icon ?? child ?? const material.SizedBox.shrink(),
+          child:
+              widget.icon ?? widget.child ?? const material.SizedBox.shrink(),
         ),
       );
     }
 
-    final radius = _variant == _FabVariant.extended ? 28.0 : size / 2;
+    final radius = widget._variant == _FabVariant.extended ? 28.0 : size / 2;
 
     final glassChild = GlassLayer(
       borderRadius: radius,
@@ -209,26 +235,36 @@ class FloatingActionButton extends StatelessWidget {
       child: fabBody,
     );
 
+    final pressFeedbackChild = GlasConfig.buttonPressFeedbackEnabled
+        ? buildPressFeedback(
+            statesController: _statesController,
+            enabled: isEnabled,
+            pressedScale: GlasConfig.buttonPressScaleValue(),
+            child: glassChild,
+          )
+        : glassChild;
+
     final wrapped = material.Material(
       color: material.Colors.transparent,
       borderRadius: material.BorderRadius.circular(radius),
       clipBehavior: material.Clip.antiAlias,
       child: material.InkWell(
-        onTap: onPressed,
-        onLongPress: onLongPress,
-        focusNode: focusNode,
-        autofocus: autofocus ?? false,
-        enableFeedback: enableFeedback,
-        child: glassChild,
+        statesController: _statesController,
+        onTap: widget.onPressed,
+        onLongPress: widget.onLongPress,
+        focusNode: widget.focusNode,
+        autofocus: widget.autofocus ?? false,
+        enableFeedback: widget.enableFeedback,
+        child: pressFeedbackChild,
       ),
     );
 
     Widget result = wrapped;
-    if (heroTag != null) {
-      result = material.Hero(tag: heroTag!, child: result);
+    if (widget.heroTag != null) {
+      result = material.Hero(tag: widget.heroTag!, child: result);
     }
-    if (tooltip != null) {
-      result = material.Tooltip(message: tooltip!, child: result);
+    if (widget.tooltip != null) {
+      result = material.Tooltip(message: widget.tooltip!, child: result);
     }
     return result;
   }

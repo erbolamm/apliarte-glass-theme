@@ -65,7 +65,7 @@ This avoids hidden layout changes in production apps.
 
 ```yaml
 dependencies:
-  apliarte_glass_theme: ^0.7.0
+  apliarte_glass_theme: ^0.8.0
 ```
 
 ```bash
@@ -89,6 +89,8 @@ GlasConfig.glassTintColor = const Color(0xFFFFF0F5);
 GlasConfig.largeRadius = 32.0;
 GlasConfig.mediumRadius = 24.0;
 GlasConfig.glassBlur = 24.0;
+GlasConfig.buttonPressFeedbackEnabled = true;
+GlasConfig.buttonPressScale = 0.97;
 ```
 
 ## Why the API changed in 0.7

@@ -2,39 +2,43 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:apliarte_glass_theme/apliarte_glass_theme.dart';
 
 void main() {
-  testWidgets('full app with all glass components renders without errors',
-      (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Test'),
-          actions: [
-            IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          ],
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: const [
-            Card(child: Text('Card content')),
-            SizedBox(height: 16),
-            Card(child: Text('Second card')),
-          ],
-        ),
-        bottomNavigationBar: NavigationBar(
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.favorite), label: 'Fav'),
-            NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
-          ],
-          selectedIndex: 0,
-          onDestinationSelected: (_) {},
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: null,
-          child: const Icon(Icons.add),
+  testWidgets('full app with all glass components renders without errors', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: _testTheme(),
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Test'),
+            actions: [
+              IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+            ],
+          ),
+          body: ListView(
+            padding: const EdgeInsets.all(16),
+            children: const [
+              Card(child: Text('Card content')),
+              SizedBox(height: 16),
+              Card(child: Text('Second card')),
+            ],
+          ),
+          bottomNavigationBar: NavigationBar(
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+              NavigationDestination(icon: Icon(Icons.favorite), label: 'Fav'),
+              NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+            ],
+            selectedIndex: 0,
+            onDestinationSelected: (_) {},
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: null,
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     // All components rendered
@@ -45,23 +49,28 @@ void main() {
   });
 
   testWidgets('theme toggle between light and dark works', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(brightness: Brightness.light),
-      darkTheme: ThemeData(brightness: Brightness.dark),
-      themeMode: ThemeMode.light,
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Theme')),
-        body: const Card(child: Text('Content')),
-        bottomNavigationBar: NavigationBar(
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-          ],
-          selectedIndex: 0,
-          onDestinationSelected: (_) {},
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: _testTheme(),
+        darkTheme: _testTheme(brightness: Brightness.dark),
+        themeMode: ThemeMode.light,
+        home: Scaffold(
+          appBar: AppBar(title: const Text('Theme')),
+          body: const Card(child: Text('Content')),
+          bottomNavigationBar: NavigationBar(
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+              NavigationDestination(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
+            selectedIndex: 0,
+            onDestinationSelected: (_) {},
+          ),
         ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Theme'), findsOneWidget);
@@ -69,24 +78,27 @@ void main() {
   });
 
   testWidgets('AlertDialog opens and closes via glass theme', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) => ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (_) => const AlertDialog(
-                  title: Text('Glass Dialog'),
-                  content: Text('Dialog content'),
-                ),
-              );
-            },
-            child: const Text('Open'),
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: _testTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => const AlertDialog(
+                    title: Text('Glass Dialog'),
+                    content: Text('Dialog content'),
+                  ),
+                );
+              },
+              child: const Text('Open'),
+            ),
           ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
@@ -100,25 +112,28 @@ void main() {
   });
 
   testWidgets('BottomSheet renders through Material API', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) => ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                showDragHandle: true,
-                builder: (_) => const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('Sheet content'),
-                ),
-              );
-            },
-            child: const Text('Open sheet'),
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: _testTheme(),
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  showDragHandle: true,
+                  builder: (_) => const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('Sheet content'),
+                  ),
+                );
+              },
+              child: const Text('Open sheet'),
+            ),
           ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('Open sheet'));
     await tester.pumpAndSettle();
@@ -126,16 +141,20 @@ void main() {
     expect(find.text('Sheet content'), findsOneWidget);
   });
 
-  testWidgets('GlasConfig warm preset changes glass appearance',
-      (tester) async {
+  testWidgets('GlasConfig warm preset changes glass appearance', (
+    tester,
+  ) async {
     GlasConfig.useWarmPreset = true;
 
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Warm')),
-        body: const Card(child: Text('Warm glass')),
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: _testTheme(),
+        home: Scaffold(
+          appBar: AppBar(title: const Text('Warm')),
+          body: const Card(child: Text('Warm glass')),
+        ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Warm'), findsOneWidget);
@@ -143,4 +162,12 @@ void main() {
 
     GlasConfig.useWarmPreset = false;
   });
+}
+
+ThemeData _testTheme({Brightness brightness = Brightness.light}) {
+  return ThemeData(
+    useMaterial3: true,
+    brightness: brightness,
+    splashFactory: InkRipple.splashFactory,
+  );
 }
