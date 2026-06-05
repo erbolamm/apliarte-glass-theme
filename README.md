@@ -104,6 +104,7 @@ default and makes glass widgets explicit.
 - [GitHub](https://github.com/erbolamm/apliarte-glass-theme)
 - [Web demo](https://erbolamm.github.io/apliarte-glass-theme/)
 - [Documentation](https://pub.dev/documentation/apliarte_glass_theme/latest/)
+- [Discord](https://discord.gg/b9PD37KWS5)
 
 ## Author
 
