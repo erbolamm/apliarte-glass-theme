@@ -1,3 +1,20 @@
+## 0.8.0
+
+* ✨ **Press feedback opt-in**: nuevos controles globales en `GlasConfig`
+  para activar escala visual al presionar (`buttonPressFeedbackEnabled`,
+  `buttonPressScale`) en los wrappers glass de botones.
+* ✨ **Cobertura ampliada**: `ElevatedButton`, `TextButton`,
+  `OutlinedButton`, `IconButton` y `FloatingActionButton` glass ahora
+  soportan pressed feedback visual-only sin robar ownership de gestos a
+  Material.
+* 🧱 **Helper interno compartido**: el pressed state se resuelve con una
+  abstracción privada reutilizable, sin exponer una API pública `Pressable`.
+* 🛡️ **Hardening del theme**: `GlassTheme.light/dark()` fijan
+  `InkRipple.splashFactory` para evitar el blocker de `InkSparkle`
+  (`shaders/ink_sparkle.frag`) en entornos de test.
+* 🧪 **Verificación reforzada**: nuevas suites y escenarios para config,
+  wrappers standard, FAB, compatibilidad Material-safe e integración.
+
 ## 0.7.0
 
 * ✅ **Release estable**: eliminado `liquid_glass_renderer` como dependencia

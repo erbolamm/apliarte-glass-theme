@@ -1,6 +1,6 @@
 name: apliarte_glass_theme
 description: "Material-safe glass theme for Flutter. The default entrypoint preserves Material API compatibility; glass widget wrappers are opt-in."
-version: 0.7.0
+version: 0.8.0
 license: MIT
 homepage: https://github.com/erbolamm/apliarte-glass-theme
 repository: https://github.com/erbolamm/apliarte-glass-theme

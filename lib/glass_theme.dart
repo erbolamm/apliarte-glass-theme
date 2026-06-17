@@ -37,6 +37,7 @@ class GlassTheme {
 
     return ThemeData(
       useMaterial3: true,
+      splashFactory: InkRipple.splashFactory,
       primarySwatch: seedColor,
       colorScheme: scheme,
       textTheme: _buildTextTheme(baseFontSize),
@@ -98,6 +99,7 @@ class GlassTheme {
 
     return ThemeData(
       useMaterial3: true,
+      splashFactory: InkRipple.splashFactory,
       primarySwatch: seedColor,
       colorScheme: scheme,
       textTheme: _buildTextTheme(baseFontSize),
@@ -154,14 +156,38 @@ class GlassTheme {
       bodySmall: TextStyle(fontSize: fontSize * 0.85),
       bodyMedium: TextStyle(fontSize: fontSize),
       bodyLarge: TextStyle(fontSize: fontSize * 1.15),
-      titleSmall: TextStyle(fontSize: fontSize * 1.3, fontWeight: FontWeight.w500),
-      titleMedium: TextStyle(fontSize: fontSize * 1.5, fontWeight: FontWeight.w500),
-      titleLarge: TextStyle(fontSize: fontSize * 1.8, fontWeight: FontWeight.w600),
-      headlineSmall: TextStyle(fontSize: fontSize * 1.4, fontWeight: FontWeight.w400),
-      headlineMedium: TextStyle(fontSize: fontSize * 1.6, fontWeight: FontWeight.w400),
-      headlineLarge: TextStyle(fontSize: fontSize * 2.0, fontWeight: FontWeight.w400),
-      labelSmall: TextStyle(fontSize: fontSize * 0.75, fontWeight: FontWeight.w500),
-      labelMedium: TextStyle(fontSize: fontSize * 0.85, fontWeight: FontWeight.w500),
+      titleSmall: TextStyle(
+        fontSize: fontSize * 1.3,
+        fontWeight: FontWeight.w500,
+      ),
+      titleMedium: TextStyle(
+        fontSize: fontSize * 1.5,
+        fontWeight: FontWeight.w500,
+      ),
+      titleLarge: TextStyle(
+        fontSize: fontSize * 1.8,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineSmall: TextStyle(
+        fontSize: fontSize * 1.4,
+        fontWeight: FontWeight.w400,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: fontSize * 1.6,
+        fontWeight: FontWeight.w400,
+      ),
+      headlineLarge: TextStyle(
+        fontSize: fontSize * 2.0,
+        fontWeight: FontWeight.w400,
+      ),
+      labelSmall: TextStyle(
+        fontSize: fontSize * 0.75,
+        fontWeight: FontWeight.w500,
+      ),
+      labelMedium: TextStyle(
+        fontSize: fontSize * 0.85,
+        fontWeight: FontWeight.w500,
+      ),
       labelLarge: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
     );
   }

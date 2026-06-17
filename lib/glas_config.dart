@@ -108,6 +108,21 @@ class GlasConfig {
   static String liquidHighlightPreset = 'balanced';
 
   /// ──────────────────────────────────────────────────────────
+  /// Button press feedback (visual-only, opt-in)
+  /// ──────────────────────────────────────────────────────────
+
+  /// Global opt-in for visual press feedback on supported glass buttons.
+  ///
+  /// Defaults to `false` so the Material-safe entrypoint stays unchanged until
+  /// wrappers wire this behavior explicitly.
+  static bool buttonPressFeedbackEnabled = false;
+
+  /// Target scale used while a supported button stays in pressed state.
+  ///
+  /// The effective runtime value is clamped by [buttonPressScaleValue].
+  static double buttonPressScale = 0.97;
+
+  /// ──────────────────────────────────────────────────────────
   /// Derived values — read theme at runtime.
   /// ──────────────────────────────────────────────────────────
 
@@ -152,6 +167,10 @@ class GlasConfig {
 
   /// Returns the effective medium corner radius (bars).
   static double mediumRadiusValue() => mediumRadius ?? (_w ? 20.0 : 12.0);
+
+  /// Returns the effective pressed scale for button visual feedback.
+  static double buttonPressScaleValue() =>
+      buttonPressScale.clamp(0.90, 1.0).toDouble();
 
   /// Returns the AppBar glass color with its propia opacidad baja.
   /// Un valor ~0.15 deja respirar el blur para un frosted glass real.

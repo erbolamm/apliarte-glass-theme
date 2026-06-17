@@ -20,6 +20,8 @@ void main() {
       GlasConfig.shadowOpacity = null;
       GlasConfig.largeRadius = null;
       GlasConfig.mediumRadius = null;
+      GlasConfig.buttonPressFeedbackEnabled = false;
+      GlasConfig.buttonPressScale = 0.97;
     });
 
     test('default preset is neutral (not warm)', () {
@@ -49,6 +51,11 @@ void main() {
       expect(GlasConfig.glassOpacity, isNull);
       expect(GlasConfig.shadowOpacity, isNull);
     });
+
+    test('press feedback stays disabled by default', () {
+      expect(GlasConfig.buttonPressFeedbackEnabled, isFalse);
+      expect(GlasConfig.buttonPressScaleValue(), 0.97);
+    });
   });
 
   group('GlasConfig (warm preset)', () {
@@ -61,6 +68,8 @@ void main() {
       GlasConfig.shadowOpacity = null;
       GlasConfig.largeRadius = null;
       GlasConfig.mediumRadius = null;
+      GlasConfig.buttonPressFeedbackEnabled = false;
+      GlasConfig.buttonPressScale = 0.97;
     });
 
     tearDown(() {
@@ -97,6 +106,8 @@ void main() {
       GlasConfig.shadowOpacity = null;
       GlasConfig.largeRadius = null;
       GlasConfig.mediumRadius = null;
+      GlasConfig.buttonPressFeedbackEnabled = false;
+      GlasConfig.buttonPressScale = 0.97;
     });
 
     test('override blur', () {
@@ -139,6 +150,24 @@ void main() {
       GlasConfig.glassBlur = 10.0;
       expect(GlasConfig.blur(), 10.0);
     });
+
+    test('button press scale clamps below minimum', () {
+      GlasConfig.buttonPressScale = 0.70;
+
+      expect(GlasConfig.buttonPressScaleValue(), 0.90);
+    });
+
+    test('button press scale clamps above maximum', () {
+      GlasConfig.buttonPressScale = 1.20;
+
+      expect(GlasConfig.buttonPressScaleValue(), 1.0);
+    });
+
+    test('button press scale preserves valid values', () {
+      GlasConfig.buttonPressScale = 0.95;
+
+      expect(GlasConfig.buttonPressScaleValue(), 0.95);
+    });
   });
 
   group('GlasConfig (theme-derived colors)', () {
@@ -149,89 +178,113 @@ void main() {
       GlasConfig.glassOpacity = null;
       GlasConfig.shadowOpacity = null;
       GlasConfig.borderOpacity = null;
+      GlasConfig.buttonPressFeedbackEnabled = false;
+      GlasConfig.buttonPressScale = 0.97;
     });
 
     testWidgets('glassColor returns a color in light theme', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              final color = GlasConfig.glassColor(context);
-              expect(color, isA<Color>());
-              // Should have some alpha (transparency)
-              final alpha = (color.a * 255.0).round().clamp(0, 255);
-              expect(alpha, greaterThan(0));
-              expect(alpha, lessThan(255));
-              return const SizedBox.shrink();
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: _testTheme(),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                final color = GlasConfig.glassColor(context);
+                expect(color, isA<Color>());
+                // Should have some alpha (transparency)
+                final alpha = (color.a * 255.0).round().clamp(0, 255);
+                expect(alpha, greaterThan(0));
+                expect(alpha, lessThan(255));
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
-      ));
+      );
     });
 
     testWidgets('glassColor returns a color in dark theme', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        themeMode: ThemeMode.dark,
-        theme: ThemeData(brightness: Brightness.dark, useMaterial3: true),
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              final color = GlasConfig.glassColor(context);
-              expect(color, isA<Color>());
-              final alpha = (color.a * 255.0).round().clamp(0, 255);
-              expect(alpha, greaterThan(0));
-              return const SizedBox.shrink();
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          themeMode: ThemeMode.dark,
+          theme: _testTheme(brightness: Brightness.dark),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                final color = GlasConfig.glassColor(context);
+                expect(color, isA<Color>());
+                final alpha = (color.a * 255.0).round().clamp(0, 255);
+                expect(alpha, greaterThan(0));
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
-      ));
+      );
     });
 
     testWidgets('borderColor returns a color in light theme', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              final color = GlasConfig.borderColor(context);
-              expect(color, isA<Color>());
-              return const SizedBox.shrink();
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: _testTheme(),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                final color = GlasConfig.borderColor(context);
+                expect(color, isA<Color>());
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
-      ));
+      );
     });
 
     testWidgets('shadowColor returns a color in light theme', (tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              final color = GlasConfig.shadowColor(context);
-              expect(color, isA<Color>());
-              return const SizedBox.shrink();
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: _testTheme(),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                final color = GlasConfig.shadowColor(context);
+                expect(color, isA<Color>());
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
-      ));
+      );
     });
 
     testWidgets('warm preset glassColor is pink-tinted', (tester) async {
       GlasConfig.useWarmPreset = true;
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              final color = GlasConfig.glassColor(context);
-              expect(color, isA<Color>());
-              // Warm preset uses pink tint → red component should be > average
-              final red = (color.r * 255.0).round().clamp(0, 255);
-              expect(red, greaterThan(200));
-              return const SizedBox.shrink();
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: _testTheme(),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                final color = GlasConfig.glassColor(context);
+                expect(color, isA<Color>());
+                // Warm preset uses pink tint → red component should be > average
+                final red = (color.r * 255.0).round().clamp(0, 255);
+                expect(red, greaterThan(200));
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
-      ));
+      );
       GlasConfig.useWarmPreset = false;
     });
   });
+}
+
+ThemeData _testTheme({Brightness brightness = Brightness.light}) {
+  return ThemeData(
+    useMaterial3: true,
+    brightness: brightness,
+    splashFactory: InkRipple.splashFactory,
+  );
 }

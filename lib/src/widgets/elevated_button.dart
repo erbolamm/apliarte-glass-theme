@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../glas_config.dart';
 import '../helpers/glass_layer.dart';
+import '../helpers/press_feedback.dart';
 
 /// Glass-themed [material.ElevatedButton].
 ///
@@ -166,8 +167,8 @@ class ElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = GlasConfig.mediumRadiusValue();
-
-    return GlassLayer(
+    final isEnabled = onPressed != null || onLongPress != null;
+    final button = GlassLayer(
       borderRadius: radius,
       showBorder: false,
       child: material.ElevatedButton(
@@ -183,21 +184,51 @@ class ElevatedButton extends StatelessWidget {
         child: child,
       ),
     );
+
+    if (!GlasConfig.buttonPressFeedbackEnabled) {
+      return button;
+    }
+
+    return buildButtonPressFeedback(
+      statesController: statesController,
+      enabled: isEnabled,
+      pressedScale: GlasConfig.buttonPressScaleValue(),
+      builder: (effectiveStatesController) {
+        return GlassLayer(
+          borderRadius: radius,
+          showBorder: false,
+          child: material.ElevatedButton(
+            onPressed: onPressed,
+            onLongPress: onLongPress,
+            onHover: onHover,
+            onFocusChange: onFocusChange,
+            style: _effectiveStyle(context),
+            focusNode: focusNode,
+            autofocus: autofocus,
+            clipBehavior: clipBehavior,
+            statesController: effectiveStatesController,
+            child: child,
+          ),
+        );
+      },
+    );
   }
 
   material.ButtonStyle _effectiveStyle(BuildContext context) {
     final glassBg = GlasConfig.glassColor(context);
-    final baseStyle = material.ElevatedButton.styleFrom(
-      backgroundColor: material.Colors.transparent,
-      foregroundColor:
-          material.Theme.of(context).colorScheme.onPrimaryContainer,
-      shadowColor: material.Colors.transparent,
-      surfaceTintColor: material.Colors.transparent,
-      elevation: 0,
-    ).copyWith(
-      // Override the internal Material color so glass shows through
-      backgroundColor: material.WidgetStatePropertyAll(glassBg),
-    );
+    final baseStyle =
+        material.ElevatedButton.styleFrom(
+          backgroundColor: material.Colors.transparent,
+          foregroundColor: material.Theme.of(
+            context,
+          ).colorScheme.onPrimaryContainer,
+          shadowColor: material.Colors.transparent,
+          surfaceTintColor: material.Colors.transparent,
+          elevation: 0,
+        ).copyWith(
+          // Override the internal Material color so glass shows through
+          backgroundColor: material.WidgetStatePropertyAll(glassBg),
+        );
 
     if (style != null) {
       return baseStyle.merge(style);
